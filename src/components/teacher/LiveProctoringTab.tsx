@@ -253,11 +253,13 @@ export const LiveProctoringTab: React.FC = () => {
     e.preventDefault();
     if (!broadcastMessage.trim()) return;
     const socket = getSocket();
-    // Send to each active student
+    socket.emit('teacher:broadcast_all', {
+      message: broadcastMessage.trim()
+    });
     studentList.forEach((s) => {
       socket.emit('teacher:send_message', {
         attemptId: s.attemptId,
-        message: `📢 THÔNG BÁO TỪ GIÁM THỊ: ${broadcastMessage.trim()}`
+        message: `📢 THÔNG BÁO PHÒNG THI: ${broadcastMessage.trim()}`
       });
     });
     setBroadcastMessage('');

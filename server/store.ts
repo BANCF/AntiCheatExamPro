@@ -63,20 +63,78 @@ class ServerStore {
     }
   }
 
+  private persistTimer: NodeJS.Timeout | null = null;
+
   public persist() {
-    try {
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-      const data: StoredData = {
-        bank: this.bank,
-        config: this.config,
-        submissions: this.submissions
-      };
-      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (err) {
-      console.error('Failed to persist store to disk:', err);
+    if (this.persistTimer) {
+      clearTimeout(this.persistTimer);
     }
+    this.persistTimer = setTimeout(() => {
+      try {
+        if (!fs.existsSync(DATA_DIR)) {
+          fs.mkdirSync(DATA_DIR, { recursive: true });
+        }
+        const data: StoredData = {
+          bank: this.bank,
+          config: this.config,
+          submissions: this.submissions
+        };
+        fs.promises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8').catch((err) => {
+          console.error('Async persist error:', err);
+        });
+      } catch (err) {
+        console.error('Failed to schedule store persist:', err);
+      }
+    }, 500);
+  }
+
+  public getOrCreateStudentExam(studentName: string, studentClass: string) {
+    const normName = studentName.trim().toLowerCase();
+    const normClass = studentClass.trim().toLowerCase();
+
+    for (const [_id, student] of this.activeStudents.entries()) {
+      if (
+        student.studentName.trim().toLowerCase() === normName &&
+        student.studentClass.trim().toLowerCase() === normClass &&
+        student.status !== 'SUBMITTED' &&
+        student.status !== 'FORCE_SUBMITTED'
+      ) {
+        const sanitizedQuestions = student.pickedOriginalQuestions.map((q) => {
+          if (q.type === 'single_choice') {
+            return {
+              id: q.id,
+              type: 'single_choice' as const,
+              prompt: q.prompt,
+              tags: q.tags,
+              options: q.options.map(({ id, text }) => ({ id, text }))
+            };
+          } else {
+            return {
+              id: q.id,
+              type: 'true_false' as const,
+              prompt: q.prompt,
+              tags: q.tags,
+              items: q.items.map(({ id, text }) => ({ id, text }))
+            };
+          }
+        });
+
+        const elapsedSec = Math.floor((Date.now() - new Date(student.startTime).getTime()) / 1000);
+        const remainingSeconds = Math.max(10, student.durationSeconds - elapsedSec);
+
+        return {
+          attemptId: student.attemptId,
+          assignedCode: student.assignedCode,
+          sanitizedQuestions,
+          durationSeconds: student.durationSeconds,
+          remainingSeconds,
+          startTime: student.startTime,
+          isReconnected: true
+        };
+      }
+    }
+
+    return this.startStudentExam(studentName, studentClass);
   }
 
   public startStudentExam(studentName: string, studentClass: string) {
@@ -90,8 +148,8 @@ class ServerStore {
 
     const studentState: ActiveStudentState = {
       attemptId,
-      studentName,
-      studentClass,
+      studentName: studentName.trim(),
+      studentClass: studentClass.trim(),
       assignedCode,
       seed,
       startTime,
@@ -114,7 +172,9 @@ class ServerStore {
       assignedCode,
       sanitizedQuestions,
       durationSeconds,
-      startTime
+      remainingSeconds: durationSeconds,
+      startTime,
+      isReconnected: false
     };
   }
 

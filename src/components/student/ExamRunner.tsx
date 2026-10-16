@@ -22,7 +22,9 @@ import {
   HelpCircle,
   ListOrdered,
   BellRing,
-  Sparkles
+  Sparkles,
+  Lock,
+  Megaphone
 } from 'lucide-react';
 
 interface ExamRunnerProps {
@@ -62,6 +64,8 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
   const [teacherMessage, setTeacherMessage] = useState<string | null>(null);
   const [timeBonusNotice, setTimeBonusNotice] = useState<string | null>(null);
 
+  const [broadcastNotice, setBroadcastNotice] = useState<string | null>(null);
+
   // Auto Force Submit handler from anti-cheat hook
   const handleForceSubmit = useCallback(
     (finalLogs: ViolationLog[]) => {
@@ -79,6 +83,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     dismissWarning,
     isFullscreenWarningOpen,
     fullscreenCountdown,
+    isScreenBlinded,
     requestFullscreen
   } = useAntiCheat({
     enabled: true,
@@ -117,6 +122,10 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
       setTeacherMessage(message);
     });
 
+    socket.on('teacher:broadcast_received', ({ message }: { message: string }) => {
+      setBroadcastNotice(message);
+    });
+
     socket.on('teacher:time_added', ({ extraSeconds }: { extraSeconds: number }) => {
       setRemainingSeconds((prev) => prev + extraSeconds);
       setTimeBonusNotice(`Giám thị vừa cộng thêm ${Math.round(extraSeconds / 60)} phút vào bài thi của bạn!`);
@@ -130,6 +139,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
 
     return () => {
       socket.off('teacher:message_received');
+      socket.off('teacher:broadcast_received');
       socket.off('teacher:time_added');
       socket.off('teacher:force_terminate');
     };
@@ -653,6 +663,41 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
         <div className="fixed top-20 right-6 z-50 p-4 rounded-2xl bg-white border border-emerald-300 text-emerald-800 text-xs font-semibold shadow-xl flex items-center gap-2 animate-bounce">
           <Sparkles className="w-4 h-4 text-emerald-600" />
           <span>{timeBonusNotice}</span>
+        </div>
+      )}
+
+      {/* 6. Broadcast Announcement Modal */}
+      {broadcastNotice && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-2xl bg-white border-2 border-purple-500 shadow-2xl text-center space-y-4 animate-fadeIn">
+            <div className="w-14 h-14 rounded-full bg-purple-50 text-purple-600 border border-purple-200 flex items-center justify-center mx-auto">
+              <Megaphone className="w-7 h-7 animate-bounce" />
+            </div>
+            <h2 className="text-lg font-bold text-slate-900">Thông Báo Chung Từ Giám Thị</h2>
+            <div className="p-4 rounded-xl bg-purple-50/50 border border-purple-200 text-sm text-purple-900 font-medium leading-relaxed">
+              "{broadcastNotice}"
+            </div>
+            <button
+              type="button"
+              onClick={() => setBroadcastNotice(null)}
+              className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition-all cursor-pointer shadow-sm"
+            >
+              Đã hiểu thông báo
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Security Screen Blind Overlay (When fullscreen is broken or window is not active) */}
+      {isScreenBlinded && (
+        <div className="fixed inset-0 z-45 bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center text-white select-none pointer-events-none">
+          <div className="w-16 h-16 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center mb-4">
+            <Lock className="w-8 h-8 animate-pulse" />
+          </div>
+          <h2 className="text-xl font-black text-rose-400 tracking-tight mb-2">MÀN HÌNH BẢO MẬT PHÒNG THI</h2>
+          <p className="text-xs text-slate-300 max-w-sm leading-relaxed">
+            Nội dung câu hỏi tạm thời bị che để bảo vệ tính công bằng của bài thi. Hãy bấm quay lại toàn màn hình ngay lập tức!
+          </p>
         </div>
       )}
     </div>

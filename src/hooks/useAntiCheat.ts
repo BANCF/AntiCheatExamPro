@@ -136,6 +136,9 @@ export function useAntiCheat({
     }
   }, []);
 
+  // Security Blind state (hides questions if user exits fullscreen or switches window)
+  const [isScreenBlinded, setIsScreenBlinded] = useState<boolean>(false);
+
   // Fullscreen change listener
   useEffect(() => {
     if (!enabled) return;
@@ -150,15 +153,16 @@ export function useAntiCheat({
       setIsFullscreen(isCurrentlyFs);
 
       if (!isCurrentlyFs && !hasForceSubmittedRef.current) {
-        // Exited fullscreen -> start 10s countdown modal
+        // Exited fullscreen -> blind screen immediately and start 5s countdown modal
+        setIsScreenBlinded(true);
         setIsFullscreenWarningOpen(true);
-        setFullscreenCountdown(10);
+        setFullscreenCountdown(5);
 
         if (fullscreenTimerRef.current) {
           window.clearInterval(fullscreenTimerRef.current);
         }
 
-        let remaining = 10;
+        let remaining = 5;
         fullscreenTimerRef.current = window.setInterval(() => {
           remaining -= 1;
           setFullscreenCountdown(remaining);
@@ -169,11 +173,12 @@ export function useAntiCheat({
               fullscreenTimerRef.current = null;
             }
             setIsFullscreenWarningOpen(false);
-            recordViolation('FULLSCREEN_EXIT', 'Không quay lại toàn màn hình trong 10 giây');
+            recordViolation('FULLSCREEN_EXIT', 'Không quay lại toàn màn hình trong 5 giây');
           }
         }, 1000);
       } else if (isCurrentlyFs) {
         setIsFullscreenWarningOpen(false);
+        setIsScreenBlinded(false);
         if (fullscreenTimerRef.current) {
           window.clearInterval(fullscreenTimerRef.current);
           fullscreenTimerRef.current = null;
@@ -320,6 +325,7 @@ export function useAntiCheat({
     isFullscreen,
     isFullscreenWarningOpen,
     fullscreenCountdown,
+    isScreenBlinded,
     requestFullscreen,
     exitFullscreen,
     recordViolation

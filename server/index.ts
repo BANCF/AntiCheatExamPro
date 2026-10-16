@@ -64,6 +64,17 @@ app.post('/api/config', (req, res) => {
   }
 });
 
+// Teacher Auth
+app.post('/api/auth/teacher', (req, res) => {
+  const { password } = req.body;
+  const correct = serverStore.config.teacher_password || 'admin2026';
+  if (password === correct) {
+    res.json({ success: true, message: 'Authenticated' });
+  } else {
+    res.status(401).json({ success: false, error: 'Mật khẩu giáo viên không chính xác!' });
+  }
+});
+
 // Start Student Exam
 app.post('/api/exam/start', (req, res) => {
   const { student_name, student_class, pin } = req.body;
@@ -76,7 +87,7 @@ app.post('/api/exam/start', (req, res) => {
     return res.status(403).json({ error: 'Mã PIN phòng thi không hợp lệ!' });
   }
 
-  const examSession = serverStore.startStudentExam(student_name, student_class);
+  const examSession = serverStore.getOrCreateStudentExam(student_name, student_class);
 
   // Notify teacher of new student joined
   io.to('teacher_room').emit('student:new_session', {
@@ -153,7 +164,28 @@ io.on('connection', (socket) => {
   // Student registers socket with their attemptId
   socket.on('student:register', ({ attemptId, studentName, studentClass, assignedCode }) => {
     socket.join(`student_${attemptId}`);
-    const student = serverStore.activeStudents.get(attemptId);
+    let student = serverStore.activeStudents.get(attemptId);
+    if (!student && studentName && studentClass) {
+      student = {
+        attemptId,
+        studentName,
+        studentClass,
+        assignedCode: assignedCode || '101',
+        seed: 2026,
+        startTime: new Date().toISOString(),
+        durationSeconds: (serverStore.config.duration_minutes || 45) * 60,
+        remainingSeconds: (serverStore.config.duration_minutes || 45) * 60,
+        currentQuestionIndex: 0,
+        answeredCount: 0,
+        totalQuestions: serverStore.config.total_questions_to_pick || 20,
+        violationCount: 0,
+        violationsLog: [],
+        status: 'IN_PROGRESS',
+        lastPing: Date.now(),
+        pickedOriginalQuestions: []
+      };
+      serverStore.activeStudents.set(attemptId, student);
+    }
     if (student) {
       student.socketId = socket.id;
       student.status = 'IN_PROGRESS';
@@ -222,6 +254,11 @@ io.on('connection', (socket) => {
   // Teacher sends private message / warning to student screen
   socket.on('teacher:send_message', ({ attemptId, message }: { attemptId: string; message: string }) => {
     io.to(`student_${attemptId}`).emit('teacher:message_received', { message });
+  });
+
+  // Teacher broadcasts announcement to ALL students
+  socket.on('teacher:broadcast_all', ({ message }: { message: string }) => {
+    io.emit('teacher:broadcast_received', { message, timestamp: new Date().toISOString() });
   });
 
   // Teacher adds time to student exam

@@ -28,6 +28,17 @@ import { ExamRunner } from './components/student/ExamRunner';
 import { ExamCompleted } from './components/student/ExamCompleted';
 import { TeacherLoginModal } from './components/teacher/TeacherLoginModal';
 import { Shield, GraduationCap, School, Lock, LogOut, KeyRound } from 'lucide-react';
+import {
+  fetchQuestionBank,
+  saveQuestionBankApi,
+  fetchExamConfig,
+  saveExamConfigApi,
+  fetchSubmissionsApi,
+  clearSubmissionsApi,
+  startStudentExamApi,
+  submitStudentExamApi
+} from './services/api';
+import { getSocket } from './services/socket';
 
 export function App() {
   // Global Data States
@@ -72,20 +83,65 @@ export function App() {
     submitTime: string;
   } | null>(null);
 
-  // Sync state to local storage when changed
+  // Fetch initial data from backend API
+  useEffect(() => {
+    fetchQuestionBank().then((serverBank) => {
+      if (serverBank && serverBank.length > 0) {
+        setBank(serverBank);
+        saveQuestionBank(serverBank);
+      }
+    });
+
+    fetchExamConfig().then((serverConfig) => {
+      if (serverConfig && serverConfig.title) {
+        setConfig(serverConfig);
+        saveExamConfig(serverConfig);
+      }
+    });
+
+    fetchSubmissionsApi().then((serverSubmissions) => {
+      if (serverSubmissions && Array.isArray(serverSubmissions)) {
+        setSubmissions(serverSubmissions);
+        saveSubmissions(serverSubmissions);
+      }
+    });
+  }, []);
+
+  // Real-time listener for submissions from remote students
+  useEffect(() => {
+    const socket = getSocket();
+    const handleRemoteSubmitted = ({ submission }: { submission: SubmissionRecord }) => {
+      setSubmissions((prev) => {
+        const filtered = prev.filter((s) => s.submission_id !== submission.submission_id);
+        const updated = [submission, ...filtered];
+        saveSubmissions(updated);
+        return updated;
+      });
+    };
+
+    socket.on('student:submitted', handleRemoteSubmitted);
+    return () => {
+      socket.off('student:submitted', handleRemoteSubmitted);
+    };
+  }, []);
+
+  // Sync state to local storage and server when changed
   const handleUpdateBank = (newBank: Question[]) => {
     setBank(newBank);
     saveQuestionBank(newBank);
+    saveQuestionBankApi(newBank);
   };
 
   const handleUpdateConfig = (newConfig: ExamConfig) => {
     setConfig(newConfig);
     saveExamConfig(newConfig);
+    saveExamConfigApi(newConfig);
   };
 
   const handleClearSubmissions = () => {
     setSubmissions([]);
     saveSubmissions([]);
+    clearSubmissionsApi();
   };
 
   // Add realistic mock submissions for quick teacher evaluation
@@ -232,17 +288,40 @@ export function App() {
     }
   }, [bank, config]);
 
-  // Start Exam Handler - Generates minimum 12 variants and draws 1 at random
-  const handleStartExam = (studentName: string, studentClass: string) => {
-    // Generate all official exam variants (default 12 codes: 101, 102, ..., 112)
-    const variants = generateAllExamVariants(bank, config);
-    // Draw 1 random variant from the pool
-    const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
-    const { sanitizedQuestions, pickedOriginalQuestions, assignedCode, seed } = pickedVariant;
+  // Start Exam Handler - Connects to Server for Random Variant (or fallbacks locally)
+  const handleStartExam = async (studentName: string, studentClass: string) => {
+    // 1. Try starting via Backend Server
+    const serverSession = await startStudentExamApi({
+      studentName,
+      studentClass,
+      pin: config.access_pin
+    });
 
-    const durationSeconds = config.duration_minutes * 60;
-    const startTime = new Date().toISOString();
-    const attemptId = `attempt_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    let attemptId = `attempt_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    let assignedCode = '101';
+    let seed = 2026;
+    let sanitizedQuestions: SanitizedQuestion[] = [];
+    let pickedOriginalQuestions: Question[] = [];
+    let durationSeconds = config.duration_minutes * 60;
+    let remainingSeconds = durationSeconds;
+    let startTime = new Date().toISOString();
+
+    if (serverSession) {
+      attemptId = serverSession.attemptId;
+      assignedCode = serverSession.assignedCode;
+      sanitizedQuestions = serverSession.sanitizedQuestions;
+      durationSeconds = serverSession.durationSeconds;
+      remainingSeconds = serverSession.remainingSeconds !== undefined ? serverSession.remainingSeconds : durationSeconds;
+      startTime = serverSession.startTime;
+    } else {
+      // Offline fallback: generate locally
+      const variants = generateAllExamVariants(bank, config);
+      const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
+      assignedCode = pickedVariant.assignedCode;
+      seed = pickedVariant.seed;
+      sanitizedQuestions = pickedVariant.sanitizedQuestions;
+      pickedOriginalQuestions = pickedVariant.pickedOriginalQuestions;
+    }
 
     const sessionData = {
       attemptId,
@@ -254,7 +333,7 @@ export function App() {
       pickedOriginalQuestions,
       answers: {},
       durationSeconds,
-      remainingSeconds: durationSeconds,
+      remainingSeconds,
       startTime,
       violationsLog: [],
       violationCount: 0
@@ -262,7 +341,7 @@ export function App() {
 
     setCurrentSession(sessionData);
 
-    // Save initial session to localStorage
+    // Save initial session to localStorage for reload recovery
     const storableSession: ExamSessionState = {
       attempt_id: attemptId,
       assigned_code: assignedCode,
@@ -273,7 +352,7 @@ export function App() {
       answers: {},
       start_time: startTime,
       duration_seconds: durationSeconds,
-      remaining_seconds: durationSeconds,
+      remaining_seconds: remainingSeconds,
       violation_count: 0,
       violations_log: [],
       is_submitted: false,
@@ -323,8 +402,8 @@ export function App() {
     [currentSession, config.exam_id]
   );
 
-  // Submit Exam Handler
-  const handleSubmitExam = (
+  // Submit Exam Handler - Submits to Backend Server and shows receipt
+  const handleSubmitExam = async (
     answers: StudentAnswers,
     status: SubmissionStatus,
     finalLogs: ViolationLog[]
@@ -332,24 +411,46 @@ export function App() {
     if (!currentSession) return;
 
     const submitTime = new Date().toISOString();
+    let submissionId = `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
-    // Score the exam on teacher/protected side
-    const record = buildSubmissionRecord({
+    // Call Backend API to register submission and score safely on server
+    const apiResult = await submitStudentExamApi({
+      attemptId: currentSession.attemptId,
       studentName: currentSession.studentName,
       studentClass: currentSession.studentClass,
       assignedCode: currentSession.assignedCode,
-      startTime: currentSession.startTime,
-      submitTime,
+      answers,
       status,
-      violationCount: finalLogs.length,
-      violationsLog: finalLogs,
-      studentAnswers: answers,
-      originalQuestions: currentSession.pickedOriginalQuestions
+      violationsLog: finalLogs
     });
 
-    // Save to submissions
-    const updatedSubmissions = addSubmission(record);
-    setSubmissions(updatedSubmissions);
+    if (apiResult && apiResult.submission_id) {
+      submissionId = apiResult.submission_id;
+    } else {
+      // Fallback local scoring if offline
+      const record = buildSubmissionRecord({
+        studentName: currentSession.studentName,
+        studentClass: currentSession.studentClass,
+        assignedCode: currentSession.assignedCode,
+        startTime: currentSession.startTime,
+        submitTime,
+        status,
+        violationCount: finalLogs.length,
+        violationsLog: finalLogs,
+        studentAnswers: answers,
+        originalQuestions: currentSession.pickedOriginalQuestions.length > 0 ? currentSession.pickedOriginalQuestions : bank
+      });
+      const updatedSubmissions = addSubmission(record);
+      setSubmissions(updatedSubmissions);
+    }
+
+    // Refresh submissions from server to update gradebook
+    fetchSubmissionsApi().then((serverSubmissions) => {
+      if (serverSubmissions && Array.isArray(serverSubmissions)) {
+        setSubmissions(serverSubmissions);
+        saveSubmissions(serverSubmissions);
+      }
+    });
 
     // Clear active session from localStorage
     clearActiveSession();
@@ -367,7 +468,7 @@ export function App() {
       studentClass: currentSession.studentClass,
       assignedCode: currentSession.assignedCode,
       status,
-      submissionId: record.submission_id,
+      submissionId,
       submitTime
     });
 
@@ -375,11 +476,11 @@ export function App() {
     setStudentFlow('completed');
   };
 
-  // Exit from completed view
+  // Exit from completed view - ALWAYS return to student lobby for security!
   const handleExitCompleted = () => {
     setCompletedReceipt(null);
     setStudentFlow('lobby');
-    setAppMode('teacher');
+    setAppMode('student');
   };
 
   return (
@@ -397,7 +498,7 @@ export function App() {
                 <span className="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight flex items-center gap-1.5">
                   AntiCheat Exam Pro
                   <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono font-medium">
-                    v2.0
+                    v2.1
                   </span>
                 </span>
                 <span className="text-[11px] text-slate-500 block -mt-0.5">
@@ -407,7 +508,7 @@ export function App() {
             </div>
 
             {/* Role / Access Control */}
-            {appMode === 'teacher' ? (
+            {appMode === 'teacher' && isTeacherAuthenticated ? (
               <div className="flex items-center gap-2">
                 <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -457,7 +558,7 @@ export function App() {
 
       {/* Main Content Router */}
       <div className="flex-1 flex flex-col">
-        {appMode === 'teacher' ? (
+        {appMode === 'teacher' && isTeacherAuthenticated ? (
           <TeacherConsole
             bank={bank}
             config={config}
