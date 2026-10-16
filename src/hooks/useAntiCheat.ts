@@ -15,7 +15,7 @@ export function useAntiCheat({
   const [violationCount, setViolationCount] = useState<number>(0);
   const [violationsLog, setViolationsLog] = useState<ViolationLog[]>([]);
 
-  // Warning modal state
+  // Warning toast/modal state
   const [isWarningModalOpen, setIsWarningModalOpen] = useState<boolean>(false);
   const [currentWarning, setCurrentWarning] = useState<{
     title: string;
@@ -26,15 +26,13 @@ export function useAntiCheat({
 
   // Fullscreen state
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [isFullscreenWarningOpen, setIsFullscreenWarningOpen] = useState<boolean>(false);
-  const [fullscreenCountdown, setFullscreenCountdown] = useState<number>(10);
 
-  // Refs for tracking timestamps and preventing double counting
-  const blurStartTimeRef = useRef<number | null>(null);
+  // Refs for tracking timestamps and preventing duplicate triggers
+  const hiddenStartTimeRef = useRef<number | null>(null);
+  const lastViolationTimeRef = useRef<number>(0);
   const violationCountRef = useRef<number>(0);
   const violationsLogRef = useRef<ViolationLog[]>([]);
   const hasForceSubmittedRef = useRef<boolean>(false);
-  const fullscreenTimerRef = useRef<number | null>(null);
 
   // Sync refs
   useEffect(() => {
@@ -45,10 +43,17 @@ export function useAntiCheat({
     violationsLogRef.current = violationsLog;
   }, [violationsLog]);
 
-  // Record a violation
+  // Record a violation with a 3-second cooldown to prevent double-counting
   const recordViolation = useCallback(
     (type: ViolationType, note?: string, durationSeconds?: number) => {
       if (!enabled || hasForceSubmittedRef.current) return;
+
+      const now = Date.now();
+      // Enforce 3-second cooldown between violations to avoid burst glitches
+      if (now - lastViolationTimeRef.current < 3000) {
+        return;
+      }
+      lastViolationTimeRef.current = now;
 
       const newCount = violationCountRef.current + 1;
       violationCountRef.current = newCount;
@@ -70,25 +75,24 @@ export function useAntiCheat({
       if (newCount >= maxViolationsAllowed) {
         hasForceSubmittedRef.current = true;
         setIsWarningModalOpen(false);
-        setIsFullscreenWarningOpen(false);
         onForceSubmit(updatedLogs);
         return;
       }
 
       // Show warning modal
-      let title = 'Cảnh báo Vi phạm!';
-      let message = `Hệ thống ghi nhận bạn đã thực hiện thao tác không được phép. Lần vi phạm: ${newCount}/${maxViolationsAllowed}.`;
-      if (type === 'TAB_SWITCH' || type === 'WINDOW_BLUR') {
-        title = 'Cảnh báo Rời màn hình thi!';
-        message = `Bạn đã chuyển tab hoặc mở ứng dụng khác${
+      let title = 'Cảnh Báo Vi Phạm Quy Chế!';
+      let message = `Hệ thống ghi nhận thao tác không được phép. Lần vi phạm: ${newCount}/${maxViolationsAllowed}.`;
+      if (type === 'TAB_SWITCH') {
+        title = 'Cảnh Báo Chuyển Tab / Ẩn Cửa Sổ!';
+        message = `Bạn vừa rời khỏi màn hình bài thi${
           durationSeconds ? ` trong ${durationSeconds} giây` : ''
-        }. Vui lòng chỉ làm bài trên trang này! (Lần vi phạm: ${newCount}/${maxViolationsAllowed})`;
+        }. Vui lòng chỉ tập trung làm bài thi tại tab này! (Vi phạm: ${newCount}/${maxViolationsAllowed})`;
       } else if (type === 'DEVTOOLS' || type === 'SHORTCUT_ATTEMPT') {
-        title = 'Cảnh báo Phím tắt bị chặn!';
-        message = `Phím tắt nhà phát triển hoặc thao tác hệ thống bị cấm trong phòng thi. (Lần vi phạm: ${newCount}/${maxViolationsAllowed})`;
-      } else if (type === 'FULLSCREEN_EXIT') {
-        title = 'Cảnh báo Thoát Toàn Màn Hình!';
-        message = `Bạn đã thoát chế độ toàn màn hình quá thời gian cho phép. (Lần vi phạm: ${newCount}/${maxViolationsAllowed})`;
+        title = 'Cảnh Báo Phím Tắt Bị Chặn!';
+        message = `Phím tắt công cụ hoặc thao tác hệ thống bị nghiêm cấm trong phòng thi. (Vi phạm: ${newCount}/${maxViolationsAllowed})`;
+      } else if (type === 'CONTEXT_MENU') {
+        title = 'Cảnh Báo Chuột Phải!';
+        message = `Thao tác bấm chuột phải bị cấm trong phòng thi. (Vi phạm: ${newCount}/${maxViolationsAllowed})`;
       }
 
       setCurrentWarning({
@@ -114,13 +118,8 @@ export function useAntiCheat({
         await (docEl as any).msRequestFullscreen();
       }
       setIsFullscreen(true);
-      setIsFullscreenWarningOpen(false);
-      if (fullscreenTimerRef.current) {
-        window.clearInterval(fullscreenTimerRef.current);
-        fullscreenTimerRef.current = null;
-      }
     } catch (err) {
-      console.warn('Failed to enter fullscreen:', err);
+      console.warn('Fullscreen request bypassed:', err);
     }
   }, []);
 
@@ -132,14 +131,11 @@ export function useAntiCheat({
       }
       setIsFullscreen(false);
     } catch (err) {
-      console.warn('Failed to exit fullscreen:', err);
+      console.warn('Exit fullscreen failed:', err);
     }
   }, []);
 
-  // Security Blind state (hides questions if user exits fullscreen or switches window)
-  const [isScreenBlinded, setIsScreenBlinded] = useState<boolean>(false);
-
-  // Fullscreen change listener
+  // Fullscreen status tracker (without aggressive penalties)
   useEffect(() => {
     if (!enabled) return;
 
@@ -149,41 +145,7 @@ export function useAntiCheat({
           (document as any).webkitFullscreenElement ||
           (document as any).msFullscreenElement
       );
-
       setIsFullscreen(isCurrentlyFs);
-
-      if (!isCurrentlyFs && !hasForceSubmittedRef.current) {
-        // Exited fullscreen -> blind screen immediately and start 5s countdown modal
-        setIsScreenBlinded(true);
-        setIsFullscreenWarningOpen(true);
-        setFullscreenCountdown(5);
-
-        if (fullscreenTimerRef.current) {
-          window.clearInterval(fullscreenTimerRef.current);
-        }
-
-        let remaining = 5;
-        fullscreenTimerRef.current = window.setInterval(() => {
-          remaining -= 1;
-          setFullscreenCountdown(remaining);
-
-          if (remaining <= 0) {
-            if (fullscreenTimerRef.current) {
-              window.clearInterval(fullscreenTimerRef.current);
-              fullscreenTimerRef.current = null;
-            }
-            setIsFullscreenWarningOpen(false);
-            recordViolation('FULLSCREEN_EXIT', 'Không quay lại toàn màn hình trong 5 giây');
-          }
-        }, 1000);
-      } else if (isCurrentlyFs) {
-        setIsFullscreenWarningOpen(false);
-        setIsScreenBlinded(false);
-        if (fullscreenTimerRef.current) {
-          window.clearInterval(fullscreenTimerRef.current);
-          fullscreenTimerRef.current = null;
-        }
-      }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -194,53 +156,33 @@ export function useAntiCheat({
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
       document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-      if (fullscreenTimerRef.current) {
-        window.clearInterval(fullscreenTimerRef.current);
-      }
     };
-  }, [enabled, recordViolation]);
+  }, [enabled]);
 
-  // Tab switch & Blur detection
+  // Tab switch detection via standard document.visibilitychange ONLY
+  // (We deliberately DO NOT listen to window.blur to prevent Unikey/EVKey focus-loss false positives!)
   useEffect(() => {
     if (!enabled) return;
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        blurStartTimeRef.current = Date.now();
+        hiddenStartTimeRef.current = Date.now();
       } else {
-        if (blurStartTimeRef.current) {
-          const duration = Math.round((Date.now() - blurStartTimeRef.current) / 1000);
-          blurStartTimeRef.current = null;
-          recordViolation('TAB_SWITCH', `Chuyển tab hoặc ẩn cửa sổ`, duration);
-        }
-      }
-    };
-
-    const handleWindowBlur = () => {
-      if (!blurStartTimeRef.current) {
-        blurStartTimeRef.current = Date.now();
-      }
-    };
-
-    const handleWindowFocus = () => {
-      if (blurStartTimeRef.current) {
-        const duration = Math.round((Date.now() - blurStartTimeRef.current) / 1000);
-        blurStartTimeRef.current = null;
-        // If window blurred for more than 1 second, trigger violation
-        if (duration >= 1) {
-          recordViolation('WINDOW_BLUR', `Mất tiêu điểm cửa sổ (rời màn hình thi)`, duration);
+        if (hiddenStartTimeRef.current) {
+          const duration = Math.round((Date.now() - hiddenStartTimeRef.current) / 1000);
+          hiddenStartTimeRef.current = null;
+          // Only trigger if actually hidden for 2+ seconds
+          if (duration >= 2) {
+            recordViolation('TAB_SWITCH', `Chuyển sang tab hoặc ứng dụng khác`, duration);
+          }
         }
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleWindowBlur);
-    window.addEventListener('focus', handleWindowFocus);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('blur', handleWindowBlur);
-      window.removeEventListener('focus', handleWindowFocus);
     };
   }, [enabled, recordViolation]);
 
@@ -250,6 +192,7 @@ export function useAntiCheat({
 
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
+      // Gentle notification without forcing modal
       recordViolation('CONTEXT_MENU', 'Cố tình bấm chuột phải');
       return false;
     };
@@ -323,9 +266,6 @@ export function useAntiCheat({
     currentWarning,
     dismissWarning,
     isFullscreen,
-    isFullscreenWarningOpen,
-    fullscreenCountdown,
-    isScreenBlinded,
     requestFullscreen,
     exitFullscreen,
     recordViolation

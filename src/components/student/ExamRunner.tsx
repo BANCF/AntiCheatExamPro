@@ -81,9 +81,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     isWarningModalOpen,
     currentWarning,
     dismissWarning,
-    isFullscreenWarningOpen,
-    fullscreenCountdown,
-    isScreenBlinded,
+    isFullscreen,
     requestFullscreen
   } = useAntiCheat({
     enabled: true,
@@ -445,12 +443,25 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
 
                 <button
                   type="button"
-                  disabled={currentIndex === questions.length - 1}
-                  onClick={() => setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:pointer-events-none text-white text-xs font-semibold cursor-pointer transition-colors shadow-sm"
+                  onClick={() => {
+                    if (currentIndex === questions.length - 1) {
+                      setIsSubmitConfirmOpen(true);
+                    } else {
+                      setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1));
+                    }
+                  }}
+                  className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-white text-xs font-bold cursor-pointer transition-all shadow-sm ${
+                    currentIndex === questions.length - 1
+                      ? 'bg-emerald-600 hover:bg-emerald-700 ring-2 ring-emerald-400'
+                      : 'bg-indigo-600 hover:bg-indigo-700'
+                  }`}
                 >
-                  <span>Câu tiếp theo</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <span>{currentIndex === questions.length - 1 ? 'Nộp bài thi' : 'Câu tiếp theo'}</span>
+                  {currentIndex === questions.length - 1 ? (
+                    <Send className="w-4 h-4" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -479,7 +490,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
             </div>
 
             {/* Grid Matrix of Buttons */}
-            <div className="grid grid-cols-5 gap-2 max-h-[360px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-5 gap-2 max-h-[340px] overflow-y-auto pr-1">
               {questions.map((q, idx) => {
                 const answered = isQuestionAnswered(q);
                 const isCurrent = idx === currentIndex;
@@ -520,16 +531,28 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                 <span>Đang xem</span>
               </div>
             </div>
+
+            {/* Big Unmissable Sidebar Submit Button */}
+            <div className="mt-5 pt-4 border-t border-slate-200">
+              <button
+                type="button"
+                onClick={() => setIsSubmitConfirmOpen(true)}
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                <span>NỘP BÀI THI</span>
+              </button>
+            </div>
           </div>
         </aside>
       </main>
 
       {/* ---------------- MODALS ---------------- */}
 
-      {/* 1. Tab Switch / Window Blur Warning Modal */}
+      {/* 1. Generic Violation Warning Modal */}
       {isWarningModalOpen && currentWarning && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full p-6 rounded-2xl bg-white border-2 border-rose-500 shadow-2xl animate-warning-pulse text-center space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-2xl bg-white border-2 border-rose-500 shadow-2xl text-center space-y-4">
             <div className="w-14 h-14 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
               <ShieldAlert className="w-8 h-8 animate-bounce" />
             </div>
@@ -545,44 +568,16 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
               onClick={dismissWarning}
               className="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm transition-all cursor-pointer shadow-sm"
             >
-              Tôi đã hiểu và cam kết không tái phạm
+              Tôi đã hiểu và tiếp tục làm bài
             </button>
           </div>
         </div>
       )}
 
-      {/* 2. Fullscreen Exit Warning Modal with 10s Countdown */}
-      {isFullscreenWarningOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="max-w-md w-full p-6 rounded-2xl bg-white border-2 border-amber-500 shadow-2xl text-center space-y-4">
-            <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center mx-auto">
-              <Maximize2 className="w-8 h-8 animate-pulse" />
-            </div>
-            <h2 className="text-xl font-bold text-slate-900">Yêu Cầu Toàn Màn Hình!</h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Bạn đã thoát chế độ toàn màn hình. Vui lòng quay lại ngay để tiếp tục làm bài.
-            </p>
-
-            <div className="text-3xl font-mono font-black text-amber-600 py-2">
-              {fullscreenCountdown} giây
-            </div>
-
-            <button
-              type="button"
-              onClick={requestFullscreen}
-              className="w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-amber-600/30"
-            >
-              <Maximize2 className="w-4 h-4" />
-              <span>Bấm để Quay Lại Toàn Màn Hình</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* 3. Submit Confirmation Modal */}
+      {/* 2. Submit Confirmation Modal (High z-index to guarantee clickability) */}
       {isSubmitConfirmOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full p-6 rounded-2xl bg-white border border-slate-200 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-2xl bg-white border border-slate-200 shadow-2xl space-y-4 relative z-[101]">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <Send className="w-5 h-5 text-emerald-600" />
               Xác Nhận Nộp Bài Thi
@@ -617,7 +612,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
               <button
                 type="button"
                 onClick={() => setIsSubmitConfirmOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
               >
                 Làm tiếp
               </button>
@@ -627,7 +622,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                   setIsSubmitConfirmOpen(false);
                   onSubmit(answers, 'SUBMITTED', violationsLog);
                 }}
-                className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm cursor-pointer transition-colors"
               >
                 Xác nhận nộp bài
               </button>
@@ -636,9 +631,9 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
         </div>
       )}
 
-      {/* 4. Direct Message from Teacher Modal */}
+      {/* 3. Direct Message from Teacher Modal */}
       {teacherMessage && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="max-w-md w-full p-6 rounded-2xl bg-white border-2 border-indigo-500 shadow-2xl text-center space-y-4 animate-fadeIn">
             <div className="w-14 h-14 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center mx-auto">
               <BellRing className="w-7 h-7 animate-bounce" />
@@ -658,7 +653,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
         </div>
       )}
 
-      {/* 5. Time Bonus Toast */}
+      {/* 4. Time Bonus Toast */}
       {timeBonusNotice && (
         <div className="fixed top-20 right-6 z-50 p-4 rounded-2xl bg-white border border-emerald-300 text-emerald-800 text-xs font-semibold shadow-xl flex items-center gap-2 animate-bounce">
           <Sparkles className="w-4 h-4 text-emerald-600" />
@@ -666,9 +661,9 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
         </div>
       )}
 
-      {/* 6. Broadcast Announcement Modal */}
+      {/* 5. Broadcast Announcement Modal */}
       {broadcastNotice && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="max-w-md w-full p-6 rounded-2xl bg-white border-2 border-purple-500 shadow-2xl text-center space-y-4 animate-fadeIn">
             <div className="w-14 h-14 rounded-full bg-purple-50 text-purple-600 border border-purple-200 flex items-center justify-center mx-auto">
               <Megaphone className="w-7 h-7 animate-bounce" />
@@ -685,19 +680,6 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
               Đã hiểu thông báo
             </button>
           </div>
-        </div>
-      )}
-
-      {/* 7. Security Screen Blind Overlay (When fullscreen is broken or window is not active) */}
-      {isScreenBlinded && (
-        <div className="fixed inset-0 z-45 bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center text-white select-none pointer-events-none">
-          <div className="w-16 h-16 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center mb-4">
-            <Lock className="w-8 h-8 animate-pulse" />
-          </div>
-          <h2 className="text-xl font-black text-rose-400 tracking-tight mb-2">MÀN HÌNH BẢO MẬT PHÒNG THI</h2>
-          <p className="text-xs text-slate-300 max-w-sm leading-relaxed">
-            Nội dung câu hỏi tạm thời bị che để bảo vệ tính công bằng của bài thi. Hãy bấm quay lại toàn màn hình ngay lập tức!
-          </p>
         </div>
       )}
     </div>
