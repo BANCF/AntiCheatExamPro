@@ -10,6 +10,7 @@ import {
   ViolationLog,
   SubmissionStatus
 } from '../types/exam';
+import { getQuestionClassification } from './questionClassification';
 
 /**
  * Seedable Pseudo-Random Number Generator (Mulberry32)
@@ -71,9 +72,24 @@ export function generateStudentExam(
   const seed = hashSeed(seedInput);
   const prng = createPRNG(seed);
 
+  // Filter bank by target_grade, target_subject, target_term if specified
+  let pool = bank;
+  if (config.target_grade && config.target_grade !== 'all') {
+    const matched = pool.filter((q) => getQuestionClassification(q).grade === config.target_grade);
+    if (matched.length > 0) pool = matched;
+  }
+  if (config.target_subject && config.target_subject !== 'all') {
+    const matched = pool.filter((q) => getQuestionClassification(q).subject === config.target_subject);
+    if (matched.length > 0) pool = matched;
+  }
+  if (config.target_term && config.target_term !== 'all') {
+    const matched = pool.filter((q) => getQuestionClassification(q).term === config.target_term);
+    if (matched.length > 0) pool = matched;
+  }
+
   // Group by type
-  const singleChoicePool = bank.filter((q) => q.type === 'single_choice');
-  const trueFalsePool = bank.filter((q) => q.type === 'true_false');
+  const singleChoicePool = pool.filter((q) => q.type === 'single_choice');
+  const trueFalsePool = pool.filter((q) => q.type === 'true_false');
 
   // Shuffle pools
   const shuffledSingle = shuffleArray(singleChoicePool, prng);

@@ -18,6 +18,9 @@ export interface SingleChoiceQuestion {
   prompt: string;
   options: SingleChoiceOption[];
   tags: string[];
+  grade?: string;    // e.g. "Lớp 7", "Lớp 10", "Lớp 12"
+  subject?: string;  // e.g. "Tin học", "Toán học", "Vật lí"
+  term?: string;     // e.g. "Giữa kì I", "Cuối kì I", "Giữa kì II", "Cuối kì II"
 }
 
 export interface TrueFalseQuestion {
@@ -26,6 +29,9 @@ export interface TrueFalseQuestion {
   prompt: string;
   items: TrueFalseSubItem[];
   tags: string[];
+  grade?: string;    // e.g. "Lớp 7", "Lớp 10", "Lớp 12"
+  subject?: string;  // e.g. "Tin học", "Toán học", "Vật lí"
+  term?: string;     // e.g. "Giữa kì I", "Cuối kì I", "Giữa kì II", "Cuối kì II"
 }
 
 export type Question = SingleChoiceQuestion | TrueFalseQuestion;
@@ -48,6 +54,18 @@ export interface ExamDistribution {
   true_false: number;
 }
 
+export type ExamMode = 'bank' | 'pdf';
+
+export interface TeacherAccount {
+  id: string;
+  username: string;
+  password: string;
+  fullName: string;
+  role: 'admin' | 'teacher';
+  subject: string; // "Tin học" | "Toán học" | "Vật lí" | "Hóa học" | "Sinh học" | "Tất cả"
+  assignedClasses?: string[];
+}
+
 export interface ExamConfig {
   exam_id: string;
   title: string;
@@ -60,6 +78,17 @@ export interface ExamConfig {
   variants_count?: number; // Minimum 12, default 12
   base_code?: number; // e.g. 101 -> 101, 102, ..., 112
   session_salt?: number; // Salt to re-shuffle variants
+  target_grade?: string; // Lọc theo lớp cụ thể
+  target_subject?: string; // Lọc theo môn cụ thể
+  target_term?: string; // Lọc theo kì cụ thể (Giữa kì I / Cuối kì I)
+  // PDF Exam Mode
+  exam_mode?: ExamMode;
+  pdf_url?: string; // base64 or URL
+  pdf_filename?: string;
+  pdf_total_questions?: number; // e.g. 40
+  pdf_options_per_question?: number; // 4 (A, B, C, D)
+  pdf_answer_key?: Record<string, string>; // e.g. { "1": "A", "2": "B" }
+  created_by_teacher_id?: string;
 }
 
 export interface ExamVariant {
@@ -92,6 +121,8 @@ export type SubmissionStatus = 'SUBMITTED' | 'FORCE_SUBMITTED';
 
 export interface SubmissionRecord {
   submission_id: string;
+  exam_id?: string;
+  exam_title?: string;
   student_name: string;
   student_class: string;
   assigned_code: string;

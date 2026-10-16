@@ -15,6 +15,7 @@ export function exportGradebookToExcel(
 
     return {
       'STT': index + 1,
+      'Bài Kiểm Tra': sub.exam_title || examTitle,
       'Họ và Tên': sub.student_name,
       'Lớp': sub.student_class,
       'Mã Đề': sub.assigned_code,
@@ -61,6 +62,9 @@ export function downloadSampleExcelTemplate(): void {
   const sampleData = [
     {
       'loai_cau_hoi': 'single_choice',
+      'lop': 'Lớp 10',
+      'mon_hoc': 'Tin học',
+      'hoc_ki': 'Giữa kì I',
       'cau_hoi': 'Hệ điều hành nào sau đây là mã nguồn mở?',
       'phuong_an_A': 'Linux',
       'phuong_an_A_dung': 'DUNG',
@@ -70,10 +74,13 @@ export function downloadSampleExcelTemplate(): void {
       'phuong_an_C_dung': 'SAI',
       'phuong_an_D': 'iOS',
       'phuong_an_D_dung': 'SAI',
-      'chu_de_tags': 'tin_hoc_10, easy'
+      'chu_de_tags': 'tin_hoc_10, he_dieu_hanh'
     },
     {
       'loai_cau_hoi': 'single_choice',
+      'lop': 'Lớp 10',
+      'mon_hoc': 'Tin học',
+      'hoc_ki': 'Giữa kì I',
       'cau_hoi': 'Giao thức nào mã hóa dữ liệu web bằng SSL/TLS?',
       'phuong_an_A': 'HTTPS',
       'phuong_an_A_dung': 'DUNG',
@@ -83,10 +90,13 @@ export function downloadSampleExcelTemplate(): void {
       'phuong_an_C_dung': 'SAI',
       'phuong_an_D': 'Telnet',
       'phuong_an_D_dung': 'SAI',
-      'chu_de_tags': 'mang_may_tinh, medium'
+      'chu_de_tags': 'mang_may_tinh, bao_mat'
     },
     {
       'loai_cau_hoi': 'true_false',
+      'lop': 'Lớp 10',
+      'mon_hoc': 'Tin học',
+      'hoc_ki': 'Giữa kì I',
       'cau_hoi': 'Đánh giá tính Đúng / Sai của các nhận định về giao thức mạng:',
       'phuong_an_A': 'HTTP truyền tải văn bản thuần không mã hóa.',
       'phuong_an_A_dung': 'DUNG',
@@ -96,14 +106,17 @@ export function downloadSampleExcelTemplate(): void {
       'phuong_an_C_dung': 'SAI',
       'phuong_an_D': 'Mỗi máy tính chỉ cần địa chỉ MAC không cần IP vẫn duyệt web quốc tế.',
       'phuong_an_D_dung': 'SAI',
-      'chu_de_tags': 'tin_hoc_10, medium'
+      'chu_de_tags': 'tin_hoc_10, mang_lan'
     }
   ];
 
   const ws = XLSX.utils.json_to_sheet(sampleData);
   ws['!cols'] = [
-    { wch: 15 },
-    { wch: 45 },
+    { wch: 15 }, // loai_cau_hoi
+    { wch: 12 }, // lop
+    { wch: 14 }, // mon_hoc
+    { wch: 14 }, // hoc_ki
+    { wch: 45 }, // cau_hoi
     { wch: 30 },
     { wch: 18 },
     { wch: 30 },
@@ -192,6 +205,10 @@ export async function parseExcelQuestions(file: File): Promise<Question[]> {
             return str === 'DUNG' || str === 'TRUE' || str === '1' || str === 'ĐÚNG' || str === 'YES';
           };
 
+          const grade = row['lop'] || row['khoi'] || row['grade'] || undefined;
+          const subject = row['mon_hoc'] || row['mon'] || row['subject'] || undefined;
+          const term = row['hoc_ki'] || row['ki_thi'] || row['phan'] || row['term'] || undefined;
+
           if (type === 'true_false') {
             const items = [
               { id: `sub_${index}_1`, text: String(row['phuong_an_A'] || 'Ý A'), is_correct: isTrue(row['phuong_an_A_dung']) },
@@ -205,7 +222,10 @@ export async function parseExcelQuestions(file: File): Promise<Question[]> {
               type: 'true_false',
               prompt,
               items,
-              tags
+              tags,
+              grade,
+              subject,
+              term
             };
             questions.push(q);
           } else {
@@ -227,7 +247,10 @@ export async function parseExcelQuestions(file: File): Promise<Question[]> {
               type: 'single_choice',
               prompt,
               options,
-              tags
+              tags,
+              grade,
+              subject,
+              term
             };
             questions.push(q);
           }

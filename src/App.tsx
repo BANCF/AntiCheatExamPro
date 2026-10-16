@@ -7,7 +7,8 @@ import {
   StudentAnswers,
   SubmissionStatus,
   ViolationLog,
-  ExamSessionState
+  ExamSessionState,
+  TeacherAccount
 } from './types/exam';
 import {
   getStoredQuestionBank,
@@ -50,6 +51,14 @@ export function App() {
   const [appMode, setAppMode] = useState<'teacher' | 'student'>('student');
   const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState<boolean>(() => {
     return sessionStorage.getItem('anticheat_teacher_logged') === 'true';
+  });
+  const [currentTeacher, setCurrentTeacher] = useState<TeacherAccount | null>(() => {
+    try {
+      const saved = sessionStorage.getItem('anticheat_teacher_profile');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   });
   const [isTeacherLoginOpen, setIsTeacherLoginOpen] = useState<boolean>(false);
 
@@ -245,18 +254,35 @@ export function App() {
     }
   }, []);
 
-  const handleTeacherLoginSuccess = () => {
+  const handleTeacherLoginSuccess = (teacher: TeacherAccount) => {
+    setCurrentTeacher(teacher);
     setIsTeacherAuthenticated(true);
     sessionStorage.setItem('anticheat_teacher_logged', 'true');
+    sessionStorage.setItem('anticheat_teacher_profile', JSON.stringify(teacher));
     setIsTeacherLoginOpen(false);
     setAppMode('teacher');
   };
 
+  // Join teacher realtime monitoring room whenever in teacher console
+  useEffect(() => {
+    if (appMode === 'teacher' && isTeacherAuthenticated) {
+      const socket = getSocket();
+      socket.emit('teacher:join');
+    }
+  }, [appMode, isTeacherAuthenticated]);
+
   const handleTeacherLogout = () => {
+    setCurrentTeacher(null);
     setIsTeacherAuthenticated(false);
     sessionStorage.removeItem('anticheat_teacher_logged');
+    sessionStorage.removeItem('anticheat_teacher_profile');
     setAppMode('student');
     setStudentFlow('lobby');
+  };
+
+  const handleSwitchTeacher = (teacher: TeacherAccount) => {
+    setCurrentTeacher(teacher);
+    sessionStorage.setItem('anticheat_teacher_profile', JSON.stringify(teacher));
   };
 
   // Restore active student session on reload if exists
@@ -563,6 +589,7 @@ export function App() {
             bank={bank}
             config={config}
             submissions={submissions}
+            currentTeacher={currentTeacher}
             onUpdateBank={handleUpdateBank}
             onUpdateConfig={handleUpdateConfig}
             onClearSubmissions={handleClearSubmissions}
@@ -571,6 +598,8 @@ export function App() {
               setAppMode('student');
               setStudentFlow('lobby');
             }}
+            onLogoutTeacher={handleTeacherLogout}
+            onSwitchTeacher={handleSwitchTeacher}
           />
         ) : (
           <>
@@ -620,7 +649,6 @@ export function App() {
       {/* Teacher Authentication Gatekeeper Modal */}
       {isTeacherLoginOpen && (
         <TeacherLoginModal
-          correctPassword={config.teacher_password || 'admin2026'}
           onSuccess={handleTeacherLoginSuccess}
           onCancel={() => setIsTeacherLoginOpen(false)}
         />

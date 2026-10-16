@@ -1,9 +1,11 @@
-import { Question, ExamConfig, SubmissionRecord, SanitizedQuestion, StudentAnswers, ViolationLog, SubmissionStatus } from '../types/exam';
+import { Question, ExamConfig, SubmissionRecord, SanitizedQuestion, StudentAnswers, ViolationLog, SubmissionStatus, TeacherAccount } from '../types/exam';
 
 const API_BASE =
-  window.location.port === '5173'
-    ? `http://${window.location.hostname}:3000/api`
-    : `${window.location.origin}/api`;
+  import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+    : window.location.port === '5173'
+      ? `http://${window.location.hostname}:3000/api`
+      : `${window.location.origin}/api`;
 
 export async function fetchQuestionBank(): Promise<Question[] | null> {
   try {
@@ -151,16 +153,63 @@ export async function submitStudentExamApi(params: {
   return null;
 }
 
-export async function verifyTeacherPasswordApi(password: string): Promise<boolean> {
+export async function verifyTeacherLoginApi(credentials: {
+  username?: string;
+  password: string;
+}): Promise<{ success: boolean; teacher?: TeacherAccount } | null> {
   try {
     const res = await fetch(`${API_BASE}/auth/teacher`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password })
+      body: JSON.stringify(credentials)
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('API verifyTeacherLoginApi failed:', err);
+  }
+  return null;
+}
+
+export async function verifyTeacherPasswordApi(password: string): Promise<boolean> {
+  const result = await verifyTeacherLoginApi({ password });
+  return result?.success ?? (password === 'admin2026');
+}
+
+export async function fetchTeachersApi(): Promise<TeacherAccount[] | null> {
+  try {
+    const res = await fetch(`${API_BASE}/teachers`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('API fetchTeachersApi failed:', err);
+  }
+  return null;
+}
+
+export async function saveTeacherApi(teacher: Partial<TeacherAccount>): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/teachers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(teacher)
     });
     return res.ok;
   } catch (err) {
-    console.warn('API verifyTeacherPasswordApi fallback to local comparison:', err);
+    console.warn('API saveTeacherApi failed:', err);
     return false;
   }
 }
+
+export async function deleteTeacherApi(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/teachers/${id}`, { method: 'DELETE' });
+    return res.ok;
+  } catch (err) {
+    console.warn('API deleteTeacherApi failed:', err);
+    return false;
+  }
+}
+

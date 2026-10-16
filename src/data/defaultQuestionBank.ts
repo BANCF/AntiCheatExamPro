@@ -1599,7 +1599,85 @@ export const DEFAULT_QUESTION_BANK: Question[] = [
       "tin_hoc_7",
       "dung_sai_chum",
       "on_tap_giua_ki_1"
-    ]
+    ],
+    "grade": "Lớp 7",
+    "subject": "Tin học",
+    "term": "Giữa kì I"
+  },
+  {
+    "id": "q_tin10_gk1_1",
+    "type": "single_choice",
+    "grade": "Lớp 10",
+    "subject": "Tin học",
+    "term": "Giữa kì I",
+    "prompt": "Hệ đếm nhị phân (Binary system) sử dụng các kí số nào sau đây để biểu diễn dữ liệu trong máy tính?",
+    "options": [
+      { "id": "opt_t10_1_a", "text": "Chỉ gồm hai kí số 0 và 1", "is_correct": true },
+      { "id": "opt_t10_1_b", "text": "Các kí số từ 0 đến 9", "is_correct": false },
+      { "id": "opt_t10_1_c", "text": "Các kí số từ 0 đến 7", "is_correct": false },
+      { "id": "opt_t10_1_d", "text": "Gồm 0, 1 và các chữ cái A đến F", "is_correct": false }
+    ],
+    "tags": ["tin_hoc_10", "bieu_dien_thong_tin", "nhi_phan"]
+  },
+  {
+    "id": "q_tin10_ck1_2",
+    "type": "single_choice",
+    "grade": "Lớp 10",
+    "subject": "Tin học",
+    "term": "Cuối kì I",
+    "prompt": "Trong ngôn ngữ lập trình Python, hàm nào sau đây được sử dụng để xuất dữ liệu ra màn hình?",
+    "options": [
+      { "id": "opt_t10_2_a", "text": "print()", "is_correct": true },
+      { "id": "opt_t10_2_b", "text": "input()", "is_correct": false },
+      { "id": "opt_t10_2_c", "text": "echo()", "is_correct": false },
+      { "id": "opt_t10_2_d", "text": "output()", "is_correct": false }
+    ],
+    "tags": ["tin_hoc_10", "lap_trinh_python", "cuoi_ki_1"]
+  },
+  {
+    "id": "q_tin8_gk1_3",
+    "type": "single_choice",
+    "grade": "Lớp 8",
+    "subject": "Tin học",
+    "term": "Giữa kì I",
+    "prompt": "Thông tin trong môi trường số có đặc điểm nổi bật nào sau đây?",
+    "options": [
+      { "id": "opt_t8_3_a", "text": "Dễ dàng sao chép, lan truyền nhanh chóng và khó thu hồi triệt để", "is_correct": true },
+      { "id": "opt_t8_3_b", "text": "Hoàn toàn bảo mật và không bao giờ bị rò rỉ", "is_correct": false },
+      { "id": "opt_t8_3_c", "text": "Chỉ lưu trữ được trên giấy và sách vở in truyền thống", "is_correct": false },
+      { "id": "opt_t8_3_d", "text": "Không thể chia sẻ qua mạng Internet", "is_correct": false }
+    ],
+    "tags": ["tin_hoc_8", "thong_tin_so", "giua_ki_1"]
+  },
+  {
+    "id": "q_tin9_gk1_4",
+    "type": "true_false",
+    "grade": "Lớp 9",
+    "subject": "Tin học",
+    "term": "Giữa kì I",
+    "prompt": "Xét tính Đúng / Sai của các khẳng định sau về mạng máy tính và an toàn thông tin:",
+    "items": [
+      { "id": "sub_t9_4_a", "text": "Mạng LAN là mạng kết nối các máy tính trong phạm vi hẹp như trường học, văn phòng.", "is_correct": true },
+      { "id": "sub_t9_4_b", "text": "Địa chỉ IP là định danh duy nhất của mỗi thiết bị khi tham gia vào mạng Internet.", "is_correct": true },
+      { "id": "sub_t9_4_c", "text": "Cáp mạng xoắn đôi (UTP) là phương tiện truyền dẫn không dây.", "is_correct": false },
+      { "id": "sub_t9_4_d", "text": "Trang web có giao thức https:// giúp mã hóa bảo mật thông tin tốt hơn http://.", "is_correct": true }
+    ],
+    "tags": ["tin_hoc_9", "mang_may_tinh", "dung_sai"]
+  },
+  {
+    "id": "q_tin7_ck1_5",
+    "type": "single_choice",
+    "grade": "Lớp 7",
+    "subject": "Tin học",
+    "term": "Cuối kì I",
+    "prompt": "Trong phần mềm bảng tính điện tử (MS Excel), cú pháp hàm nào sau đây dùng để tính tổng các ô từ A1 đến A5?",
+    "options": [
+      { "id": "opt_t7_ck1_a", "text": "=SUM(A1:A5)", "is_correct": true },
+      { "id": "opt_t7_ck1_b", "text": "=AVERAGE(A1:A5)", "is_correct": false },
+      { "id": "opt_t7_ck1_c", "text": "=TOTAL(A1..A5)", "is_correct": false },
+      { "id": "opt_t7_ck1_d", "text": "=COUNT(A1:A5)", "is_correct": false }
+    ],
+    "tags": ["tin_hoc_7", "bang_tinh_excel", "cuoi_ki_1"]
   }
 ];
 

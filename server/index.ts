@@ -20,7 +20,7 @@ const io = new SocketIOServer(server, {
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
 
 // ---------------- REST API ----------------
 
@@ -64,15 +64,75 @@ app.post('/api/config', (req, res) => {
   }
 });
 
-// Teacher Auth
+// Teacher Auth (Multi-Account & Legacy Support)
 app.post('/api/auth/teacher', (req, res) => {
-  const { password } = req.body;
-  const correct = serverStore.config.teacher_password || 'admin2026';
-  if (password === correct) {
-    res.json({ success: true, message: 'Authenticated' });
-  } else {
-    res.status(401).json({ success: false, error: 'Mật khẩu giáo viên không chính xác!' });
+  const { username, password } = req.body;
+  
+  if (!username) {
+    const match = serverStore.teachers.find((t) => t.password === password) ||
+      (password === (serverStore.config.teacher_password || 'admin2026') ? serverStore.teachers[0] : null);
+    if (match) {
+      const { password: _, ...safeTeacher } = match;
+      return res.json({ success: true, teacher: safeTeacher });
+    }
+    return res.status(401).json({ success: false, error: 'Mật khẩu giáo viên không chính xác!' });
   }
+
+  const found = serverStore.teachers.find(
+    (t) => t.username.toLowerCase() === username.trim().toLowerCase() && t.password === password
+  );
+
+  if (found) {
+    const { password: _, ...safeTeacher } = found;
+    return res.json({ success: true, teacher: safeTeacher });
+  }
+
+  return res.status(401).json({ success: false, error: 'Tên đăng nhập hoặc mật khẩu không chính xác!' });
+});
+
+// Teachers Management APIs (Admin)
+app.get('/api/teachers', (_req, res) => {
+  const list = serverStore.teachers.map(({ password: _, ...safe }) => safe);
+  res.json(list);
+});
+
+app.post('/api/teachers', (req, res) => {
+  const { username, password, fullName, role, subject, assignedClasses } = req.body;
+  if (!username || !password || !fullName) {
+    return res.status(400).json({ error: 'Vui lòng điền đủ Tên đăng nhập, Mật khẩu và Họ tên' });
+  }
+
+  const existingIdx = serverStore.teachers.findIndex(
+    (t) => t.username.toLowerCase() === username.trim().toLowerCase()
+  );
+  const teacherAccount = {
+    id: existingIdx >= 0 ? serverStore.teachers[existingIdx].id : `tc_${Date.now()}`,
+    username: username.trim(),
+    password: password.trim(),
+    fullName: fullName.trim(),
+    role: role === 'admin' ? ('admin' as const) : ('teacher' as const),
+    subject: subject || 'Tin học',
+    assignedClasses: assignedClasses || []
+  };
+
+  if (existingIdx >= 0) {
+    serverStore.teachers[existingIdx] = teacherAccount;
+  } else {
+    serverStore.teachers.push(teacherAccount);
+  }
+  serverStore.persist();
+  const { password: _, ...safe } = teacherAccount;
+  res.json({ success: true, teacher: safe });
+});
+
+app.delete('/api/teachers/:id', (req, res) => {
+  const { id } = req.params;
+  if (id === 'tc_admin' || id === serverStore.teachers[0]?.id) {
+    return res.status(400).json({ error: 'Không thể xóa tài khoản Quản trị viên mặc định!' });
+  }
+  serverStore.teachers = serverStore.teachers.filter((t) => t.id !== id);
+  serverStore.persist();
+  res.json({ success: true });
 });
 
 // Start Student Exam
@@ -120,8 +180,12 @@ app.post('/api/exam/submit', (req, res) => {
     violationsLog: violations_log || []
   });
 
-  // Notify teacher room in real-time
+  // Notify teacher room & all teacher dashboards in real-time
   io.to('teacher_room').emit('student:submitted', {
+    submission,
+    attemptId: attempt_id
+  });
+  io.emit('student:submitted', {
     submission,
     attemptId: attempt_id
   });

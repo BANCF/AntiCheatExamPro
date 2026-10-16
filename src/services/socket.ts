@@ -4,12 +4,12 @@ let socket: Socket | null = null;
 
 export function getSocket(): Socket {
   if (!socket) {
-    // In dev with Vite on port 5173, backend runs on 3000
-    // In production, both are on the same origin
     const url =
-      window.location.port === '5173'
-        ? `http://${window.location.hostname}:3000`
-        : window.location.origin;
+      import.meta.env.VITE_API_URL
+        ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+        : window.location.port === '5173'
+          ? `http://${window.location.hostname}:3000`
+          : window.location.origin;
 
     socket = io(url, {
       transports: ['websocket', 'polling'],

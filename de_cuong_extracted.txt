@@ -1,0 +1,345 @@
+HỆ THÔNG GIÁO DỤC NEWTON – PASCAL
+ĐỀ CƯƠNG ÔN TẬP GIỮA HỌC KÌ I
+MÔN TIN HỌC 7
+NĂM HỌC: 2026 – 2027
+PHẠM VI ÔN TẬP
+Bài 1: Thiết bị vào - ra
+Bài 2: Phần mềm máy tính
+Bài 3: Quản lí dữ liệu trong máy tính
+Bài 4: Mạng xã hội và một số kênh trao đổi thông tin trên Internet
+I. TRẮC NGHIỆM NHIỀU LỰA CHỌN
+Khoanh tròn vào một chữ cái (A, B, C, D) đứng trước câu trả lời đúng nhất:
+Câu 1: Thiết bị vào - ra đóng vai trò gì trong hệ thống máy tính?
+A. Chỉ xử lí dữ liệu bên trong máy tính.
+B. Giúp máy tính trao đổi dữ liệu với thế giới bên ngoài.
+C. Chỉ cung cấp nguồn điện cho máy tính.
+D. Điều khiển toàn bộ hoạt động của phần mềm.
+Câu 2: Thiết bị nào sau đây dùng để tiếp nhận thông tin và chuyển vào máy tính (thiết bị vào)?
+A. Bàn phím, chuột, micro.
+B. Màn hình, máy in, loa.
+C. Bộ xử lí trung tâm (CPU).
+D. Máy chiếu, tai nghe.
+Câu 3: Thiết bị nào sau đây nhận thông tin từ máy tính đưa ra bên ngoài (thiết bị ra)?
+A. Chuột, bàn phím.
+B. Máy in, loa, màn hình.
+C. Micro, máy quét.
+D. Ổ đĩa cứng.
+Câu 4: Máy chiếu thuộc loại thiết bị nào?
+A. Thiết bị vào.
+B. Thiết bị ra.
+C. Thiết bị lưu trữ.
+D. Thiết bị xử lí.
+Câu 5: Micro làm việc với dạng thông tin nào?
+A. Văn bản.
+B. Hình ảnh.
+C. Âm thanh.
+D. Video.
+Câu 6: Thiết bị nào vừa là thiết bị vào vừa là thiết bị ra?
+A. Màn hình máy tính thông thường.
+B. Bàn phím.
+C. Màn hình cảm ứng (touch screen).
+D. Loa thường.
+Câu 7: Tấm cảm ứng (touchpad) trên máy tính xách tay có chức năng giống với thiết bị nào?
+A. Màn hình.
+B. Chuột máy tính.
+C. Bàn phím.
+D. Máy in.
+Câu 8: Thao tác nào sau đây là thao tác tắt máy tính an toàn, đúng cách?
+A. Rút phích cắm điện đột ngột.
+B. Nhấn giữ nút nguồn (Power) vài giây.
+C. Sử dụng nút lệnh Shut down của hệ điều hành.
+D. Tắt công tắc màn hình rồi rút điện.
+Câu 9: Để đảm bảo an toàn điện và tránh hỏng thiết bị, việc kết nối dây nguồn cho máy tính nên được thực hiện khi nào?
+A. Trước khi cắm tất cả các thiết bị khác.
+B. Cắm đan xen trong quá trình kết nối các thiết bị.
+C. Sau khi đã kết nối các thiết bị (chuột, bàn phím, màn hình...) xong.
+D. Chỉ cần cắm dây nguồn, không cần quan tâm thứ tự.
+Câu 10: Nếu cố gắng cắm đầu nối dây màn hình vào sai cổng, hậu quả có thể là gì?
+A. Màn hình sẽ hiển thị đẹp hơn.
+B. Máy tính tự động điều chỉnh cho phù hợp.
+C. Sẽ không lắp được hoặc có thể làm hỏng đầu nối.
+D. Máy tính tự động tắt nguồn.
+Câu 11: Việc làm nào sau đây KHÔNG NÊN thực hiện khi sử dụng máy tính?
+A. Giữ bàn tay khô, sạch khi dùng máy tính.
+B. Để đồ uống gần chuột, bàn phím.
+C. Đọc kĩ hướng dẫn sử dụng thiết bị.
+D. Gõ phím dứt khoát nhưng nhẹ nhàng.
+Câu 12: Tại sao không nên chạm vào phần kim loại của máy tính khi đang cắm điện hoặc lau dọn chưa rút điện?
+A. Làm trầy xước máy tính.
+B. Dễ gây ra giật điện, không an toàn.
+C. Làm máy tính chạy chậm đi.
+D. Làm mất dữ liệu trong máy.
+Câu 13: Hệ điều hành là gì?
+A. Là một loại thiết bị phần cứng của máy tính.
+B. Là phần mềm ứng dụng dùng để gõ văn bản.
+C. Là phần mềm hệ thống quản lí, điều khiển hoạt động chung của máy tính và quản lí dữ liệu.
+D. Là trang web dùng để tìm kiếm thông tin.
+Câu 14: Phần mềm nào sau đây LÀ một hệ điều hành?
+A. Microsoft Word.
+B. Windows 10.
+C. Google Chrome.
+D. Zalo.
+Câu 15: Chức năng nào sau đây KHÔNG phải là chức năng cơ bản của hệ điều hành?
+A. Quản lí các thiết bị và dữ liệu của máy tính.
+B. Cung cấp môi trường trao đổi thông tin (giao diện) giữa người và máy.
+C. Trực tiếp chỉnh sửa hiệu ứng của một bức ảnh nghệ thuật.
+D. Cung cấp môi trường cho phép chạy các phần mềm ứng dụng.
+Câu 16: Phần mềm ứng dụng có đặc điểm gì?
+A. Quản lí phần cứng máy tính trực tiếp.
+B. Giúp con người thực hiện những công việc cụ thể (soạn văn bản, nghe nhạc...).
+C. Phải cài đặt đầu tiên để máy tính hoạt động được.
+D. Là phần mềm không bao giờ bị lỗi.
+Câu 17: Mối quan hệ giữa hệ điều hành và phần mềm ứng dụng là gì?
+A. Phần mềm ứng dụng chạy trong môi trường do hệ điều hành tạo ra.
+B. Hệ điều hành chạy bên trong phần mềm ứng dụng.
+C. Cả hai hoạt động độc lập, không liên quan đến nhau.
+D. Phần mềm ứng dụng có chức năng điều khiển hệ điều hành.
+Câu 18: Tệp có phần mở rộng '.docx' hoặc '.doc' thường chứa dữ liệu thuộc loại nào?
+A. Âm thanh.
+B. Hình ảnh.
+C. Văn bản.
+D. Video.
+Câu 19: Để nhận biết một tệp thuộc loại gì và dùng phần mềm nào để mở, hệ điều hành thường dựa vào đâu?
+A. Kích thước của tệp.
+B. Ngày tạo tệp.
+C. Phần mở rộng của tên tệp.
+D. Tên người tạo ra tệp.
+Câu 20: Tệp nào sau đây có thể là một tệp hình ảnh?
+A. Baicacao.mp3
+B. PhaoHoa.jpg
+C. TapLamVan.doc
+D. Game.exe
+Câu 21: Tại sao nên phân loại dữ liệu và lưu trữ theo trật tự thư mục, đặt tên rõ ràng?
+A. Để máy tính chạy nhanh hơn.
+B. Để máy tính không bị nhiễm virus.
+C. Để dễ dàng, nhanh chóng tìm kiếm và truy cập lại khi cần.
+D. Để phần mềm ứng dụng hoạt động chính xác hơn.
+Câu 22: Tệp chương trình máy tính trong hệ điều hành Windows thường có phần mở rộng nào?
+A. .mp3, .mp4
+B. .doc, .docx
+C. .exe, .com, .bat, .msi
+D. .jpg, .png
+Câu 23: Nếu em nhìn thấy một tệp có đuôi '.exe' trong ổ đĩa hệ thống và không biết rõ về nó, em NÊN làm gì?
+A. Lập tức xoá nó để giải phóng bộ nhớ.
+B. Không nên xoá hay di chuyển vì đó có thể là tệp hệ thống/chương trình cần thiết.
+C. Đổi đuôi tệp thành '.txt' để dễ đọc.
+D. Tải lên mạng xã hội chia sẻ cho bạn bè.
+Câu 24: Sao lưu dữ liệu là thao tác nào sau đây?
+A. Đổi tên toàn bộ thư mục trong máy tính.
+B. Tạo ra bản sao các tệp/thư mục và lưu chúng lên một thiết bị lưu trữ khác.
+C. Xoá dữ liệu gốc và chỉ giữ lại một phiên bản duy nhất.
+D. Đăng tải dữ liệu lên mạng để mọi người cùng xem.
+Câu 25: Nhược điểm của sao lưu cục bộ (lưu trên ổ cứng ngoài, USB để cùng chỗ với máy tính) là gì?
+A. Khôi phục dữ liệu rất chậm.
+B. Chi phí rất cao.
+C. Nếu rủi ro làm mất cả máy tính lẫn USB (ví dụ hỏa hoạn, mất cắp) thì bản sao cũng bị mất theo.
+D. Không thể lưu được các tệp dung lượng lớn.
+Câu 26: Sao lưu từ xa (như lưu trữ trên công nghệ đám mây) có ưu điểm gì nổi bật?
+A. Không cần kết nối Internet vẫn sao lưu được.
+B. An toàn hơn khi máy tính gốc bị hỏng vật lí hoặc thất lạc, có thể truy cập từ máy tính khác có Internet.
+C. Không bao giờ sợ bị tin tặc tấn công.
+D. Tốc độ truyền tải luôn nhanh hơn so với copy ra USB.
+Câu 27: Mật khẩu (password) nào sau đây được coi là một mật khẩu MẠNH?
+A. 12345678
+B. HaNoi2023
+C. 2n#M1nhKhoa
+D. nguyenvanA
+Câu 28: Phần mềm nào sau đây được sử dụng để phát hiện và tiêu diệt phần mềm độc hại (virus)?
+A. Microsoft PowerPoint.
+B. Google Chrome.
+C. Windows Defender, Kaspersky, Bkav.
+D. File Explorer.
+Câu 29: Trong Windows 10, ứng dụng nào giúp quản lí tệp và thư mục (tạo, đổi tên, sao chép, di chuyển, xoá...)?
+A. Microsoft Paint.
+B. File Explorer.
+C. Control Panel.
+D. Task Manager.
+Câu 30: Để tạo một thư mục mới trên màn hình nền (Desktop), thao tác nào là ĐÚNG?
+A. Nháy đúp chuột trái -> chọn New -> Folder.
+B. Nháy nút phải chuột -> chọn New -> Folder.
+C. Nháy chuột trái -> chọn View -> Folder.
+D. Kéo thả chuột từ góc này sang góc kia của màn hình.
+Câu 31: Lệnh nào dùng để đổi tên một thư mục hoặc tệp đã chọn?
+A. Copy.
+B. Paste.
+C. Delete.
+D. Rename.
+Câu 32: Thao tác sử dụng cặp lệnh 'Copy' và 'Paste' đối với một tệp sẽ dẫn đến kết quả gì?
+A. Tệp gốc bị xoá đi.
+B. Tệp gốc bị di chuyển sang vị trí mới.
+C. Tạo ra một bản sao của tệp tại vị trí mới, tệp gốc vẫn giữ nguyên.
+D. Tệp gốc bị đổi tên.
+Câu 33: Các kênh trao đổi thông tin phổ biến trên Internet hiện nay bao gồm những gì?
+A. Chỉ có thư điện tử (email).
+B. Thư điện tử, diễn đàn (Forum), mạng xã hội.
+C. Điện báo, bưu điện truyền thống.
+D. Chỉ có diễn đàn thảo luận.
+Câu 34: Mạng xã hội là gì?
+A. Là mạng kết nối các máy tính trong một trường học bằng dây cáp.
+B. Là phần mềm hệ thống giúp máy tính hoạt động.
+C. Là một cộng đồng trực tuyến để mọi người có thể tương tác, giao tiếp với nhau.
+D. Là một thư viện điện tử chỉ chứa sách kĩ thuật số.
+Câu 35: Mục đích chính của mạng xã hội Facebook hoặc Zalo là gì?
+A. Chia sẻ video kĩ thuật cao là chủ yếu.
+B. Thảo luận các bài toán giải tích chuyên sâu.
+C. Giao lưu kết nối bạn bè, chia sẻ hình ảnh, suy nghĩ cá nhân.
+D. Quản lí tệp tin trong máy tính nội bộ.
+Câu 36: Mạng xã hội YouTube tập trung chủ yếu vào việc chia sẻ loại dữ liệu nào?
+A. Văn bản Word.
+B. Hình ảnh (Ảnh chụp tĩnh).
+C. Video.
+D. Tệp thực thi chương trình.
+Câu 37: Tính năng nào sau đây KHÔNG phải là chức năng phổ biến của mạng xã hội?
+A. Gửi tin nhắn riêng tư.
+B. Đăng ảnh, video.
+C. Viết chương trình điều khiển phần cứng máy tính.
+D. Bình luận (comment) trên bài đăng của bạn bè.
+Câu 38: Độ tuổi tối thiểu thường được quy định để lập tài khoản trên nhiều mạng xã hội phổ biến (như Facebook) là bao nhiêu?
+A. 6 tuổi.
+B. 10 tuổi.
+C. 13 tuổi.
+D. 18 tuổi.
+Câu 39: Việc sử dụng mạng xã hội để đăng thông tin đe dọa, bắt nạt người khác là hành vi:
+A. Được khuyến khích để tăng tương tác.
+B. Sai trái, vi phạm quy tắc sử dụng và có thể vi phạm pháp luật.
+C. Bình thường, thể hiện cá tính riêng.
+D. Chỉ mang tính chất giải trí, không có hậu quả.
+Câu 40: Nếu em bắt gặp một thông tin 'sốc' trên mạng nhưng chưa được kiểm chứng, việc làm ĐÚNG đắn là gì?
+A. Lập tức chia sẻ ngay để cảnh báo mọi người.
+B. Thêm bình luận kích động vào bài viết.
+C. Không chia sẻ vội, tìm hiểu kĩ tính xác thực của thông tin từ các nguồn chính thống.
+D. Sao chép và đăng lại trên trang cá nhân của mình xem như là thông tin của mình.
+Câu 41: Khi sử dụng mạng xã hội, để đảm bảo an toàn thông tin cá nhân, em NÊN làm gì?
+A. Công khai mật khẩu để bạn bè cùng sử dụng chung.
+B. Để chế độ công khai (Public) toàn bộ thông tin ngày tháng năm sinh, số điện thoại, địa chỉ nhà.
+C. Chỉ kết bạn và trò chuyện với người mà em thực sự quen biết và tin tưởng.
+D. Đăng tải mọi hoạt động, lịch trình di chuyển chi tiết hàng ngày của bản thân lên mạng.
+Câu 42: Bạn B chụp ảnh đề thi chia sẻ lên mạng xã hội nhờ giải hộ trong giờ kiểm tra. Hành vi này:
+A. Là hành vi vi phạm nghiêm trọng quy chế thi và pháp luật.
+B. Là cách trao đổi thông tin nhanh chóng, sáng tạo.
+C. Được khuyến khích vì giúp học sinh học hỏi lẫn nhau.
+D. Chỉ bị nhắc nhở nhẹ nhàng vì đó là quyền cá nhân.
+Câu 43: Để chia sẻ một bức ảnh lên trang Facebook cá nhân, em sẽ sử dụng chức năng nào trong mục tạo bài viết?
+A. Tìm kiếm bạn bè.
+B. Ảnh/Video.
+C. Video trực tiếp.
+D. Tạo nhóm mới.
+Câu 44: Thao tác nào dùng để di chuyển một thư mục/tệp (cắt từ chỗ cũ sang chỗ mới)?
+A. Copy và Paste.
+B. Cut và Paste.
+C. Delete và Paste.
+D. Rename và Cut.
+II. TRẮC NGHIỆM ĐÚNG/SAI
+Trong mỗi câu từ 45 đến 50, hãy đọc các phát biểu và xác định mỗi ý a, b, c, d là ĐÚNG hay SAI:
+Câu 45: Đọc các phát biểu sau về 'Thiết bị vào - ra':
+a) Thiết bị vào giúp con người nhập thông tin vào máy tính, ví dụ như bàn phím, micro.
+b) Máy in và loa là các thiết bị vào, giúp máy tính thu nhận hình ảnh và âm thanh từ môi trường.
+c) Màn hình cảm ứng vừa đóng vai trò thiết bị ra (hiển thị), vừa đóng vai trò thiết bị vào (nhận thao tác chạm).
+d) Loa thông minh chỉ có chức năng phát âm thanh, không thể kết nối Internet hay nhận lệnh bằng giọng nói.
+Câu 46: Đọc các phát biểu sau về 'Sử dụng máy tính an toàn':
+a) Cần cấp nguồn điện cho máy tính ngay lập tức trước khi cắm dây cáp màn hình hay bàn phím.
+b) Cắm nhầm cổng kết nối (ví dụ đầu cắm không phải USB cố cắm vào cổng USB) có thể gây chập điện hỏng thiết bị.
+c) Nên tắt máy tính bằng lệnh Shut down của hệ điều hành thay vì ngắt nguồn điện trực tiếp.
+d) Không nên rút dây điện khi lau dọn máy tính vì cần bật máy để xem lau đã sạch chưa.
+Câu 47: Đọc các phát biểu sau về 'Hệ điều hành và Phần mềm ứng dụng':
+a) Hệ điều hành phải được cài đặt đầu tiên để máy tính có thể hoạt động.
+b) Microsoft Word và Excel là các hệ điều hành phổ biến nhất hiện nay.
+c) Điện thoại thông minh (smartphone) không cần hệ điều hành, nó chỉ cần phần mềm ứng dụng để chạy.
+d) Phần mở rộng của tệp (ví dụ .docx, .mp3) giúp hệ điều hành nhận diện loại tệp và chọn phần mềm mở tương ứng.
+Câu 48: Đọc các phát biểu sau về 'Quản lí và bảo vệ dữ liệu':
+a) Khi đặt tên tệp và thư mục, nên đặt tên tuỳ ý, không liên quan đến nội dung để bảo mật thông tin.
+b) Các tệp có phần mở rộng .exe, .com thường là tệp chương trình, không nên tự ý xoá hay di chuyển.
+c) Sao lưu dữ liệu lên công nghệ đám mây (Internet) giúp dữ liệu an toàn ngay cả khi máy tính vật lí bị hỏng.
+d) Một mật khẩu mạnh chỉ cần chứa duy nhất các con số liên tiếp (như 12345678) cho dễ nhớ.
+Câu 49: Đọc các phát biểu sau về 'Mạng xã hội':
+a) Mạng xã hội là một cộng đồng trực tuyến nơi mọi người có thể tương tác, chia sẻ thông tin với nhau.
+b) Mọi website trên Internet (kể cả trang đọc báo điện tử 1 chiều) đều được gọi là mạng xã hội.
+c) Khi tham gia mạng xã hội, người dùng có thể gửi tin nhắn, bình luận hoặc chia sẻ ảnh, video.
+d) Vì mạng xã hội là thế giới ảo, mọi người có thể tự do phát ngôn, lăng mạ người khác mà không phải chịu trách nhiệm.
+Câu 50: Đọc các phát biểu sau về 'Quy tắc an toàn trên mạng Internet':
+a) Việc đăng tải các thông tin giả mạo, sai sự thật trên mạng xã hội là hành vi bị cấm và có thể bị phạt.
+b) Bất kì ai, ở mọi lứa tuổi, kể cả dưới 10 tuổi đều được phép tự do lập tài khoản Facebook mà không có giới hạn nào.
+c) Khi nhận được một yêu cầu kết bạn từ một tài khoản hoàn toàn xa lạ, em nên chấp nhận ngay để có thêm nhiều bạn.
+d) Mạng xã hội có tính hai mặt (tốt và xấu), chúng ta cần tìm hiểu kĩ và sử dụng đúng mục đích.
+III. ĐÁP ÁN THAM KHẢO
+1. Phần trắc nghiệm nhiều lựa chọn
+Câu 1: B
+Câu 12: B
+Câu 23: B
+Câu 34: C
+Câu 2: A
+Câu 13: C
+Câu 24: B
+Câu 35: C
+Câu 3: B
+Câu 14: B
+Câu 25: C
+Câu 36: C
+Câu 4: B
+Câu 15: C
+Câu 26: B
+Câu 37: C
+Câu 5: C
+Câu 16: B
+Câu 27: C
+Câu 38: C
+Câu 6: C
+Câu 17: A
+Câu 28: C
+Câu 39: B
+Câu 7: B
+Câu 18: C
+Câu 29: B
+Câu 40: C
+Câu 8: C
+Câu 19: C
+Câu 30: B
+Câu 41: C
+Câu 9: C
+Câu 20: B
+Câu 31: D
+Câu 42: A
+Câu 10: C
+Câu 21: C
+Câu 32: C
+Câu 43: B
+Câu 11: B
+Câu 22: C
+Câu 33: B
+Câu 44: B
+2. Phần trắc nghiệm đúng/sai
+Câu
+Ý a
+Ý b
+Ý c
+Ý d
+Câu 45
+Đúng
+Sai
+Đúng
+Sai
+Câu 46
+Sai
+Đúng
+Đúng
+Sai
+Câu 47
+Đúng
+Sai
+Sai
+Đúng
+Câu 48
+Sai
+Đúng
+Đúng
+Sai
+Câu 49
+Đúng
+Sai
+Đúng
+Sai
+Câu 50
+Đúng
+Sai
+Sai
+Đúng

@@ -10,6 +10,8 @@ import {
 } from '../../types/exam';
 import { useAntiCheat } from '../../hooks/useAntiCheat';
 import { getSocket } from '../../services/socket';
+import { ScientificCalculator } from './ScientificCalculator';
+import { MathRenderer } from '../common/MathRenderer';
 import {
   Clock,
   ShieldAlert,
@@ -17,14 +19,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Send,
-  Maximize2,
   CheckCircle,
   HelpCircle,
   ListOrdered,
   BellRing,
   Sparkles,
-  Lock,
-  Megaphone
+  Megaphone,
+  FileText,
+  Calculator as CalculatorIcon
 } from 'lucide-react';
 
 interface ExamRunnerProps {
@@ -61,6 +63,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     initialRemainingSeconds !== undefined ? initialRemainingSeconds : durationSeconds
   );
   const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState<boolean>(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState<boolean>(false);
   const [teacherMessage, setTeacherMessage] = useState<string | null>(null);
   const [timeBonusNotice, setTimeBonusNotice] = useState<string | null>(null);
 
@@ -143,6 +146,24 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     };
   }, [attemptId, studentName, studentClass, assignedCode, answers, violationsLog, onSubmit]);
 
+  // Check if a question is answered
+  const isQuestionAnswered = useCallback(
+    (q: SanitizedQuestion): boolean => {
+      const ans = answers[q.id];
+      if (!ans) return false;
+      if (q.type === 'single_choice') {
+        return typeof ans === 'string' && ans.length > 0;
+      }
+      if (q.type === 'true_false') {
+        const obj = ans as Record<string, boolean>;
+        // Answered if every sub-item has a choice
+        return q.items.every((item) => typeof obj[item.id] === 'boolean');
+      }
+      return false;
+    },
+    [answers]
+  );
+
   // Real-time progress emit to teacher
   useEffect(() => {
     const socket = getSocket();
@@ -153,7 +174,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
       answeredCount,
       remainingSeconds
     });
-  }, [currentIndex, answers, remainingSeconds, attemptId, questions]);
+  }, [currentIndex, answers, remainingSeconds, attemptId, questions, isQuestionAnswered]);
 
   // Real-time violation emit to teacher
   const lastEmittedViolationRef = useRef(0);
@@ -203,28 +224,21 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     });
   };
 
-  // Check if a question is answered
-  const isQuestionAnswered = useCallback(
-    (q: SanitizedQuestion): boolean => {
-      const ans = answers[q.id];
-      if (!ans) return false;
-      if (q.type === 'single_choice') {
-        return typeof ans === 'string' && ans.length > 0;
-      }
-      if (q.type === 'true_false') {
-        const obj = ans as Record<string, boolean>;
-        // Answered if every sub-item has a choice
-        return q.items.every((item) => typeof obj[item.id] === 'boolean');
-      }
-      return false;
-    },
-    [answers]
-  );
+
+
+  const isPdfMode = config.exam_mode === 'pdf' && Boolean(config.pdf_url);
+  const pdfTotalQuestions =
+    config.pdf_total_questions ||
+    (config.pdf_answer_key ? Object.keys(config.pdf_answer_key).length : questions.length || 40);
+  const totalExamQuestions = isPdfMode ? pdfTotalQuestions : questions.length;
 
   // Total answered questions count
   const answeredCount = useMemo(() => {
+    if (isPdfMode) {
+      return Object.keys(answers).filter((k) => Boolean(answers[k])).length;
+    }
     return questions.filter((q) => isQuestionAnswered(q)).length;
-  }, [questions, isQuestionAnswered]);
+  }, [isPdfMode, answers, questions, isQuestionAnswered]);
 
   const currentQuestion = questions[currentIndex];
 
@@ -282,6 +296,21 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
               <span>{formattedTime}</span>
             </div>
 
+            {/* Casio Calculator Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setIsCalculatorOpen(!isCalculatorOpen)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-xs ${
+                isCalculatorOpen
+                  ? 'bg-slate-900 border-slate-700 text-amber-300 ring-2 ring-indigo-500/40'
+                  : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900'
+              }`}
+              title="Mở máy tính bỏ túi ảo Casio fx-580VN X"
+            >
+              <CalculatorIcon className="w-4 h-4 text-indigo-600" />
+              <span className="hidden sm:inline">Máy tính</span>
+            </button>
+
             {/* Submit Button */}
             <button
               onClick={() => setIsSubmitConfirmOpen(true)}
@@ -295,7 +324,105 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
       </header>
 
       {/* Main Exam Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      {isPdfMode ? (
+        <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+          {/* Left: PDF Document Viewer (8 cols) */}
+          <section className="lg:col-span-8 h-[calc(100vh-100px)] rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+            <div className="px-4 py-2.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 font-bold text-slate-800">
+                <FileText className="w-4 h-4 text-indigo-600" />
+                <span>{config.pdf_filename || 'Tài Liệu Đề Thi PDF'}</span>
+              </div>
+              <span className="text-[11px] text-slate-500 hidden sm:inline">
+                Đọc đề thi bên trái và tô đáp án trên phiếu bên phải
+              </span>
+            </div>
+            <iframe
+              src={config.pdf_url}
+              className="w-full flex-1 border-0"
+              title="Đề thi PDF"
+            />
+          </section>
+
+          {/* Right: Digital OMR Bubble Sheet (4 cols) */}
+          <aside className="lg:col-span-4 h-[calc(100vh-100px)] flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-slate-200 bg-slate-50/80">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-bold text-xs uppercase text-slate-800 tracking-wider flex items-center gap-1.5">
+                  <ListOrdered className="w-4 h-4 text-indigo-600" />
+                  <span>Phiếu Trả Lời Trắc Nghiệm</span>
+                </h3>
+                <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-lg">
+                  {answeredCount}/{totalExamQuestions} câu
+                </span>
+              </div>
+              {/* Progress Bar */}
+              <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-300"
+                  style={{ width: `${Math.round((answeredCount / totalExamQuestions) * 100)}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Bubble List */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {Array.from({ length: totalExamQuestions }, (_, i) => {
+                const qNum = String(i + 1);
+                const currentAns = answers[qNum] as string;
+                const isAnswered = Boolean(currentAns);
+
+                return (
+                  <div
+                    key={qNum}
+                    className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
+                      isAnswered
+                        ? 'bg-indigo-50/70 border-indigo-300 shadow-xs'
+                        : 'bg-white border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <span className="font-bold text-xs text-slate-800 w-16">
+                      Câu {i + 1}:
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {['A', 'B', 'C', 'D'].map((letter) => {
+                        const isSelected = currentAns === letter;
+                        return (
+                          <button
+                            key={letter}
+                            type="button"
+                            onClick={() => handleSelectOption(qNum, letter)}
+                            className={`w-8 h-8 rounded-full font-bold text-xs transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-400 scale-105'
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                            }`}
+                          >
+                            {letter}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Bottom Submit Action */}
+            <div className="p-3 border-t border-slate-200 bg-slate-50">
+              <button
+                type="button"
+                onClick={() => setIsSubmitConfirmOpen(true)}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                <span>NỘP BÀI THI ({answeredCount}/{totalExamQuestions})</span>
+              </button>
+            </div>
+          </aside>
+        </main>
+      ) : (
+        <main className="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         {/* Left 3 cols: Question Card */}
         <section className="lg:col-span-3 space-y-4">
           {currentQuestion && (
@@ -325,7 +452,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
 
               {/* Question Prompt */}
               <div className="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed mb-6">
-                {currentQuestion.prompt}
+                <MathRenderer text={currentQuestion.prompt} />
               </div>
 
               {/* Options Section */}
@@ -357,7 +484,9 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                         >
                           {letter}
                         </span>
-                        <span className="text-sm pt-0.5 leading-relaxed">{opt.text}</span>
+                        <span className="text-sm pt-0.5 leading-relaxed">
+                          <MathRenderer text={opt.text} />
+                        </span>
                       </button>
                     );
                   })}
@@ -383,7 +512,9 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                           <span className="w-6 h-6 rounded-md bg-white border border-slate-200 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                             {subLetter})
                           </span>
-                          <span className="text-sm text-slate-800 leading-relaxed font-medium">{item.text}</span>
+                          <span className="text-sm text-slate-800 leading-relaxed font-medium">
+                            <MathRenderer text={item.text} />
+                          </span>
                         </div>
 
                         {/* True / False Toggle Buttons */}
@@ -546,6 +677,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
           </div>
         </aside>
       </main>
+    )}
 
       {/* ---------------- MODALS ---------------- */}
 
@@ -589,13 +721,13 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                 <div className="flex justify-between">
                   <span className="text-slate-500">Số câu đã làm:</span>
                   <span className="font-bold text-emerald-600">
-                    {answeredCount} / {questions.length} câu
+                    {answeredCount} / {totalExamQuestions} câu
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Số câu chưa chọn:</span>
                   <span className="font-bold text-rose-600">
-                    {questions.length - answeredCount} câu
+                    {totalExamQuestions - answeredCount} câu
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -682,6 +814,12 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
           </div>
         </div>
       )}
+
+      {/* 6. Built-in Casio Scientific Calculator Popup */}
+      <ScientificCalculator
+        isOpen={isCalculatorOpen}
+        onClose={() => setIsCalculatorOpen(false)}
+      />
     </div>
   );
 };
