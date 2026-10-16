@@ -381,10 +381,10 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans">
       {/* Top Navigation Bar (Hidden during running exam to maintain strict anti-cheat focus) */}
       {studentFlow !== 'running' && (
-        <nav className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+        <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 shadow-xs">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             {/* Logo & Brand */}
             <div className="flex items-center gap-2.5">
@@ -392,13 +392,13 @@ export function App() {
                 <Shield className="w-5 h-5" />
               </div>
               <div>
-                <span className="font-extrabold text-sm sm:text-base text-white tracking-tight flex items-center gap-1.5">
+                <span className="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight flex items-center gap-1.5">
                   AntiCheat Exam Pro
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-mono font-normal">
+                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono font-medium">
                     v2.0
                   </span>
                 </span>
-                <span className="text-[11px] text-slate-400 block -mt-0.5">
+                <span className="text-[11px] text-slate-500 block -mt-0.5">
                   Hệ thống kiểm tra trực tuyến chống gian lận
                 </span>
               </div>
@@ -407,8 +407,8 @@ export function App() {
             {/* Role / Access Control */}
             {appMode === 'teacher' ? (
               <div className="flex items-center gap-2">
-                <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   Giáo Viên Đã Đăng Nhập
                 </span>
                 <button
@@ -417,16 +417,16 @@ export function App() {
                     setAppMode('student');
                     setStudentFlow('lobby');
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors border border-slate-200"
                 >
-                  <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />
+                  <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
                   <span>Phòng thi Học sinh</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleTeacherLogout}
                   title="Đăng xuất khỏi bảng điều khiển giáo viên"
-                  className="p-1.5 px-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-1.5 cursor-pointer border border-rose-500/20 transition-colors"
+                  className="p-1.5 px-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer border border-rose-200 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Đăng xuất</span>
@@ -443,9 +443,9 @@ export function App() {
                     setIsTeacherLoginOpen(true);
                   }
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white text-xs font-medium cursor-pointer transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 text-xs font-medium cursor-pointer transition-colors shadow-xs"
               >
-                <Lock className="w-3.5 h-3.5 text-indigo-400" />
+                <Lock className="w-3.5 h-3.5 text-indigo-600" />
                 <span>Khu Vực Giáo Viên</span>
               </button>
             )}

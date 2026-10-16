@@ -41,15 +41,15 @@ export const ExamCompleted: React.FC<ExamCompletedProps> = ({
 
   return (
     <div className="max-w-xl mx-auto px-4 py-12">
-      <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center space-y-6">
+      <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-xl text-center space-y-6">
         {/* Status Icon */}
         <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
           {isForceSubmitted ? (
-            <div className="w-20 h-20 rounded-full bg-rose-500/20 border-2 border-rose-500/40 text-rose-400 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full bg-rose-50 border-2 border-rose-200 text-rose-600 flex items-center justify-center">
               <ShieldAlert className="w-10 h-10" />
             </div>
           ) : (
-            <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500/40 text-emerald-400 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full bg-emerald-50 border-2 border-emerald-200 text-emerald-600 flex items-center justify-center">
               <CheckCircle2 className="w-10 h-10" />
             </div>
           )}
@@ -57,14 +57,14 @@ export const ExamCompleted: React.FC<ExamCompletedProps> = ({
 
         {/* Title & Message */}
         <div>
-          <h1 className="text-2xl font-black text-white mb-2">
+          <h1 className="text-2xl font-black text-slate-900 mb-2">
             {isForceSubmitted
               ? 'Bài Thi Đã Bị Thu Do Vi Phạm Quy Chế'
               : 'Đã Hoàn Thành Bài Kiểm Tra!'}
           </h1>
-          <p className="text-sm text-slate-300 leading-relaxed max-w-md mx-auto">
+          <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
             {isForceSubmitted ? (
-              <span className="text-rose-300">
+              <span className="text-rose-700 font-medium">
                 Hệ thống đã tự động khóa và thu bài của bạn do vượt quá số lần vi phạm (chuyển tab hoặc rời màn hình). Toàn bộ dữ liệu đã được gửi về cho giáo viên.
               </span>
             ) : (
@@ -74,45 +74,45 @@ export const ExamCompleted: React.FC<ExamCompletedProps> = ({
         </div>
 
         {/* Confidentiality Notice */}
-        <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs flex items-center gap-3 text-left">
-          <ShieldCheck className="w-5 h-5 shrink-0 text-indigo-400" />
+        <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-900 text-xs flex items-center gap-3 text-left">
+          <ShieldCheck className="w-5 h-5 shrink-0 text-indigo-600" />
           <span>
             <strong>Bảo mật kết quả:</strong> Điểm số và đáp án chi tiết được ẩn hoàn toàn để đảm bảo công bằng. Kết quả chính thức sẽ được công bố bởi giáo viên bộ môn.
           </span>
         </div>
 
         {/* Receipt Information Card */}
-        <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-800 space-y-2.5 text-xs text-left">
-          <div className="flex items-center justify-between py-1 border-b border-slate-800">
-            <span className="text-slate-400 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5" /> Thí sinh
+        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5 text-xs text-left">
+          <div className="flex items-center justify-between py-1 border-b border-slate-200">
+            <span className="text-slate-500 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-slate-400" /> Thí sinh
             </span>
-            <span className="font-semibold text-slate-200">
+            <span className="font-semibold text-slate-800">
               {studentName} ({studentClass})
             </span>
           </div>
 
-          <div className="flex items-center justify-between py-1 border-b border-slate-800">
-            <span className="text-slate-400 flex items-center gap-1.5">
-              <Hash className="w-3.5 h-3.5" /> Mã đề thi
+          <div className="flex items-center justify-between py-1 border-b border-slate-200">
+            <span className="text-slate-500 flex items-center gap-1.5">
+              <Hash className="w-3.5 h-3.5 text-slate-400" /> Mã đề thi
             </span>
-            <span className="font-mono font-bold text-purple-400">{assignedCode}</span>
+            <span className="font-mono font-bold text-purple-700">{assignedCode}</span>
           </div>
 
-          <div className="flex items-center justify-between py-1 border-b border-slate-800">
-            <span className="text-slate-400 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" /> Thời gian nộp
+          <div className="flex items-center justify-between py-1 border-b border-slate-200">
+            <span className="text-slate-500 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-slate-400" /> Thời gian nộp
             </span>
-            <span className="font-mono text-slate-200">
+            <span className="font-mono font-semibold text-slate-700">
               {new Date(submitTime).toLocaleTimeString('vi-VN')}
             </span>
           </div>
 
           <div className="flex items-center justify-between py-1">
-            <span className="text-slate-400 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5" /> Mã biên nhận
+            <span className="text-slate-500 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" /> Mã biên nhận
             </span>
-            <span className="font-mono text-[11px] text-slate-400 truncate max-w-[200px]">
+            <span className="font-mono text-[11px] text-slate-500 truncate max-w-[200px]">
               {submissionId}
             </span>
           </div>
@@ -123,7 +123,7 @@ export const ExamCompleted: React.FC<ExamCompletedProps> = ({
           <button
             type="button"
             onClick={onExit}
-            className="w-full py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
           >
             <LogOut className="w-4 h-4" />
             <span>Thoát Phòng Thi</span>
