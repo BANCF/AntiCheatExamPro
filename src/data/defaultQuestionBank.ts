@@ -1614,5 +1614,8 @@ export const DEFAULT_EXAM_CONFIG: ExamConfig = {
     true_false: 4
   },
   access_pin: "",
-  teacher_password: "admin2026"
+  teacher_password: "admin2026",
+  variants_count: 12,
+  base_code: 101,
+  session_salt: 2026
 };

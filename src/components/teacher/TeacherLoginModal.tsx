@@ -74,13 +74,10 @@ export const TeacherLoginModal: React.FC<TeacherLoginModalProps> = ({
                   setPassword(e.target.value);
                   setError(null);
                 }}
-                placeholder="Nhập mật khẩu (mặc định: admin2026)..."
+                placeholder="Nhập mật khẩu bảo mật của giáo viên..."
                 className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
               />
             </div>
-            <span className="text-[11px] text-slate-500 mt-1 block">
-              Mật khẩu mặc định khởi tạo: <code className="text-indigo-600 font-mono font-semibold">admin2026</code>
-            </span>
           </div>
 
           <div className="flex items-center gap-3 pt-2">

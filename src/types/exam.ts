@@ -57,6 +57,16 @@ export interface ExamConfig {
   distribution: ExamDistribution;
   access_pin?: string;
   teacher_password?: string;
+  variants_count?: number; // Minimum 12, default 12
+  base_code?: number; // e.g. 101 -> 101, 102, ..., 112
+  session_salt?: number; // Salt to re-shuffle variants
+}
+
+export interface ExamVariant {
+  assignedCode: string;
+  seed: number;
+  sanitizedQuestions: SanitizedQuestion[];
+  pickedOriginalQuestions: Question[];
 }
 
 export type ViolationType =

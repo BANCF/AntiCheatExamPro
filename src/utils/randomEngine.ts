@@ -4,6 +4,7 @@ import {
   SanitizedSingleChoiceQuestion,
   SanitizedTrueFalseQuestion,
   ExamConfig,
+  ExamVariant,
   StudentAnswers,
   SubmissionRecord,
   ViolationLog,
@@ -59,7 +60,8 @@ export function shuffleArray<T>(array: T[], prng: () => number): T[] {
 export function generateStudentExam(
   seedInput: string | number,
   bank: Question[],
-  config: ExamConfig
+  config: ExamConfig,
+  customAssignedCode?: string
 ): {
   sanitizedQuestions: SanitizedQuestion[];
   pickedOriginalQuestions: Question[];
@@ -87,8 +89,8 @@ export function generateStudentExam(
   // Combine and shuffle the overall question order
   const combinedOriginal = shuffleArray([...pickedSingle, ...pickedTF], prng);
 
-  // Generate a friendly 3-digit Exam Code (e.g. 101, 102, 103...)
-  const assignedCode = String(100 + (seed % 900));
+  // Generate a friendly 3-digit Exam Code (or use custom code e.g. 101, 102...)
+  const assignedCode = customAssignedCode || String(100 + (seed % 900));
 
   // Sanitize and shuffle options
   const sanitizedQuestions: SanitizedQuestion[] = combinedOriginal.map((q) => {
@@ -125,6 +127,33 @@ export function generateStudentExam(
     assignedCode,
     seed
   };
+}
+
+/**
+ * Generate a pool of minimum 12 official Exam Variants
+ * e.g. Codes 101, 102, 103, ..., 112
+ */
+export function generateAllExamVariants(
+  bank: Question[],
+  config: ExamConfig
+): ExamVariant[] {
+  const count = Math.max(12, config.variants_count || 12);
+  const baseCode = config.base_code || 101;
+  const salt = config.session_salt || 2026;
+
+  const variants: ExamVariant[] = [];
+  for (let i = 0; i < count; i++) {
+    const code = String(baseCode + i);
+    const variantSeed = hashSeed(`${config.exam_id}_code_${code}_salt_${salt}`);
+    const exam = generateStudentExam(variantSeed, bank, config, code);
+    variants.push({
+      assignedCode: code,
+      seed: exam.seed,
+      sanitizedQuestions: exam.sanitizedQuestions,
+      pickedOriginalQuestions: exam.pickedOriginalQuestions
+    });
+  }
+  return variants;
 }
 
 /**

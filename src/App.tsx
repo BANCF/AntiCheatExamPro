@@ -21,7 +21,7 @@ import {
   saveActiveSession,
   clearActiveSession
 } from './utils/storage';
-import { generateStudentExam, buildSubmissionRecord } from './utils/randomEngine';
+import { generateAllExamVariants, generateStudentExam, buildSubmissionRecord } from './utils/randomEngine';
 import { TeacherConsole } from './components/teacher/TeacherConsole';
 import { ExamLobby } from './components/student/ExamLobby';
 import { ExamRunner } from './components/student/ExamRunner';
@@ -207,8 +207,11 @@ export function App() {
   useEffect(() => {
     const active = getStoredActiveSession();
     if (active && !active.is_submitted) {
-      // Re-sample or reconstruct pickedOriginalQuestions for scoring
-      const examGen = generateStudentExam(active.seed, bank, config);
+      // Find matching variant or reconstruct with exact seed & assigned code
+      const allVariants = generateAllExamVariants(bank, config);
+      const matched = allVariants.find((v) => v.assignedCode === active.assigned_code);
+      const examGen = matched || generateStudentExam(active.seed, bank, config, active.assigned_code);
+
       setCurrentSession({
         attemptId: active.attempt_id,
         studentName: active.student_name,
@@ -229,14 +232,13 @@ export function App() {
     }
   }, [bank, config]);
 
-  // Start Exam Handler
+  // Start Exam Handler - Generates minimum 12 variants and draws 1 at random
   const handleStartExam = (studentName: string, studentClass: string) => {
-    const seed = Date.now();
-    const { sanitizedQuestions, pickedOriginalQuestions, assignedCode } = generateStudentExam(
-      seed,
-      bank,
-      config
-    );
+    // Generate all official exam variants (default 12 codes: 101, 102, ..., 112)
+    const variants = generateAllExamVariants(bank, config);
+    // Draw 1 random variant from the pool
+    const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
+    const { sanitizedQuestions, pickedOriginalQuestions, assignedCode, seed } = pickedVariant;
 
     const durationSeconds = config.duration_minutes * 60;
     const startTime = new Date().toISOString();

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Question, ExamConfig, SubmissionRecord, ViolationLog, StudentAnswers } from '../src/types/exam';
 import { DEFAULT_QUESTION_BANK, DEFAULT_EXAM_CONFIG } from '../src/data/defaultQuestionBank';
-import { generateStudentExam, calculateExamScore } from '../src/utils/randomEngine';
+import { generateAllExamVariants, generateStudentExam, calculateExamScore } from '../src/utils/randomEngine';
 
 export interface ActiveStudentState {
   socketId?: string;
@@ -80,12 +80,9 @@ class ServerStore {
   }
 
   public startStudentExam(studentName: string, studentClass: string) {
-    const seed = Date.now();
-    const { sanitizedQuestions, pickedOriginalQuestions, assignedCode } = generateStudentExam(
-      seed,
-      this.bank,
-      this.config
-    );
+    const variants = generateAllExamVariants(this.bank, this.config);
+    const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
+    const { sanitizedQuestions, pickedOriginalQuestions, assignedCode, seed } = pickedVariant;
 
     const attemptId = `att_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const durationSeconds = this.config.duration_minutes * 60;
