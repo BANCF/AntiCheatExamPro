@@ -56,6 +56,7 @@ export interface ExamConfig {
   total_questions_to_pick: number;
   distribution: ExamDistribution;
   access_pin?: string;
+  teacher_password?: string;
 }
 
 export type ViolationType =

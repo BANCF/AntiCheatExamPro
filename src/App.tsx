@@ -26,7 +26,8 @@ import { TeacherConsole } from './components/teacher/TeacherConsole';
 import { ExamLobby } from './components/student/ExamLobby';
 import { ExamRunner } from './components/student/ExamRunner';
 import { ExamCompleted } from './components/student/ExamCompleted';
-import { Shield, GraduationCap, School } from 'lucide-react';
+import { TeacherLoginModal } from './components/teacher/TeacherLoginModal';
+import { Shield, GraduationCap, School, Lock, LogOut, KeyRound } from 'lucide-react';
 
 export function App() {
   // Global Data States
@@ -34,8 +35,12 @@ export function App() {
   const [config, setConfig] = useState<ExamConfig>(getStoredExamConfig);
   const [submissions, setSubmissions] = useState<SubmissionRecord[]>(getStoredSubmissions);
 
-  // Active View Mode: 'teacher' | 'student'
-  const [appMode, setAppMode] = useState<'teacher' | 'student'>('teacher');
+  // Active View Mode: 'student' by default for security!
+  const [appMode, setAppMode] = useState<'teacher' | 'student'>('student');
+  const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('anticheat_teacher_logged') === 'true';
+  });
+  const [isTeacherLoginOpen, setIsTeacherLoginOpen] = useState<boolean>(false);
 
   // Student Flow States: 'lobby' | 'running' | 'completed'
   const [studentFlow, setStudentFlow] = useState<'lobby' | 'running' | 'completed'>('lobby');
@@ -169,13 +174,34 @@ export function App() {
     saveSubmissions(updated);
   };
 
-  // Check URL parameters for direct exam link (?mode=exam)
+  // Check URL parameters for direct exam link (?mode=exam or ?mode=teacher)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('mode') === 'exam') {
+    if (params.get('mode') === 'teacher') {
+      if (sessionStorage.getItem('anticheat_teacher_logged') === 'true') {
+        setAppMode('teacher');
+      } else {
+        setIsTeacherLoginOpen(true);
+      }
+    } else {
+      // Default to student room
       setAppMode('student');
     }
   }, []);
+
+  const handleTeacherLoginSuccess = () => {
+    setIsTeacherAuthenticated(true);
+    sessionStorage.setItem('anticheat_teacher_logged', 'true');
+    setIsTeacherLoginOpen(false);
+    setAppMode('teacher');
+  };
+
+  const handleTeacherLogout = () => {
+    setIsTeacherAuthenticated(false);
+    sessionStorage.removeItem('anticheat_teacher_logged');
+    setAppMode('student');
+    setStudentFlow('lobby');
+  };
 
   // Restore active student session on reload if exists
   useEffect(() => {
@@ -378,40 +404,51 @@ export function App() {
               </div>
             </div>
 
-            {/* Role Switcher Pill */}
-            <div className="flex items-center p-1 rounded-xl bg-slate-800/80 border border-slate-700/80">
+            {/* Role / Access Control */}
+            {appMode === 'teacher' ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Giáo Viên Đã Đăng Nhập
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAppMode('student');
+                    setStudentFlow('lobby');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Phòng thi Học sinh</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleTeacherLogout}
+                  title="Đăng xuất khỏi bảng điều khiển giáo viên"
+                  className="p-1.5 px-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-1.5 cursor-pointer border border-rose-500/20 transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Đăng xuất</span>
+                </button>
+              </div>
+            ) : (
+              /* Student mode: Only show lock button if teacher wants to log in */
               <button
                 type="button"
                 onClick={() => {
-                  setAppMode('teacher');
-                  setStudentFlow('lobby');
+                  if (isTeacherAuthenticated) {
+                    setAppMode('teacher');
+                  } else {
+                    setIsTeacherLoginOpen(true);
+                  }
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  appMode === 'teacher'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white text-xs font-medium cursor-pointer transition-colors"
               >
-                <School className="w-3.5 h-3.5" />
-                <span>Giáo Viên</span>
+                <Lock className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Khu Vực Giáo Viên</span>
               </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setAppMode('student');
-                  setStudentFlow('lobby');
-                }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  appMode === 'student'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <GraduationCap className="w-3.5 h-3.5" />
-                <span>Học Sinh</span>
-              </button>
-            </div>
+            )}
           </div>
         </nav>
       )}
@@ -475,6 +512,15 @@ export function App() {
         <footer className="border-t border-slate-800/80 py-4 px-4 text-center text-xs text-slate-500">
           <p>© 2026 AntiCheat Exam Pro • Hệ thống bảo mật & ngẫu nhiên hóa đề thi trực tuyến</p>
         </footer>
+      )}
+
+      {/* Teacher Authentication Gatekeeper Modal */}
+      {isTeacherLoginOpen && (
+        <TeacherLoginModal
+          correctPassword={config.teacher_password || 'admin2026'}
+          onSuccess={handleTeacherLoginSuccess}
+          onCancel={() => setIsTeacherLoginOpen(false)}
+        />
       )}
     </div>
   );

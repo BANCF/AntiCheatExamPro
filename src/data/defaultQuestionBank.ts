@@ -303,5 +303,6 @@ export const DEFAULT_EXAM_CONFIG = {
     single_choice: 7,
     true_false: 3
   },
-  access_pin: "2026"
+  access_pin: "2026",
+  teacher_password: "admin2026"
 };

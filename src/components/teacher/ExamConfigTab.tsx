@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   HelpCircle,
   KeyRound,
+  Lock,
   ExternalLink,
   Sparkles,
   Info
@@ -247,19 +248,42 @@ export const ExamConfigTab: React.FC<ExamConfigTabProps> = ({
                 )}
               </div>
 
-              {/* Security PIN */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1">
-                  <KeyRound className="w-3.5 h-3.5 text-amber-400" />
-                  Mã PIN phòng thi (Tùy chọn)
-                </label>
-                <input
-                  type="text"
-                  value={formData.access_pin || ''}
-                  onChange={(e) => setFormData({ ...formData, access_pin: e.target.value })}
-                  placeholder="Để trống nếu không yêu cầu mã PIN..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-indigo-500"
-                />
+              {/* Security Credentials */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1">
+                    <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+                    Mã PIN phòng thi cho Học sinh (Tùy chọn)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.access_pin || ''}
+                    onChange={(e) => setFormData({ ...formData, access_pin: e.target.value })}
+                    placeholder="Để trống nếu không yêu cầu PIN..."
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-indigo-500"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Học sinh cần nhập mã này trước khi vào thi.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1">
+                    <Lock className="w-3.5 h-3.5 text-rose-400" />
+                    Mật khẩu Quản Trị Giáo Viên <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.teacher_password || 'admin2026'}
+                    onChange={(e) => setFormData({ ...formData, teacher_password: e.target.value })}
+                    placeholder="Mật khẩu giáo viên..."
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-indigo-500"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Bảo vệ khu vực Giáo viên, ngăn học sinh truy cập đề & bảng điểm.
+                  </span>
+                </div>
               </div>
             </div>
 
