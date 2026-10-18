@@ -245,6 +245,8 @@ export function buildSubmissionRecord(params: {
   violationsLog: ViolationLog[];
   studentAnswers: StudentAnswers;
   originalQuestions: Question[];
+  examId?: string;
+  examTitle?: string;
 }): SubmissionRecord {
   const { calculatedScore, earnedPoints, totalPossiblePoints } = calculateExamScore(
     params.studentAnswers,
@@ -253,6 +255,8 @@ export function buildSubmissionRecord(params: {
 
   return {
     submission_id: `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+    exam_id: params.examId,
+    exam_title: params.examTitle,
     student_name: params.studentName.trim(),
     student_class: params.studentClass.trim(),
     assigned_code: params.assignedCode,

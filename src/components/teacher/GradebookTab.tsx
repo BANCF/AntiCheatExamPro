@@ -62,8 +62,13 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
 
   // Sync with prop updates
   useEffect(() => {
-    if (initialSubmissions) {
-      setSubmissions(initialSubmissions);
+    if (initialSubmissions && initialSubmissions.length > 0) {
+      setSubmissions((prev) => {
+        const map = new Map<string, SubmissionRecord>();
+        prev.forEach((s) => map.set(s.submission_id, s));
+        initialSubmissions.forEach((s) => map.set(s.submission_id, s));
+        return Array.from(map.values());
+      });
     }
   }, [initialSubmissions]);
 
@@ -110,8 +115,13 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
     const interval = setInterval(async () => {
       try {
         const remote = await fetchSubmissionsApi();
-        if (remote && Array.isArray(remote)) {
-          setSubmissions(remote);
+        if (remote && Array.isArray(remote) && remote.length > 0) {
+          setSubmissions((prev) => {
+            const map = new Map<string, SubmissionRecord>();
+            prev.forEach((s) => map.set(s.submission_id, s));
+            remote.forEach((s) => map.set(s.submission_id, s));
+            return Array.from(map.values());
+          });
         }
       } catch {
         // Ignore silent background network errors

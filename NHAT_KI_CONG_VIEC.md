@@ -235,7 +235,17 @@
   - **Phần II (2 câu trắc nghiệm Đúng / Sai):** Mỗi câu gồm 4 ý $a, b, c, d$, học sinh chọn Đúng hoặc Sai cho từng nhận định độc lập về Biểu diễn dữ liệu & Mạng máy tính.
 - **Tự động trộn đề & chống gian lận:**
   - Mỗi học sinh vào thi với mã `6G01` và PIN `6001` sẽ được phát sinh mã đề ngẫu nhiên (3 chữ số), đảo thứ tự câu hỏi và xáo trộn các phương án trả lời.
-  - Đáp án đúng được bảo mật tuyệt đối tại phía server/engine, không lộ trong payload client.
+
+### 4. Sửa lỗi F5 văng ra giao diện học sinh & Đảm bảo 100% kết quả nộp bài hiện trong Bảng điểm:
+- **Khắc phục lỗi F5 (Refresh) bị văng về giao diện học sinh:**
+  - Nguyên nhân: Trước đây `appMode` mặc định đặt lại thành `'student'` mỗi khi tải lại trang và không lưu vết chế độ đang xem vào `sessionStorage` hay URL.
+  - Giải pháp: Lưu `sessionStorage.setItem('anticheat_app_mode', 'teacher')` và cập nhật tham số URL `?mode=teacher`. Khởi tạo `appMode` ưu tiên kiểm tra phiên đăng nhập giáo viên và tham số URL. Khi F5, giáo viên ở lại đúng giao diện điều khiển, không bị văng ra phòng thi học sinh.
+- **Khắc phục lỗi nộp bài thi thử không hiện kết quả trong Bảng điểm:**
+  - Nguyên nhân: `handleSubmitExam` trước đây chỉ lưu bài nộp vào LocalStorage khi API backend báo lỗi, nhưng khi chạy trên hosting tĩnh (như Vercel) hoặc khi server phản hồi rỗng `[]`, hàm làm mới bảng điểm đã ghi đè làm trắng danh sách nộp. Ngoài ra bản ghi nộp bài thiếu trường `exam_title` của lớp làm bộ lọc lớp/bài thi không khớp.
+  - Giải pháp:
+    1. Khi thí sinh nộp bài, hệ thống **lập tức lưu vĩnh viễn** bản ghi `SubmissionRecord` (đầy đủ `exam_id`, `exam_title` của lớp riêng) vào LocalStorage và State bảng điểm trước khi gửi API.
+    2. Nâng cấp cơ chế đồng bộ nền (Polling 3.5s): Áp dụng thuật toán **Merge thông minh (Map theo submission_id)**, tuyệt đối không dùng mảng rỗng `[]` để xóa sạch bài nộp đã có.
+    3. Thêm hàm kiểm tra `safeJsonFetch` tránh xung đột phản hồi HTML của Vercel SPA rewrite.
 
 ---
 

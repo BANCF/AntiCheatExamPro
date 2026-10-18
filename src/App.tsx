@@ -55,8 +55,17 @@ export function App() {
   const [classes, setClasses] = useState<ClassRoom[]>(getStoredClasses);
   const [targetClassCode, setTargetClassCode] = useState<string>('');
 
-  // Active View Mode: 'student' by default for security!
-  const [appMode, setAppMode] = useState<'teacher' | 'student'>('student');
+  // Active View Mode: persists across page refresh (F5)
+  const [appMode, setAppMode] = useState<'teacher' | 'student'>(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('class')) return 'student';
+    const isTeacher = sessionStorage.getItem('anticheat_teacher_logged') === 'true';
+    const savedMode = sessionStorage.getItem('anticheat_app_mode');
+    if (params.get('mode') === 'teacher' || (isTeacher && savedMode === 'teacher')) {
+      return 'teacher';
+    }
+    return 'student';
+  });
   const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState<boolean>(() => {
     return sessionStorage.getItem('anticheat_teacher_logged') === 'true';
   });
@@ -88,6 +97,8 @@ export function App() {
     startTime: string;
     violationsLog: ViolationLog[];
     violationCount: number;
+    examId?: string;
+    examTitle?: string;
   } | null>(null);
 
   // Completed receipt state
@@ -117,9 +128,15 @@ export function App() {
     });
 
     fetchSubmissionsApi().then((serverSubmissions) => {
-      if (serverSubmissions && Array.isArray(serverSubmissions)) {
-        setSubmissions(serverSubmissions);
-        saveSubmissions(serverSubmissions);
+      if (serverSubmissions && Array.isArray(serverSubmissions) && serverSubmissions.length > 0) {
+        setSubmissions((prev) => {
+          const map = new Map<string, SubmissionRecord>();
+          prev.forEach((s) => map.set(s.submission_id, s));
+          serverSubmissions.forEach((s) => map.set(s.submission_id, s));
+          const merged = Array.from(map.values());
+          saveSubmissions(merged);
+          return merged;
+        });
       }
     });
 
@@ -261,16 +278,14 @@ export function App() {
     if (classParam) {
       setTargetClassCode(classParam.trim().toUpperCase());
       setAppMode('student');
+      sessionStorage.setItem('anticheat_app_mode', 'student');
       setStudentFlow('lobby');
-    } else if (params.get('mode') === 'teacher') {
+    } else if (params.get('mode') === 'teacher' || sessionStorage.getItem('anticheat_app_mode') === 'teacher') {
       if (sessionStorage.getItem('anticheat_teacher_logged') === 'true') {
         setAppMode('teacher');
       } else {
         setIsTeacherLoginOpen(true);
       }
-    } else {
-      // Default to student room
-      setAppMode('student');
     }
   }, []);
 
@@ -298,8 +313,14 @@ export function App() {
     setIsTeacherAuthenticated(true);
     sessionStorage.setItem('anticheat_teacher_logged', 'true');
     sessionStorage.setItem('anticheat_teacher_profile', JSON.stringify(teacher));
+    sessionStorage.setItem('anticheat_app_mode', 'teacher');
     setIsTeacherLoginOpen(false);
     setAppMode('teacher');
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('mode', 'teacher');
+      window.history.replaceState({}, '', url.toString());
+    } catch {}
   };
 
   // Join teacher realtime monitoring room whenever in teacher console
@@ -315,8 +336,14 @@ export function App() {
     setIsTeacherAuthenticated(false);
     sessionStorage.removeItem('anticheat_teacher_logged');
     sessionStorage.removeItem('anticheat_teacher_profile');
+    sessionStorage.removeItem('anticheat_app_mode');
     setAppMode('student');
     setStudentFlow('lobby');
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('mode');
+      window.history.replaceState({}, '', url.toString());
+    } catch {}
   };
 
   const handleSwitchTeacher = (teacher: TeacherAccount) => {
@@ -441,7 +468,9 @@ export function App() {
       remainingSeconds,
       startTime,
       violationsLog: [],
-      violationCount: 0
+      violationCount: 0,
+      examId: matchedClass?.id || config.exam_id,
+      examTitle: matchedClass?.examTitle || config.title
     };
 
     setCurrentSession(sessionData);
@@ -518,42 +547,56 @@ export function App() {
     const submitTime = new Date().toISOString();
     let submissionId = `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
-    // Call Backend API to register submission and score safely on server
-    const apiResult = await submitStudentExamApi({
-      attemptId: currentSession.attemptId,
+    // Build the complete submission record locally IMMEDIATELY
+    const record = buildSubmissionRecord({
       studentName: currentSession.studentName,
       studentClass: currentSession.studentClass,
       assignedCode: currentSession.assignedCode,
-      answers,
+      startTime: currentSession.startTime,
+      submitTime,
       status,
-      violationsLog: finalLogs
+      violationCount: finalLogs.length,
+      violationsLog: finalLogs,
+      studentAnswers: answers,
+      originalQuestions: currentSession.pickedOriginalQuestions.length > 0 ? currentSession.pickedOriginalQuestions : bank,
+      examId: currentSession.examId || config.exam_id,
+      examTitle: currentSession.examTitle || config.title
     });
 
-    if (apiResult && apiResult.submission_id) {
-      submissionId = apiResult.submission_id;
-    } else {
-      // Fallback local scoring if offline
-      const record = buildSubmissionRecord({
+    // Save locally immediately to guarantee it is NEVER lost
+    const updatedSubmissions = addSubmission(record);
+    setSubmissions(updatedSubmissions);
+
+    // Call Backend API to register submission on server if available
+    try {
+      const apiResult = await submitStudentExamApi({
+        attemptId: currentSession.attemptId,
         studentName: currentSession.studentName,
         studentClass: currentSession.studentClass,
         assignedCode: currentSession.assignedCode,
-        startTime: currentSession.startTime,
-        submitTime,
+        answers,
         status,
-        violationCount: finalLogs.length,
-        violationsLog: finalLogs,
-        studentAnswers: answers,
-        originalQuestions: currentSession.pickedOriginalQuestions.length > 0 ? currentSession.pickedOriginalQuestions : bank
+        violationsLog: finalLogs
       });
-      const updatedSubmissions = addSubmission(record);
-      setSubmissions(updatedSubmissions);
+
+      if (apiResult && apiResult.submission_id) {
+        submissionId = apiResult.submission_id;
+      }
+    } catch (err) {
+      console.warn('Backend submit sync failed, preserved locally:', err);
     }
 
-    // Refresh submissions from server to update gradebook
+    // Refresh and merge submissions from server to update gradebook
     fetchSubmissionsApi().then((serverSubmissions) => {
-      if (serverSubmissions && Array.isArray(serverSubmissions)) {
-        setSubmissions(serverSubmissions);
-        saveSubmissions(serverSubmissions);
+      if (serverSubmissions && Array.isArray(serverSubmissions) && serverSubmissions.length > 0) {
+        setSubmissions((prev) => {
+          const map = new Map<string, SubmissionRecord>();
+          prev.forEach((s) => map.set(s.submission_id, s));
+          serverSubmissions.forEach((s) => map.set(s.submission_id, s));
+          const merged = Array.from(map.values());
+          saveSubmissions(merged);
+          return merged;
+        });
       }
     });
 
@@ -623,7 +666,13 @@ export function App() {
                   type="button"
                   onClick={() => {
                     setAppMode('student');
+                    sessionStorage.setItem('anticheat_app_mode', 'student');
                     setStudentFlow('lobby');
+                    try {
+                      const url = new URL(window.location.href);
+                      url.searchParams.delete('mode');
+                      window.history.replaceState({}, '', url.toString());
+                    } catch {}
                   }}
                   className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors border border-slate-200"
                 >
@@ -647,6 +696,12 @@ export function App() {
                 onClick={() => {
                   if (isTeacherAuthenticated) {
                     setAppMode('teacher');
+                    sessionStorage.setItem('anticheat_app_mode', 'teacher');
+                    try {
+                      const url = new URL(window.location.href);
+                      url.searchParams.set('mode', 'teacher');
+                      window.history.replaceState({}, '', url.toString());
+                    } catch {}
                   } else {
                     setIsTeacherLoginOpen(true);
                   }
@@ -681,7 +736,14 @@ export function App() {
                 setTargetClassCode(classItem.code);
               }
               setAppMode('student');
+              sessionStorage.setItem('anticheat_app_mode', 'student');
               setStudentFlow('lobby');
+              try {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('mode');
+                if (classItem) url.searchParams.set('class', classItem.code);
+                window.history.replaceState({}, '', url.toString());
+              } catch {}
             }}
             onLogoutTeacher={handleTeacherLogout}
             onSwitchTeacher={handleSwitchTeacher}

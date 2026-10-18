@@ -293,11 +293,17 @@ class ServerStore {
       totalPossiblePoints = res.totalPossiblePoints;
     }
 
+    const matchedClass = this.classes.find(
+      (c) => c.code.trim().toUpperCase() === params.studentClass.trim().toUpperCase()
+    );
+    const examId = matchedClass?.id || this.config.exam_id;
+    const examTitle = matchedClass?.examTitle || this.config.title;
+
     const submitTime = new Date().toISOString();
     const submission: SubmissionRecord = {
       submission_id: `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-      exam_id: this.config.exam_id,
-      exam_title: this.config.title,
+      exam_id: examId,
+      exam_title: examTitle,
       student_name: params.studentName.trim(),
       student_class: params.studentClass.trim(),
       assigned_code: params.assignedCode,

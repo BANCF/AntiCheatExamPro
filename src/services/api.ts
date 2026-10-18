@@ -6,16 +6,23 @@ const API_BASE =
     ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
     : '/api';
 
-export async function fetchQuestionBank(): Promise<Question[] | null> {
+async function safeJsonFetch<T>(url: string, options?: RequestInit): Promise<T | null> {
   try {
-    const res = await fetch(`${API_BASE}/bank`);
-    if (res.ok) {
-      return await res.json();
+    const res = await fetch(url, options);
+    if (!res.ok) return null;
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      // Vercel SPA rewrite returns index.html (text/html) instead of API response
+      return null;
     }
-  } catch (err) {
-    console.warn('API fetchQuestionBank failed, fallback to local:', err);
+    return await res.json();
+  } catch {
+    return null;
   }
-  return null;
+}
+
+export async function fetchQuestionBank(): Promise<Question[] | null> {
+  return safeJsonFetch<Question[]>(`${API_BASE}/bank`);
 }
 
 export async function saveQuestionBankApi(bank: Question[]): Promise<boolean> {
@@ -25,7 +32,7 @@ export async function saveQuestionBankApi(bank: Question[]): Promise<boolean> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(bank)
     });
-    return res.ok;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API saveQuestionBankApi failed:', err);
     return false;
@@ -33,15 +40,7 @@ export async function saveQuestionBankApi(bank: Question[]): Promise<boolean> {
 }
 
 export async function fetchExamConfig(): Promise<ExamConfig | null> {
-  try {
-    const res = await fetch(`${API_BASE}/config`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (err) {
-    console.warn('API fetchExamConfig failed, fallback to local:', err);
-  }
-  return null;
+  return safeJsonFetch<ExamConfig>(`${API_BASE}/config`);
 }
 
 export async function saveExamConfigApi(config: ExamConfig): Promise<boolean> {
@@ -51,7 +50,7 @@ export async function saveExamConfigApi(config: ExamConfig): Promise<boolean> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(config)
     });
-    return res.ok;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API saveExamConfigApi failed:', err);
     return false;
@@ -59,21 +58,13 @@ export async function saveExamConfigApi(config: ExamConfig): Promise<boolean> {
 }
 
 export async function fetchSubmissionsApi(): Promise<SubmissionRecord[] | null> {
-  try {
-    const res = await fetch(`${API_BASE}/submissions`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (err) {
-    console.warn('API fetchSubmissionsApi failed, fallback to local:', err);
-  }
-  return null;
+  return safeJsonFetch<SubmissionRecord[]>(`${API_BASE}/submissions`);
 }
 
 export async function clearSubmissionsApi(): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE}/submissions`, { method: 'DELETE' });
-    return res.ok;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API clearSubmissionsApi failed:', err);
     return false;
@@ -105,6 +96,8 @@ export async function startStudentExamApi(params: {
         pin: params.pin
       })
     });
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) return null;
     const data = await res.json();
     if (!res.ok) {
       return { error: data?.error || 'Không thể bắt đầu bài thi' } as any;
@@ -147,6 +140,8 @@ export async function submitStudentExamApi(params: {
         violations_log: params.violationsLog
       })
     });
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) return null;
     if (res.ok) {
       return await res.json();
     }
@@ -166,12 +161,15 @@ export async function verifyTeacherLoginApi(credentials: {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials)
     });
-    const data = await res.json();
-    if (res.ok && data?.success) {
-      return data;
-    }
-    if (!res.ok && data?.error) {
-      return { success: false, error: data.error };
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      const data = await res.json();
+      if (res.ok && data?.success) {
+        return data;
+      }
+      if (!res.ok && data?.error) {
+        return { success: false, error: data.error };
+      }
     }
   } catch (err) {
     console.warn('API verifyTeacherLoginApi network failed, trying offline local fallback:', err);
@@ -212,15 +210,8 @@ export async function verifyTeacherPasswordApi(password: string): Promise<boolea
 }
 
 export async function fetchTeachersApi(): Promise<TeacherAccount[] | null> {
-  try {
-    const res = await fetch(`${API_BASE}/teachers`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (err) {
-    console.warn('API fetchTeachersApi failed, using local storage:', err);
-  }
-  return getStoredTeachers();
+  const data = await safeJsonFetch<TeacherAccount[]>(`${API_BASE}/teachers`);
+  return data || getStoredTeachers();
 }
 
 export async function saveTeacherApi(teacher: Partial<TeacherAccount>): Promise<boolean> {
@@ -230,34 +221,26 @@ export async function saveTeacherApi(teacher: Partial<TeacherAccount>): Promise<
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(teacher)
     });
-    if (res.ok) return true;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API saveTeacherApi failed, fallback to local:', err);
+    return false;
   }
-  return false;
 }
 
 export async function deleteTeacherApi(id: string): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE}/teachers/${id}`, { method: 'DELETE' });
-    if (res.ok) return true;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API deleteTeacherApi failed:', err);
+    return false;
   }
-  return false;
 }
 
 // ---------------- Class Rooms APIs ----------------
 export async function fetchClassesApi(): Promise<ClassRoom[] | null> {
-  try {
-    const res = await fetch(`${API_BASE}/classes`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (err) {
-    console.warn('API fetchClassesApi failed, fallback to local:', err);
-  }
-  return null;
+  return safeJsonFetch<ClassRoom[]>(`${API_BASE}/classes`);
 }
 
 export async function saveClassApi(classItem: Partial<ClassRoom>): Promise<boolean> {
@@ -267,7 +250,7 @@ export async function saveClassApi(classItem: Partial<ClassRoom>): Promise<boole
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(classItem)
     });
-    return res.ok;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API saveClassApi failed:', err);
     return false;
@@ -277,11 +260,9 @@ export async function saveClassApi(classItem: Partial<ClassRoom>): Promise<boole
 export async function deleteClassApi(id: string): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE}/classes/${id}`, { method: 'DELETE' });
-    return res.ok;
+    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
   } catch (err) {
     console.warn('API deleteClassApi failed:', err);
     return false;
   }
 }
-
-
