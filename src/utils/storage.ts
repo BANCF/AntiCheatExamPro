@@ -1,11 +1,14 @@
-import { Question, ExamConfig, SubmissionRecord, ExamSessionState } from '../types/exam';
+import { Question, ExamConfig, SubmissionRecord, ExamSessionState, ClassRoom, TeacherAccount } from '../types/exam';
 import { DEFAULT_QUESTION_BANK, DEFAULT_EXAM_CONFIG } from '../data/defaultQuestionBank';
+import { DEFAULT_CLASSES, DEFAULT_TEACHERS } from '../data/defaultClasses';
 
 const STORAGE_KEYS = {
   QUESTION_BANK: 'anticheat_exam_bank_v1',
   EXAM_CONFIG: 'anticheat_exam_config_v1',
   SUBMISSIONS: 'anticheat_exam_submissions_v1',
-  ACTIVE_SESSION: 'anticheat_active_session_v1'
+  ACTIVE_SESSION: 'anticheat_active_session_v1',
+  CLASSES: 'anticheat_classes_v1',
+  TEACHERS: 'anticheat_teachers_v1'
 };
 
 export function getStoredQuestionBank(): Question[] {
@@ -104,3 +107,42 @@ export function clearActiveSession(): void {
     console.error('Failed to clear active session:', err);
   }
 }
+
+export function getStoredClasses(): ClassRoom[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.CLASSES);
+    if (!raw) return DEFAULT_CLASSES;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_CLASSES;
+  } catch {
+    return DEFAULT_CLASSES;
+  }
+}
+
+export function saveStoredClasses(classes: ClassRoom[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEYS.CLASSES, JSON.stringify(classes));
+  } catch (err) {
+    console.error('Failed to save classes to localStorage:', err);
+  }
+}
+
+export function getStoredTeachers(): TeacherAccount[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.TEACHERS);
+    if (!raw) return DEFAULT_TEACHERS;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_TEACHERS;
+  } catch {
+    return DEFAULT_TEACHERS;
+  }
+}
+
+export function saveStoredTeachers(teachers: TeacherAccount[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEYS.TEACHERS, JSON.stringify(teachers));
+  } catch (err) {
+    console.error('Failed to save teachers to localStorage:', err);
+  }
+}
+

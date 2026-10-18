@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
-import { Question, ExamConfig, SubmissionRecord, TeacherAccount } from '../../types/exam';
+import { Question, ExamConfig, SubmissionRecord, TeacherAccount, ClassRoom } from '../../types/exam';
 import { QuestionBankTab } from './QuestionBankTab';
 import { ExamConfigTab } from './ExamConfigTab';
 import { GradebookTab } from './GradebookTab';
 import { LiveProctoringTab } from './LiveProctoringTab';
 import { TeacherManagementTab } from './TeacherManagementTab';
-import { Database, Sliders, Award, Sparkles, Play, Radio, Users, LogOut, BookOpen } from 'lucide-react';
+import { ClassManagementTab } from './ClassManagementTab';
+import { Database, Sliders, Award, Sparkles, Play, Radio, Users, LogOut, BookOpen, School } from 'lucide-react';
 
 interface TeacherConsoleProps {
   bank: Question[];
   config: ExamConfig;
   submissions: SubmissionRecord[];
+  classes: ClassRoom[];
   currentTeacher?: TeacherAccount | null;
   onUpdateBank: (bank: Question[]) => void;
   onUpdateConfig: (config: ExamConfig) => void;
+  onSaveClass: (classItem: ClassRoom) => void;
+  onDeleteClass: (classId: string) => void;
   onClearSubmissions: () => void;
   onAddSampleSubmissions: () => void;
-  onLaunchStudentExam: () => void;
+  onLaunchStudentExam: (classItem?: ClassRoom) => void;
   onLogoutTeacher?: () => void;
   onSwitchTeacher?: (teacher: TeacherAccount) => void;
 }
@@ -25,16 +29,19 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
   bank,
   config,
   submissions,
+  classes,
   currentTeacher,
   onUpdateBank,
   onUpdateConfig,
+  onSaveClass,
+  onDeleteClass,
   onClearSubmissions,
   onAddSampleSubmissions,
   onLaunchStudentExam,
   onLogoutTeacher,
   onSwitchTeacher
 }) => {
-  const [activeTab, setActiveTab] = useState<'live' | 'bank' | 'config' | 'gradebook' | 'teachers'>('live');
+  const [activeTab, setActiveTab] = useState<'live' | 'classes' | 'bank' | 'config' | 'gradebook' | 'teachers'>('classes');
 
   const isAdmin = currentTeacher?.role === 'admin';
 
@@ -81,7 +88,7 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
 
           <button
             type="button"
-            onClick={onLaunchStudentExam}
+            onClick={() => onLaunchStudentExam()}
             className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all cursor-pointer shrink-0"
           >
             <Play className="w-4 h-4 fill-current" />
@@ -94,6 +101,19 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
         <button
           type="button"
+          onClick={() => setActiveTab('classes')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            activeTab === 'classes'
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'bg-white border border-slate-200 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <School className="w-4 h-4 text-indigo-400" />
+          <span>1. Lớp Học & Phòng Thi ({classes.length})</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('live')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'live'
@@ -102,7 +122,7 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
           }`}
         >
           <Radio className="w-4 h-4 text-emerald-300 animate-pulse" />
-          <span>Giám Thị Trực Tiếp (Live)</span>
+          <span>2. Giám Thị Trực Tiếp (Live)</span>
         </button>
 
         <button
@@ -115,7 +135,7 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
           }`}
         >
           <Database className="w-4 h-4" />
-          <span>1. Ngân Hàng Đề ({bank.length})</span>
+          <span>3. Ngân Hàng Đề ({bank.length})</span>
         </button>
 
         <button
@@ -128,7 +148,7 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
           }`}
         >
           <Sliders className="w-4 h-4" />
-          <span>2. Thiết Lập Đề Thi (PDF / Ngân Hàng)</span>
+          <span>4. Cấu Hình Đề Chung (PDF / Bank)</span>
         </button>
 
         <button
@@ -141,7 +161,7 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
           }`}
         >
           <Award className="w-4 h-4" />
-          <span>3. Bảng Điểm & Kết Quả ({submissions.length})</span>
+          <span>5. Bảng Điểm & Kết Quả ({submissions.length})</span>
         </button>
 
         {isAdmin && (
@@ -155,13 +175,27 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>4. Phân Quyền Giáo Viên (Admin)</span>
+            <span>6. Phân Quyền Giáo Viên (Admin)</span>
           </button>
         )}
       </div>
 
       {/* Tab Panels */}
       <div>
+        {activeTab === 'classes' && (
+          <ClassManagementTab
+            classes={classes}
+            config={config}
+            bank={bank}
+            currentTeacher={currentTeacher}
+            onSaveClass={onSaveClass}
+            onDeleteClass={onDeleteClass}
+            onLaunchClassExam={(c) => onLaunchStudentExam(c)}
+            onViewClassSubmissions={(_classCode) => {
+              setActiveTab('gradebook');
+            }}
+          />
+        )}
         {activeTab === 'live' && <LiveProctoringTab />}
         {activeTab === 'bank' && (
           <QuestionBankTab questions={bank} onUpdateQuestions={onUpdateBank} />
@@ -171,7 +205,7 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
             config={config}
             bank={bank}
             onSaveConfig={onUpdateConfig}
-            onLaunchExamMode={onLaunchStudentExam}
+            onLaunchExamMode={() => onLaunchStudentExam()}
           />
         )}
         {activeTab === 'gradebook' && (

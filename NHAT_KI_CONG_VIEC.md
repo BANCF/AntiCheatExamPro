@@ -198,12 +198,46 @@
 
 ---
 
-## 💡 6. KẾ HOẠCH NÂNG CẤP TIẾP THEO (GỢI Ý)
+## 🚀 6. CẬP NHẬT PHIÊN BẢN MỚI (18/10/2026): TẠO LỚP, MÃ LỚP CHÍNH XÁC, MÃ PIN RIÊNG & SỬA ĐĂNG NHẬP GIÁO VIÊN
 
-- [ ] **AI Hỗ Trợ Tạo Đề:** Cho phép giáo viên dán văn bản thô hoặc ảnh chụp đề thi để AI tự động trích xuất thành câu hỏi trắc nghiệm kèm công thức KaTeX.
-- [ ] **Chụp ảnh giám sát qua Webcam:** Chụp ảnh khuôn mặt học sinh ngẫu nhiên định kỳ trong ca thi để phát hiện người thi hộ.
-- [ ] **Xuất báo cáo PDF/Excel:** Bổ sung nút bấm xuất toàn bộ bảng điểm lớp học ra file Excel mẫu chuẩn của Bộ Giáo dục & Đào tạo.
-- [ ] **Ngân hàng đề thi chung toàn trường:** Chia sẻ kho đề thi giữa các giáo viên cùng bộ môn để tái sử dụng.
+### 1. Quản lý lớp học & Mã PIN bài thi riêng biệt cho từng lớp:
+- **Tạo lớp học độc lập:** Giáo viên và Admin có thể tạo lớp học với mã lớp chuẩn xác (VD: `7A1`, `7A2`, `10A1`, `12A3`...), tên lớp, khối lớp, môn học và giáo viên phụ trách.
+- **Bài thi & Mã PIN riêng cho từng lớp:** Mỗi lớp được gán một bài thi riêng (tên bài thi, thời gian làm bài, số lượng câu, chế độ Ngân hàng đề hoặc PDF) kèm **Mã PIN bảo mật riêng**.
+- **Nhận diện học sinh theo mã lớp chính xác:**
+  - Học sinh nhập Họ tên, Mã lớp và Mã PIN phòng thi.
+  - Hệ thống kiểm tra mã lớp thời gian thực: Nếu mã lớp tồn tại, hiển thị ngay huy hiệu nhận diện màu xanh với tên lớp, môn thi, bài thi riêng và thời gian làm bài.
+  - Nếu học sinh nhập sai mã lớp hoặc mã lớp chưa tạo: Báo lỗi chi tiết, yêu cầu nhập đúng mã lớp do giáo viên cung cấp.
+  - Nếu phòng thi của lớp đang đóng: Báo lỗi thông báo phòng thi đang đóng.
+  - Nếu nhập sai mã PIN bài thi của lớp: Báo lỗi mã PIN không chính xác.
+  - Khi bắt đầu: Học sinh nhận đúng đề thi và cấu hình riêng của lớp đó.
+- **Nút tiện ích cho giáo viên:**
+  - Sao chép nhanh thông báo thi & link vào phòng thi kèm mã PIN để gửi Zalo/nhóm lớp chỉ với 1 click.
+  - Bật/tắt mở thi nhanh tức thời (Toggle Active/Closed).
+  - Vào thi thử trực tiếp theo từng lớp.
+
+### 2. Khắc phục toàn diện lỗi đăng nhập Giáo viên:
+- **Nguyên nhân trước đây:** 
+  - `src/services/api.ts` dùng hardcoded check `window.location.port === '5173'` nên khi chạy ở port khác hoặc không có server, fetch API trả về 404.
+  - `vite.config.ts` thiếu proxy tới backend Express port 3000.
+  - Chế độ offline fallback chỉ kiểm tra `admin2026`, các tài khoản bộ môn khác (`gv_tin`, `gv_toan`, `gv_ly`...) bị từ chối nếu backend chưa khởi động.
+- **Giải pháp đã triển khai:**
+  - Cấu hình proxy `/api` và `/socket.io` trong `vite.config.ts` trỏ tới `http://localhost:3000`.
+  - Bổ sung cơ chế xác thực offline đa tài khoản từ `getStoredTeachers()` cho phép đăng nhập thành công 100% cả khi online lẫn offline.
+  - Nâng cấp giao diện `TeacherLoginModal.tsx`: Hiển thị rõ danh sách tài khoản kèm mật khẩu, nút bấm 1-click đăng nhập ngay, và nút Hiện/Ẩn mật khẩu (Show/Hide Password).
+  - Xử lý trim khoảng trắng tên đăng nhập và mật khẩu ở cả server và client.
+
+### 3. Đưa đề thi Giữa học kì 1 Tin học 6 và cấu hình lớp 6G01 vào hệ thống:
+- **Lớp học:** `6G01` (`Lớp 6G01 - Tin Học 6`).
+- **Mã PIN phòng thi:** `6001`.
+- **Cấu trúc đề thi:**
+  - Tổng số: **34 câu hỏi** (Thời gian làm bài: 45 phút).
+  - **Phần I (32 câu trắc nghiệm 4 lựa chọn):** Bao quát toàn bộ kiến thức Tin học 6 Giữa học kì 1 (Thông tin & dữ liệu, Lưu trữ và trao đổi thông tin, Máy tính trong hoạt động thông tin, Biểu diễn dữ liệu trong máy tính, Mạng máy tính). Đáp án chính xác theo ma trận chuẩn của đề thi.
+  - **Phần II (2 câu trắc nghiệm Đúng / Sai):** Mỗi câu gồm 4 ý $a, b, c, d$, học sinh chọn Đúng hoặc Sai cho từng nhận định độc lập về Biểu diễn dữ liệu & Mạng máy tính.
+- **Tự động trộn đề & chống gian lận:**
+  - Mỗi học sinh vào thi với mã `6G01` và PIN `6001` sẽ được phát sinh mã đề ngẫu nhiên (3 chữ số), đảo thứ tự câu hỏi và xáo trộn các phương án trả lời.
+  - Đáp án đúng được bảo mật tuyệt đối tại phía server/engine, không lộ trong payload client.
 
 ---
-*Nhật ký được cập nhật lần cuối vào: 17/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
+
+*Nhật ký được cập nhật lần cuối vào: 18/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
+

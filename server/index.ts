@@ -5,7 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { serverStore } from './store';
-import { ViolationLog } from '../src/types/exam';
+import { ViolationLog, ClassRoom } from '../src/types/exam';
 
 const app = express();
 const server = http.createServer(app);
@@ -67,10 +67,17 @@ app.post('/api/config', (req, res) => {
 // Teacher Auth (Multi-Account & Legacy Support)
 app.post('/api/auth/teacher', (req, res) => {
   const { username, password } = req.body;
-  
-  if (!username) {
-    const match = serverStore.teachers.find((t) => t.password === password) ||
-      (password === (serverStore.config.teacher_password || 'admin2026') ? serverStore.teachers[0] : null);
+  const cleanPass = (password || '').trim();
+  const cleanUser = (username || '').trim().toLowerCase();
+
+  if (!cleanPass) {
+    return res.status(400).json({ success: false, error: 'Vui lòng nhập mật khẩu quản trị!' });
+  }
+
+  // If no username provided (legacy mode), check password only
+  if (!cleanUser) {
+    const match = serverStore.teachers.find((t) => t.password.trim() === cleanPass) ||
+      (cleanPass === (serverStore.config.teacher_password || 'admin2026').trim() ? serverStore.teachers[0] : null);
     if (match) {
       const { password: _, ...safeTeacher } = match;
       return res.json({ success: true, teacher: safeTeacher });
@@ -78,8 +85,9 @@ app.post('/api/auth/teacher', (req, res) => {
     return res.status(401).json({ success: false, error: 'Mật khẩu giáo viên không chính xác!' });
   }
 
+  // Match username & password
   const found = serverStore.teachers.find(
-    (t) => t.username.toLowerCase() === username.trim().toLowerCase() && t.password === password
+    (t) => t.username.toLowerCase() === cleanUser && t.password.trim() === cleanPass
   );
 
   if (found) {
@@ -87,7 +95,20 @@ app.post('/api/auth/teacher', (req, res) => {
     return res.json({ success: true, teacher: safeTeacher });
   }
 
-  return res.status(401).json({ success: false, error: 'Tên đăng nhập hoặc mật khẩu không chính xác!' });
+  // Fallback check for admin account
+  if (cleanUser === 'admin' && cleanPass === (serverStore.config.teacher_password || 'admin2026').trim()) {
+    const adminTeacher = serverStore.teachers[0] || {
+      id: 'tc_admin',
+      username: 'admin',
+      fullName: 'Quản Trị Viên (Admin Trường)',
+      role: 'admin',
+      subject: 'Tất cả'
+    };
+    const { password: _, ...safeTeacher } = adminTeacher as any;
+    return res.json({ success: true, teacher: safeTeacher });
+  }
+
+  return res.status(401).json({ success: false, error: 'Tên đăng nhập hoặc mật khẩu không chính xác! Vui lòng kiểm tra lại.' });
 });
 
 // Teachers Management APIs (Admin)
@@ -135,31 +156,114 @@ app.delete('/api/teachers/:id', (req, res) => {
   res.json({ success: true });
 });
 
+// ---------------- Class Rooms Management APIs ----------------
+app.get('/api/classes', (_req, res) => {
+  res.json(serverStore.classes);
+});
+
+app.post('/api/classes', (req, res) => {
+  const { id, code, name, grade, subject, teacherName, pinCode, examTitle, examConfig, isActive, description } = req.body;
+  if (!code || !name) {
+    return res.status(400).json({ error: 'Mã lớp và Tên lớp là bắt buộc!' });
+  }
+
+  const normalizedCode = code.trim().toUpperCase();
+  const existingIdx = serverStore.classes.findIndex(
+    (c) => (id && c.id === id) || c.code.trim().toUpperCase() === normalizedCode
+  );
+
+  const classItem: ClassRoom = {
+    id: id || (existingIdx >= 0 ? serverStore.classes[existingIdx].id : `cls_${Date.now()}`),
+    code: normalizedCode,
+    name: name.trim(),
+    grade: grade || 'Lớp 7',
+    subject: subject || 'Tin học',
+    teacherName: teacherName || 'Giáo viên bộ môn',
+    pinCode: (pinCode || '2026').trim(),
+    examTitle: examTitle?.trim() || `Kiểm tra ${subject || 'Bộ môn'} - ${normalizedCode}`,
+    examConfig: examConfig || {},
+    isActive: isActive !== undefined ? Boolean(isActive) : true,
+    description: description || '',
+    createdAt: existingIdx >= 0 ? serverStore.classes[existingIdx].createdAt : new Date().toISOString()
+  };
+
+  if (existingIdx >= 0) {
+    serverStore.classes[existingIdx] = classItem;
+  } else {
+    serverStore.classes.push(classItem);
+  }
+
+  serverStore.persist();
+  res.json({ success: true, classItem });
+});
+
+app.delete('/api/classes/:id', (req, res) => {
+  const { id } = req.params;
+  serverStore.classes = serverStore.classes.filter((c) => c.id !== id && c.code !== id);
+  serverStore.persist();
+  res.json({ success: true });
+});
+
 // Start Student Exam
 app.post('/api/exam/start', (req, res) => {
   const { student_name, student_class, pin } = req.body;
 
-  if (!student_name || !student_class) {
-    return res.status(400).json({ error: 'Vui lòng cung cấp Họ tên và Lớp học' });
+  if (!student_name?.trim() || !student_class?.trim()) {
+    return res.status(400).json({ error: 'Vui lòng cung cấp Họ tên và Mã lớp học' });
   }
 
-  if (serverStore.config.access_pin && pin !== serverStore.config.access_pin) {
+  const normClass = student_class.trim().toUpperCase();
+  const matchedClass = serverStore.classes.find(
+    (c) => c.code.trim().toUpperCase() === normClass
+  );
+
+  // If classes are configured, enforce exact class verification
+  if (serverStore.classes.length > 0) {
+    if (!matchedClass) {
+      return res.status(404).json({
+        error: `Mã lớp "${student_class}" không tồn tại trên hệ thống! Vui lòng nhập đúng mã lớp đã được giáo viên tạo (VD: 7A1, 7A2, 10A1...).`
+      });
+    }
+
+    if (!matchedClass.isActive) {
+      return res.status(403).json({
+        error: `Phòng thi của lớp ${matchedClass.code} (${matchedClass.name}) hiện đang ĐÓNG. Vui lòng liên hệ giáo viên để mở phòng thi!`
+      });
+    }
+
+    const cleanPin = (pin || '').trim();
+    if (matchedClass.pinCode && cleanPin !== matchedClass.pinCode.trim()) {
+      return res.status(403).json({
+        error: `Mã PIN bài thi cho lớp ${matchedClass.code} không chính xác! Vui lòng hỏi giáo viên bộ môn.`
+      });
+    }
+  } else if (serverStore.config.access_pin && pin?.trim() !== serverStore.config.access_pin.trim()) {
     return res.status(403).json({ error: 'Mã PIN phòng thi không hợp lệ!' });
   }
 
-  const examSession = serverStore.getOrCreateStudentExam(student_name, student_class);
+  const examSession = serverStore.getOrCreateStudentExam(student_name.trim(), normClass, matchedClass);
 
   // Notify teacher of new student joined
   io.to('teacher_room').emit('student:new_session', {
     attemptId: examSession.attemptId,
-    studentName: student_name,
-    studentClass: student_class,
+    studentName: student_name.trim(),
+    studentClass: normClass,
     assignedCode: examSession.assignedCode,
     startTime: examSession.startTime,
     durationSeconds: examSession.durationSeconds
   });
 
-  res.json(examSession);
+  res.json({
+    ...examSession,
+    classInfo: matchedClass
+      ? {
+          code: matchedClass.code,
+          name: matchedClass.name,
+          subject: matchedClass.subject,
+          examTitle: matchedClass.examTitle
+        }
+      : undefined
+  });
 });
 
 // Submit Exam

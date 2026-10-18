@@ -1,59 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { Question, ExamConfig, SubmissionRecord, ViolationLog, StudentAnswers, TeacherAccount } from '../src/types/exam';
+import { Question, ExamConfig, SubmissionRecord, ViolationLog, StudentAnswers, TeacherAccount, ClassRoom } from '../src/types/exam';
 import { DEFAULT_QUESTION_BANK, DEFAULT_EXAM_CONFIG } from '../src/data/defaultQuestionBank';
+import { DEFAULT_CLASSES, DEFAULT_TEACHERS } from '../src/data/defaultClasses';
 import { generateAllExamVariants, generateStudentExam, calculateExamScore } from '../src/utils/randomEngine';
 
-export const DEFAULT_TEACHERS: TeacherAccount[] = [
-  {
-    id: 'tc_admin',
-    username: 'admin',
-    password: 'admin2026',
-    fullName: 'Quản Trị Viên (Admin Trường)',
-    role: 'admin',
-    subject: 'Tất cả'
-  },
-  {
-    id: 'tc_tin',
-    username: 'gv_tin',
-    password: 'tin2026',
-    fullName: 'Thầy/Cô Bộ Môn Tin Học',
-    role: 'teacher',
-    subject: 'Tin học'
-  },
-  {
-    id: 'tc_toan',
-    username: 'gv_toan',
-    password: 'toan2026',
-    fullName: 'Thầy/Cô Bộ Môn Toán Học',
-    role: 'teacher',
-    subject: 'Toán học'
-  },
-  {
-    id: 'tc_ly',
-    username: 'gv_ly',
-    password: 'ly2026',
-    fullName: 'Thầy/Cô Bộ Môn Vật Lí',
-    role: 'teacher',
-    subject: 'Vật lí'
-  },
-  {
-    id: 'tc_hoa',
-    username: 'gv_hoa',
-    password: 'hoa2026',
-    fullName: 'Thầy/Cô Bộ Môn Hóa Học',
-    role: 'teacher',
-    subject: 'Hóa học'
-  },
-  {
-    id: 'tc_sinh',
-    username: 'gv_sinh',
-    password: 'sinh2026',
-    fullName: 'Thầy/Cô Bộ Môn Sinh Học',
-    role: 'teacher',
-    subject: 'Sinh học'
-  }
-];
+export { DEFAULT_CLASSES, DEFAULT_TEACHERS };
 
 export interface ActiveStudentState {
   socketId?: string;
@@ -83,6 +35,7 @@ interface StoredData {
   config: ExamConfig;
   submissions: SubmissionRecord[];
   teachers?: TeacherAccount[];
+  classes?: ClassRoom[];
 }
 
 class ServerStore {
@@ -90,6 +43,7 @@ class ServerStore {
   public config: ExamConfig = DEFAULT_EXAM_CONFIG;
   public submissions: SubmissionRecord[] = [];
   public teachers: TeacherAccount[] = DEFAULT_TEACHERS;
+  public classes: ClassRoom[] = DEFAULT_CLASSES;
   public activeStudents: Map<string, ActiveStudentState> = new Map();
 
   constructor() {
@@ -110,6 +64,9 @@ class ServerStore {
         if (parsed.submissions && Array.isArray(parsed.submissions)) this.submissions = parsed.submissions;
         if (parsed.teachers && Array.isArray(parsed.teachers) && parsed.teachers.length > 0) {
           this.teachers = parsed.teachers;
+        }
+        if (parsed.classes && Array.isArray(parsed.classes) && parsed.classes.length > 0) {
+          this.classes = parsed.classes;
         }
       } else {
         this.persist();
@@ -134,7 +91,8 @@ class ServerStore {
           bank: this.bank,
           config: this.config,
           submissions: this.submissions,
-          teachers: this.teachers
+          teachers: this.teachers,
+          classes: this.classes
         };
         fs.promises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8').catch((err) => {
           console.error('Async persist error:', err);
@@ -145,7 +103,7 @@ class ServerStore {
     }, 500);
   }
 
-  public getOrCreateStudentExam(studentName: string, studentClass: string) {
+  public getOrCreateStudentExam(studentName: string, studentClass: string, classOverride?: ClassRoom) {
     const normName = studentName.trim().toLowerCase();
     const normClass = studentClass.trim().toLowerCase();
 
@@ -191,18 +149,30 @@ class ServerStore {
       }
     }
 
-    return this.startStudentExam(studentName, studentClass);
+    return this.startStudentExam(studentName, studentClass, classOverride);
   }
 
-  public startStudentExam(studentName: string, studentClass: string) {
-    if (this.config.exam_mode === 'pdf') {
-      const totalQ = this.config.pdf_total_questions || (this.config.pdf_answer_key ? Object.keys(this.config.pdf_answer_key).length : 40);
+  public startStudentExam(studentName: string, studentClass: string, classOverride?: ClassRoom) {
+    const effectiveConfig: ExamConfig = classOverride?.examConfig
+      ? {
+          ...this.config,
+          ...classOverride.examConfig,
+          title: classOverride.examTitle || this.config.title,
+          duration_minutes: classOverride.examConfig.duration_minutes || this.config.duration_minutes
+        }
+      : {
+          ...this.config,
+          title: classOverride?.examTitle || this.config.title
+        };
+
+    if (effectiveConfig.exam_mode === 'pdf') {
+      const totalQ = effectiveConfig.pdf_total_questions || (effectiveConfig.pdf_answer_key ? Object.keys(effectiveConfig.pdf_answer_key).length : 40);
       const assignedCode = String(100 + Math.floor(Math.random() * 15));
       const sanitizedQuestions: Question[] = Array.from({ length: totalQ }, (_, i) => ({
         id: String(i + 1),
         type: 'single_choice' as const,
         prompt: `Câu ${i + 1}`,
-        tags: [this.config.target_subject || 'Đề PDF'],
+        tags: [effectiveConfig.target_subject || 'Đề PDF'],
         options: [
           { id: 'A', text: 'A' },
           { id: 'B', text: 'B' },
@@ -212,7 +182,7 @@ class ServerStore {
       }));
 
       const attemptId = `att_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-      const durationSeconds = this.config.duration_minutes * 60;
+      const durationSeconds = effectiveConfig.duration_minutes * 60;
       const startTime = new Date().toISOString();
 
       const studentState: ActiveStudentState = {
@@ -247,12 +217,12 @@ class ServerStore {
       };
     }
 
-    const variants = generateAllExamVariants(this.bank, this.config);
+    const variants = generateAllExamVariants(this.bank, effectiveConfig);
     const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
     const { sanitizedQuestions, pickedOriginalQuestions, assignedCode, seed } = pickedVariant;
 
     const attemptId = `att_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-    const durationSeconds = this.config.duration_minutes * 60;
+    const durationSeconds = effectiveConfig.duration_minutes * 60;
     const startTime = new Date().toISOString();
 
     const studentState: ActiveStudentState = {

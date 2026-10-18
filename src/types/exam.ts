@@ -56,10 +56,26 @@ export interface ExamDistribution {
 
 export type ExamMode = 'bank' | 'pdf';
 
+export interface ClassRoom {
+  id: string;
+  code: string; // Mã lớp viết hoa duy nhất, ví dụ: "7A1", "10A1", "12A3"
+  name: string; // Tên hiển thị lớp, ví dụ: "Lớp 7A1 - Tin học 7"
+  grade: string; // Khối lớp, ví dụ: "Lớp 7"
+  subject: string; // Môn học, ví dụ: "Tin học"
+  teacherName?: string;
+  pinCode: string; // Mã PIN bảo mật riêng cho bài thi của lớp này (VD: "2026", "1234")
+  examTitle?: string; // Tên bài thi riêng cho lớp
+  examConfig?: Partial<ExamConfig>; // Cấu hình riêng cho bài thi lớp này (thời gian, số câu, pdf...)
+  isActive: boolean; // Trạng thái mở phòng thi (true: đang mở, false: đóng)
+  studentCount?: number;
+  description?: string;
+  createdAt?: string;
+}
+
 export interface TeacherAccount {
   id: string;
   username: string;
-  password: string;
+  password?: string;
   fullName: string;
   role: 'admin' | 'teacher';
   subject: string; // "Tin học" | "Toán học" | "Vật lí" | "Hóa học" | "Sinh học" | "Tất cả"

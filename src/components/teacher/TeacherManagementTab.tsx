@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TeacherAccount } from '../../types/exam';
 import { fetchTeachersApi, saveTeacherApi, deleteTeacherApi } from '../../services/api';
+import { getStoredTeachers, saveStoredTeachers } from '../../utils/storage';
 import {
   Users,
   UserPlus,
@@ -111,26 +112,41 @@ export const TeacherManagementTab: React.FC<TeacherManagementTabProps> = ({
     };
 
     const ok = await saveTeacherApi(payload);
-    if (ok) {
-      showToast('success', `Đã lưu tài khoản giáo viên: ${payload.fullName}`);
-      setIsAddModalOpen(false);
-      loadTeachers();
+    
+    // Always sync with localStorage
+    const localList = getStoredTeachers();
+    const existingIdx = localList.findIndex((t) => (payload.id && t.id === payload.id) || t.username.toLowerCase() === payload.username!.toLowerCase());
+    const fullTeacher: TeacherAccount = {
+      id: payload.id || (existingIdx >= 0 ? localList[existingIdx].id : `tc_${Date.now()}`),
+      username: payload.username!,
+      password: payload.password!,
+      fullName: payload.fullName!,
+      role: payload.role as any,
+      subject: payload.subject!,
+      assignedClasses: payload.assignedClasses
+    };
+    if (existingIdx >= 0) {
+      localList[existingIdx] = fullTeacher;
     } else {
-      showToast('error', 'Lưu tài khoản thất bại, vui lòng thử lại');
+      localList.push(fullTeacher);
     }
+    saveStoredTeachers(localList);
+
+    showToast('success', `Đã lưu tài khoản giáo viên: ${payload.fullName}`);
+    setIsAddModalOpen(false);
+    loadTeachers();
   };
 
   const handleDeleteTeacher = async (id: string, name: string) => {
     if (!window.confirm(`Bạn có chắc muốn xóa tài khoản của giáo viên "${name}"?`)) {
       return;
     }
-    const ok = await deleteTeacherApi(id);
-    if (ok) {
-      showToast('success', `Đã xóa tài khoản: ${name}`);
-      loadTeachers();
-    } else {
-      showToast('error', 'Không thể xóa tài khoản này!');
-    }
+    await deleteTeacherApi(id);
+    const localList = getStoredTeachers().filter((t) => t.id !== id);
+    saveStoredTeachers(localList);
+
+    showToast('success', `Đã xóa tài khoản: ${name}`);
+    loadTeachers();
   };
 
   const filteredTeachers = teachers.filter((t) => {

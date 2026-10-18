@@ -8,7 +8,8 @@ import {
   SubmissionStatus,
   ViolationLog,
   ExamSessionState,
-  TeacherAccount
+  TeacherAccount,
+  ClassRoom
 } from './types/exam';
 import {
   getStoredQuestionBank,
@@ -20,7 +21,9 @@ import {
   saveSubmissions,
   getStoredActiveSession,
   saveActiveSession,
-  clearActiveSession
+  clearActiveSession,
+  getStoredClasses,
+  saveStoredClasses
 } from './utils/storage';
 import { generateAllExamVariants, generateStudentExam, buildSubmissionRecord } from './utils/randomEngine';
 import { TeacherConsole } from './components/teacher/TeacherConsole';
@@ -28,7 +31,7 @@ import { ExamLobby } from './components/student/ExamLobby';
 import { ExamRunner } from './components/student/ExamRunner';
 import { ExamCompleted } from './components/student/ExamCompleted';
 import { TeacherLoginModal } from './components/teacher/TeacherLoginModal';
-import { Shield, GraduationCap, School, Lock, LogOut, KeyRound } from 'lucide-react';
+import { Shield, GraduationCap, Lock, LogOut } from 'lucide-react';
 import {
   fetchQuestionBank,
   saveQuestionBankApi,
@@ -37,7 +40,10 @@ import {
   fetchSubmissionsApi,
   clearSubmissionsApi,
   startStudentExamApi,
-  submitStudentExamApi
+  submitStudentExamApi,
+  fetchClassesApi,
+  saveClassApi,
+  deleteClassApi
 } from './services/api';
 import { getSocket } from './services/socket';
 
@@ -46,6 +52,8 @@ export function App() {
   const [bank, setBank] = useState<Question[]>(getStoredQuestionBank);
   const [config, setConfig] = useState<ExamConfig>(getStoredExamConfig);
   const [submissions, setSubmissions] = useState<SubmissionRecord[]>(getStoredSubmissions);
+  const [classes, setClasses] = useState<ClassRoom[]>(getStoredClasses);
+  const [targetClassCode, setTargetClassCode] = useState<string>('');
 
   // Active View Mode: 'student' by default for security!
   const [appMode, setAppMode] = useState<'teacher' | 'student'>('student');
@@ -112,6 +120,13 @@ export function App() {
       if (serverSubmissions && Array.isArray(serverSubmissions)) {
         setSubmissions(serverSubmissions);
         saveSubmissions(serverSubmissions);
+      }
+    });
+
+    fetchClassesApi().then((serverClasses) => {
+      if (serverClasses && Array.isArray(serverClasses) && serverClasses.length > 0) {
+        setClasses(serverClasses);
+        saveStoredClasses(serverClasses);
       }
     });
   }, []);
@@ -239,10 +254,15 @@ export function App() {
     saveSubmissions(updated);
   };
 
-  // Check URL parameters for direct exam link (?mode=exam or ?mode=teacher)
+  // Check URL parameters for direct exam link (?mode=exam or ?mode=teacher or ?class=7A1)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('mode') === 'teacher') {
+    const classParam = params.get('class');
+    if (classParam) {
+      setTargetClassCode(classParam.trim().toUpperCase());
+      setAppMode('student');
+      setStudentFlow('lobby');
+    } else if (params.get('mode') === 'teacher') {
       if (sessionStorage.getItem('anticheat_teacher_logged') === 'true') {
         setAppMode('teacher');
       } else {
@@ -253,6 +273,25 @@ export function App() {
       setAppMode('student');
     }
   }, []);
+
+  const handleSaveClass = (classItem: ClassRoom) => {
+    setClasses((prev) => {
+      const idx = prev.findIndex((c) => c.id === classItem.id || c.code.toUpperCase() === classItem.code.toUpperCase());
+      const updated = idx >= 0 ? prev.map((c, i) => (i === idx ? classItem : c)) : [...prev, classItem];
+      saveStoredClasses(updated);
+      return updated;
+    });
+    saveClassApi(classItem);
+  };
+
+  const handleDeleteClass = (classId: string) => {
+    setClasses((prev) => {
+      const updated = prev.filter((c) => c.id !== classId && c.code !== classId);
+      saveStoredClasses(updated);
+      return updated;
+    });
+    deleteClassApi(classId);
+  };
 
   const handleTeacherLoginSuccess = (teacher: TeacherAccount) => {
     setCurrentTeacher(teacher);
@@ -315,24 +354,46 @@ export function App() {
   }, [bank, config]);
 
   // Start Exam Handler - Connects to Server for Random Variant (or fallbacks locally)
-  const handleStartExam = async (studentName: string, studentClass: string) => {
+  const handleStartExam = async (
+    studentName: string,
+    studentClass: string,
+    pin: string,
+    matchedClass?: ClassRoom
+  ) => {
+    const effectiveConfig: ExamConfig = matchedClass?.examConfig
+      ? {
+          ...config,
+          ...matchedClass.examConfig,
+          title: matchedClass.examTitle || config.title,
+          duration_minutes: matchedClass.examConfig.duration_minutes || config.duration_minutes
+        }
+      : {
+          ...config,
+          title: matchedClass?.examTitle || config.title
+        };
+
     // 1. Try starting via Backend Server
     const serverSession = await startStudentExamApi({
       studentName,
       studentClass,
-      pin: config.access_pin
+      pin
     });
+
+    if (serverSession && (serverSession as any).error) {
+      alert((serverSession as any).error);
+      return;
+    }
 
     let attemptId = `attempt_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     let assignedCode = '101';
     let seed = 2026;
     let sanitizedQuestions: SanitizedQuestion[] = [];
     let pickedOriginalQuestions: Question[] = [];
-    let durationSeconds = config.duration_minutes * 60;
+    let durationSeconds = effectiveConfig.duration_minutes * 60;
     let remainingSeconds = durationSeconds;
     let startTime = new Date().toISOString();
 
-    if (serverSession) {
+    if (serverSession && !serverSession.error) {
       attemptId = serverSession.attemptId;
       assignedCode = serverSession.assignedCode;
       sanitizedQuestions = serverSession.sanitizedQuestions;
@@ -340,13 +401,31 @@ export function App() {
       remainingSeconds = serverSession.remainingSeconds !== undefined ? serverSession.remainingSeconds : durationSeconds;
       startTime = serverSession.startTime;
     } else {
-      // Offline fallback: generate locally
-      const variants = generateAllExamVariants(bank, config);
-      const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
-      assignedCode = pickedVariant.assignedCode;
-      seed = pickedVariant.seed;
-      sanitizedQuestions = pickedVariant.sanitizedQuestions;
-      pickedOriginalQuestions = pickedVariant.pickedOriginalQuestions;
+      // Offline fallback: generate locally using effectiveConfig
+      if (effectiveConfig.exam_mode === 'pdf') {
+        const totalQ = effectiveConfig.pdf_total_questions || (effectiveConfig.pdf_answer_key ? Object.keys(effectiveConfig.pdf_answer_key).length : 40);
+        assignedCode = String(100 + Math.floor(Math.random() * 15));
+        sanitizedQuestions = Array.from({ length: totalQ }, (_, i) => ({
+          id: String(i + 1),
+          type: 'single_choice' as const,
+          prompt: `Câu ${i + 1}`,
+          tags: [effectiveConfig.target_subject || 'Đề PDF'],
+          options: [
+            { id: 'A', text: 'A' },
+            { id: 'B', text: 'B' },
+            { id: 'C', text: 'C' },
+            { id: 'D', text: 'D' }
+          ]
+        }));
+        pickedOriginalQuestions = sanitizedQuestions;
+      } else {
+        const variants = generateAllExamVariants(bank, effectiveConfig);
+        const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
+        assignedCode = pickedVariant.assignedCode;
+        seed = pickedVariant.seed;
+        sanitizedQuestions = pickedVariant.sanitizedQuestions;
+        pickedOriginalQuestions = pickedVariant.pickedOriginalQuestions;
+      }
     }
 
     const sessionData = {
@@ -589,12 +668,18 @@ export function App() {
             bank={bank}
             config={config}
             submissions={submissions}
+            classes={classes}
             currentTeacher={currentTeacher}
             onUpdateBank={handleUpdateBank}
             onUpdateConfig={handleUpdateConfig}
+            onSaveClass={handleSaveClass}
+            onDeleteClass={handleDeleteClass}
             onClearSubmissions={handleClearSubmissions}
             onAddSampleSubmissions={handleAddSampleSubmissions}
-            onLaunchStudentExam={() => {
+            onLaunchStudentExam={(classItem) => {
+              if (classItem) {
+                setTargetClassCode(classItem.code);
+              }
               setAppMode('student');
               setStudentFlow('lobby');
             }}
@@ -604,7 +689,12 @@ export function App() {
         ) : (
           <>
             {studentFlow === 'lobby' && (
-              <ExamLobby config={config} onStartExam={handleStartExam} />
+              <ExamLobby
+                config={config}
+                classes={classes}
+                initialClassCode={targetClassCode}
+                onStartExam={handleStartExam}
+              />
             )}
 
             {studentFlow === 'running' && currentSession && (
