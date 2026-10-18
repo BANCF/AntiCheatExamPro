@@ -223,7 +223,7 @@
 - **Giải pháp đã triển khai:**
   - Cấu hình proxy `/api` và `/socket.io` trong `vite.config.ts` trỏ tới `http://localhost:3000`.
   - Bổ sung cơ chế xác thực offline đa tài khoản từ `getStoredTeachers()` cho phép đăng nhập thành công 100% cả khi online lẫn offline.
-  - Nâng cấp giao diện `TeacherLoginModal.tsx`: Hiển thị rõ danh sách tài khoản kèm mật khẩu, nút bấm 1-click đăng nhập ngay, và nút Hiện/Ẩn mật khẩu (Show/Hide Password).
+  - Bảo mật tuyệt đối giao diện `TeacherLoginModal.tsx`: Đã gỡ bỏ toàn bộ danh sách tài khoản mẫu/mật khẩu thử nghiệm và các nút 1-click đăng nhập nhanh. Ô đăng nhập và mật khẩu để trống hoàn toàn, hỗ trợ nút Hiện/Ẩn mật khẩu (Show/Hide Password) và bảo mật tuyệt đối không để học sinh nhìn thấy mật khẩu của giáo viên.
   - Xử lý trim khoảng trắng tên đăng nhập và mật khẩu ở cả server và client.
 
 ### 3. Đưa đề thi Giữa học kì 1 Tin học 6 và cấu hình lớp 6G01 vào hệ thống:
