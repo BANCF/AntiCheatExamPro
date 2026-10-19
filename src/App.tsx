@@ -576,7 +576,8 @@ export function App() {
         assignedCode: currentSession.assignedCode,
         answers,
         status,
-        violationsLog: finalLogs
+        violationsLog: finalLogs,
+        submissionRecord: record
       });
 
       if (apiResult && apiResult.submission_id) {

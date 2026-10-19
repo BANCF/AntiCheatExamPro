@@ -117,6 +117,7 @@ export async function submitStudentExamApi(params: {
   answers: StudentAnswers;
   status: SubmissionStatus;
   violationsLog: ViolationLog[];
+  submissionRecord?: SubmissionRecord;
 }): Promise<{
   success: boolean;
   submission_id: string;
@@ -137,7 +138,8 @@ export async function submitStudentExamApi(params: {
         assigned_code: params.assignedCode,
         answers: params.answers,
         status: params.status,
-        violations_log: params.violationsLog
+        violations_log: params.violationsLog,
+        submission_record: params.submissionRecord
       })
     });
     const contentType = res.headers.get('content-type') || '';
