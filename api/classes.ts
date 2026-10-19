@@ -39,11 +39,14 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   }
 
   if (method === 'DELETE') {
-    // Delete id passed in query or body
+    // Delete id passed in query, path, or body
     const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
     const id = url.searchParams.get('id');
+    const pathSegments = url.pathname.split('/').filter(Boolean);
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    const pathId = lastSegment && lastSegment !== 'classes' ? lastSegment : null;
     const body = await parseJsonBody(req);
-    const targetId = id || body?.id;
+    const targetId = id || pathId || body?.id;
 
     if (!targetId) {
       return sendJson(res, 400, { error: 'Thiếu ID lớp cần xóa' });

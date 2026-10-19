@@ -4,6 +4,14 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/teachers/:id",
+      "destination": "/api/teachers?id=:id"
+    },
+    {
+      "source": "/api/classes/:id",
+      "destination": "/api/classes?id=:id"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
