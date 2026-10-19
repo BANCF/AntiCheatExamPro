@@ -21,7 +21,8 @@ import {
   ArrowDown,
   GraduationCap,
   BookOpen,
-  Trophy
+  Trophy,
+  RefreshCw
 } from 'lucide-react';
 
 interface GradebookTabProps {
@@ -59,6 +60,24 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
   // Real-time flash alert indicator when new submission arrives
   const [latestSubmissionId, setLatestSubmissionId] = useState<string | null>(null);
   const [isLiveConnected, setIsLiveConnected] = useState<boolean>(true);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const remote = await fetchSubmissionsApi();
+      if (remote && Array.isArray(remote)) {
+        setSubmissions((prev) => {
+          const map = new Map<string, SubmissionRecord>();
+          prev.forEach((s) => map.set(s.submission_id, s));
+          remote.forEach((s) => map.set(s.submission_id, s));
+          return Array.from(map.values());
+        });
+      }
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   // Sync with prop updates
   useEffect(() => {
@@ -421,6 +440,16 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2 justify-end">
+          <button
+            type="button"
+            onClick={handleManualRefresh}
+            className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-indigo-200"
+            title="Tải lại toàn bộ bài nộp mới nhất từ máy chủ"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-indigo-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Đang tải...' : 'Làm mới điểm'}</span>
+          </button>
+
           {onAddSampleSubmissions && (
             <button
               type="button"

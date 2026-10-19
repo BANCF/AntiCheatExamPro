@@ -1,7 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { getSubmissions, clearSubmissions, addSubmission, parseJsonBody, sendJson } from './_storage';
+import { getSubmissions, clearSubmissions, addSubmission, parseJsonBody, sendJson, handleCors } from './_storage';
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (handleCors(req, res)) return;
+
   const method = (req.method || 'GET').toUpperCase();
 
   if (method === 'GET') {

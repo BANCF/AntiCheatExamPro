@@ -5,12 +5,15 @@ import {
   getQuestionBank,
   getExamConfig,
   parseJsonBody,
-  sendJson
+  sendJson,
+  handleCors
 } from '../_storage';
 import { SubmissionRecord } from '../../src/types/exam';
 import { calculateExamScore } from '../../src/utils/randomEngine';
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (handleCors(req, res)) return;
+
   if ((req.method || 'GET').toUpperCase() !== 'POST') {
     return sendJson(res, 405, { error: 'Method Not Allowed' });
   }
@@ -25,18 +28,22 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       answers,
       status,
       violations_log,
-      submission_record
+      submission_record,
+      submissionRecord,
+      record
     } = body;
 
-    if (!attempt_id) {
-      return sendJson(res, 400, { error: 'Thiếu attempt_id' });
+    const incomingRecord = submission_record || submissionRecord || record;
+
+    if (!attempt_id && !incomingRecord?.attempt_id && !incomingRecord?.submission_id) {
+      return sendJson(res, 400, { error: 'Thiếu attempt_id hoặc submission record' });
     }
 
     let finalRecord: SubmissionRecord;
 
-    if (submission_record && submission_record.submission_id) {
+    if (incomingRecord && incomingRecord.submission_id) {
       // Client has already computed accurate score based on picked randomized variant
-      finalRecord = submission_record;
+      finalRecord = incomingRecord;
     } else {
       // Calculate score on server
       const bank = await getQuestionBank();

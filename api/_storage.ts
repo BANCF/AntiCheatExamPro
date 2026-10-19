@@ -42,6 +42,18 @@ export function getRedis(): Redis | null {
   return redisInstance;
 }
 
+export function handleCors(req: any, res: any): boolean {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS, PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if ((req.method || '').toUpperCase() === 'OPTIONS') {
+    res.statusCode = 200;
+    res.end();
+    return true;
+  }
+  return false;
+}
+
 export async function parseJsonBody(req: any): Promise<any> {
   if (req.body && typeof req.body === 'object') {
     return req.body;
@@ -53,17 +65,33 @@ export async function parseJsonBody(req: any): Promise<any> {
       return {};
     }
   }
+  if (req.readableEnded) {
+    return {};
+  }
   return new Promise((resolve) => {
     let raw = '';
-    req.on('data', (chunk: any) => {
-      raw += chunk;
-    });
-    req.on('end', () => {
+    const timer = setTimeout(() => {
       try {
         resolve(raw ? JSON.parse(raw) : {});
       } catch {
         resolve({});
       }
+    }, 1500);
+
+    req.on('data', (chunk: any) => {
+      raw += chunk;
+    });
+    req.on('end', () => {
+      clearTimeout(timer);
+      try {
+        resolve(raw ? JSON.parse(raw) : {});
+      } catch {
+        resolve({});
+      }
+    });
+    req.on('error', () => {
+      clearTimeout(timer);
+      resolve({});
     });
   });
 }
@@ -71,6 +99,9 @@ export async function parseJsonBody(req: any): Promise<any> {
 export function sendJson(res: any, status: number, data: any) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS, PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.end(JSON.stringify(data));
 }
 
@@ -83,7 +114,12 @@ export async function getSubmissions(): Promise<SubmissionRecord[]> {
   const redis = getRedis();
   if (redis) {
     try {
-      const list = await redis.get<SubmissionRecord[]>('exam:submissions');
+      let list = await redis.get<any>('exam:submissions');
+      if (typeof list === 'string') {
+        try {
+          list = JSON.parse(list);
+        } catch {}
+      }
       if (Array.isArray(list)) return list;
     } catch (err) {
       console.error('Error fetching submissions from Redis:', err);
@@ -96,8 +132,16 @@ export async function addSubmission(sub: SubmissionRecord): Promise<void> {
   const redis = getRedis();
   if (redis) {
     try {
-      const list = (await redis.get<SubmissionRecord[]>('exam:submissions')) || [];
-      const filtered = Array.isArray(list) ? list.filter((s) => s.submission_id !== sub.submission_id) : [];
+      let list = await redis.get<any>('exam:submissions');
+      if (typeof list === 'string') {
+        try {
+          list = JSON.parse(list);
+        } catch {
+          list = [];
+        }
+      }
+      const currentList = Array.isArray(list) ? list : [];
+      const filtered = currentList.filter((s: any) => s.submission_id !== sub.submission_id);
       const updated = [sub, ...filtered].slice(0, 2000);
       await redis.set('exam:submissions', updated);
       return;
