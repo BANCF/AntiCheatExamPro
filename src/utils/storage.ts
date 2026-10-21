@@ -16,7 +16,17 @@ export function getStoredQuestionBank(): Question[] {
     const raw = localStorage.getItem(STORAGE_KEYS.QUESTION_BANK);
     if (!raw) return DEFAULT_QUESTION_BANK;
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_QUESTION_BANK;
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      const existingIds = new Set(parsed.map((q: Question) => q.id));
+      const missing = DEFAULT_QUESTION_BANK.filter((q) => !existingIds.has(q.id));
+      if (missing.length > 0) {
+        const merged = [...parsed, ...missing];
+        saveQuestionBank(merged);
+        return merged;
+      }
+      return parsed;
+    }
+    return DEFAULT_QUESTION_BANK;
   } catch {
     return DEFAULT_QUESTION_BANK;
   }
@@ -112,8 +122,18 @@ export function getStoredClasses(): ClassRoom[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CLASSES);
     if (!raw) return DEFAULT_CLASSES;
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_CLASSES;
+    const parsed: ClassRoom[] = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      const existingIds = new Set(parsed.map((c) => c.id));
+      const missing = DEFAULT_CLASSES.filter((c) => !existingIds.has(c.id));
+      if (missing.length > 0) {
+        const merged = [...missing, ...parsed];
+        saveStoredClasses(merged);
+        return merged;
+      }
+      return parsed;
+    }
+    return DEFAULT_CLASSES;
   } catch {
     return DEFAULT_CLASSES;
   }

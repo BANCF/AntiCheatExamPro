@@ -2,6 +2,30 @@ import { ClassRoom, TeacherAccount } from '../types/exam';
 
 export const DEFAULT_CLASSES: ClassRoom[] = [
   {
+    id: 'cls_6ontap',
+    code: '6ONTAP',
+    name: 'Lớp 6 - Ôn Tập Thường Xuyên (Test)',
+    grade: 'Lớp 6',
+    subject: 'Tin học',
+    teacherName: 'Thầy/Cô Bộ Môn Tin Học',
+    pinCode: '6666',
+    examTitle: 'Đề Ôn Tập Thường Xuyên - Tin Học 6',
+    examConfig: {
+      duration_minutes: 45,
+      total_questions_to_pick: 20,
+      target_grade: 'Lớp 6',
+      target_subject: 'Tin học',
+      target_term: 'Ôn tập thường xuyên',
+      exam_mode: 'bank',
+      distribution: {
+        single_choice: 16,
+        true_false: 4
+      }
+    },
+    isActive: true,
+    description: 'Đề ôn tập thường xuyên Tin học 6 (Ngân hàng 50 câu: 44 trắc nghiệm đơn + 6 trắc nghiệm đúng/sai)'
+  },
+  {
     id: 'cls_6g01',
     code: '6G01',
     name: 'Lớp 6G01 - Tin Học 6',
@@ -9,21 +33,21 @@ export const DEFAULT_CLASSES: ClassRoom[] = [
     subject: 'Tin học',
     teacherName: 'Thầy/Cô Bộ Môn Tin Học',
     pinCode: '6001',
-    examTitle: 'Đề Thi Giữa Học Kì 1 - Tin Học 6 (Lớp 6G01)',
+    examTitle: 'Đề Ôn Tập Thường Xuyên - Tin Học 6 (Lớp 6G01)',
     examConfig: {
       duration_minutes: 45,
-      total_questions_to_pick: 34,
+      total_questions_to_pick: 20,
       target_grade: 'Lớp 6',
       target_subject: 'Tin học',
-      target_term: 'Giữa kì I',
+      target_term: 'Ôn tập thường xuyên',
       exam_mode: 'bank',
       distribution: {
-        single_choice: 32,
-        true_false: 2
+        single_choice: 16,
+        true_false: 4
       }
     },
     isActive: true,
-    description: 'Đề thi Giữa học kì 1 Tin học 6 chính thức (32 câu trắc nghiệm 4 lựa chọn + 2 câu đúng sai)'
+    description: 'Đề thi ôn tập thường xuyên Tin học 6 (16 trắc nghiệm + 4 đúng/sai)'
   },
   {
     id: 'cls_7a1',

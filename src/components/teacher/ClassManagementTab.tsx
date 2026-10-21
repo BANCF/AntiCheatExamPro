@@ -23,7 +23,7 @@ import {
   Sliders,
   X
 } from 'lucide-react';
-import { KNOWN_GRADES, KNOWN_SUBJECTS, getQuestionClassification } from '../../utils/questionClassification';
+import { KNOWN_GRADES, KNOWN_SUBJECTS, KNOWN_TERMS, getQuestionClassification } from '../../utils/questionClassification';
 
 interface ClassManagementTabProps {
   classes: ClassRoom[];
@@ -105,6 +105,7 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
   const [examFormMode, setExamFormMode] = useState<'bank' | 'pdf' | 'default'>('bank');
   const [examFormDuration, setExamFormDuration] = useState(15);
   const [examFormQuestionCount, setExamFormQuestionCount] = useState(10);
+  const [examFormTerm, setExamFormTerm] = useState('Ôn tập thường xuyên');
   const [examFormPinCode, setExamFormPinCode] = useState('');
 
   // PDF Exam specific states for class
@@ -156,6 +157,7 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
     setExamFormTitle(c.examTitle || `Kiểm Tra ${c.subject} - Lớp ${c.code}`);
     setExamFormDuration(existingCfg.duration_minutes || config.duration_minutes || 15);
     setExamFormQuestionCount(existingCfg.total_questions_to_pick || config.total_questions_to_pick || 10);
+    setExamFormTerm(existingCfg.target_term || 'Ôn tập thường xuyên');
     setExamFormPinCode(c.pinCode);
 
     // Mode determination
@@ -256,6 +258,7 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
         exam_mode: 'bank',
         target_grade: targetClassForExam.grade,
         target_subject: targetClassForExam.subject,
+        target_term: examFormTerm,
         duration_minutes: Number(examFormDuration),
         total_questions_to_pick: Number(examFormQuestionCount)
       };
@@ -359,9 +362,10 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
       const info = getQuestionClassification(q);
       const matchGrade = !targetClassForExam.grade || info.grade === targetClassForExam.grade;
       const matchSubject = !targetClassForExam.subject || info.subject === targetClassForExam.subject;
-      return matchGrade && matchSubject;
+      const matchTerm = !examFormTerm || examFormTerm === 'all' || info.term === examFormTerm;
+      return matchGrade && matchSubject && matchTerm;
     });
-  }, [bank, targetClassForExam]);
+  }, [bank, targetClassForExam, examFormTerm]);
 
   const filteredClasses = classes.filter((c) => {
     const q = searchTerm.toLowerCase();
@@ -925,10 +929,31 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                       <label className="block font-semibold text-slate-700 mb-1">
-                        Số câu hỏi bốc cho học sinh
+                        Đợt thi / Học kỳ
+                      </label>
+                      <select
+                        value={examFormTerm}
+                        onChange={(e) => setExamFormTerm(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:border-indigo-600 cursor-pointer"
+                      >
+                        <option value="all">Tất cả đợt thi</option>
+                        {KNOWN_TERMS.map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="text-[10px] text-slate-500 mt-0.5 block">
+                        Chọn 'Ôn tập thường xuyên'
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">
+                        Số câu hỏi bốc
                       </label>
                       <input
                         type="number"
@@ -939,13 +964,13 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
                         className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
                       />
                       <span className="text-[10px] text-slate-500 mt-0.5 block">
-                        Tối đa {availableBankQuestionsForTarget.length} câu khả dụng trong kho
+                        Có {availableBankQuestionsForTarget.length} câu khả dụng
                       </span>
                     </div>
 
                     <div>
                       <label className="block font-semibold text-slate-700 mb-1">
-                        Thời gian làm bài (phút)
+                        Thời gian làm (phút)
                       </label>
                       <input
                         type="number"
@@ -955,6 +980,9 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
                         onChange={(e) => setExamFormDuration(Number(e.target.value))}
                         className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
                       />
+                      <span className="text-[10px] text-slate-500 mt-0.5 block">
+                        Tiêu chuẩn 45 phút
+                      </span>
                     </div>
                   </div>
 

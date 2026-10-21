@@ -1612,12 +1612,32 @@ export const DEFAULT_QUESTION_BANK: Question[] = [
     "term": "Giữa kì I",
     "prompt": "Hệ đếm nhị phân (Binary system) sử dụng các kí số nào sau đây để biểu diễn dữ liệu trong máy tính?",
     "options": [
-      { "id": "opt_t10_1_a", "text": "Chỉ gồm hai kí số 0 và 1", "is_correct": true },
-      { "id": "opt_t10_1_b", "text": "Các kí số từ 0 đến 9", "is_correct": false },
-      { "id": "opt_t10_1_c", "text": "Các kí số từ 0 đến 7", "is_correct": false },
-      { "id": "opt_t10_1_d", "text": "Gồm 0, 1 và các chữ cái A đến F", "is_correct": false }
+      {
+        "id": "opt_t10_1_a",
+        "text": "Chỉ gồm hai kí số 0 và 1",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t10_1_b",
+        "text": "Các kí số từ 0 đến 9",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t10_1_c",
+        "text": "Các kí số từ 0 đến 7",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t10_1_d",
+        "text": "Gồm 0, 1 và các chữ cái A đến F",
+        "is_correct": false
+      }
     ],
-    "tags": ["tin_hoc_10", "bieu_dien_thong_tin", "nhi_phan"]
+    "tags": [
+      "tin_hoc_10",
+      "bieu_dien_thong_tin",
+      "nhi_phan"
+    ]
   },
   {
     "id": "q_tin10_ck1_2",
@@ -1627,12 +1647,32 @@ export const DEFAULT_QUESTION_BANK: Question[] = [
     "term": "Cuối kì I",
     "prompt": "Trong ngôn ngữ lập trình Python, hàm nào sau đây được sử dụng để xuất dữ liệu ra màn hình?",
     "options": [
-      { "id": "opt_t10_2_a", "text": "print()", "is_correct": true },
-      { "id": "opt_t10_2_b", "text": "input()", "is_correct": false },
-      { "id": "opt_t10_2_c", "text": "echo()", "is_correct": false },
-      { "id": "opt_t10_2_d", "text": "output()", "is_correct": false }
+      {
+        "id": "opt_t10_2_a",
+        "text": "print()",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t10_2_b",
+        "text": "input()",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t10_2_c",
+        "text": "echo()",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t10_2_d",
+        "text": "output()",
+        "is_correct": false
+      }
     ],
-    "tags": ["tin_hoc_10", "lap_trinh_python", "cuoi_ki_1"]
+    "tags": [
+      "tin_hoc_10",
+      "lap_trinh_python",
+      "cuoi_ki_1"
+    ]
   },
   {
     "id": "q_tin8_gk1_3",
@@ -1642,12 +1682,32 @@ export const DEFAULT_QUESTION_BANK: Question[] = [
     "term": "Giữa kì I",
     "prompt": "Thông tin trong môi trường số có đặc điểm nổi bật nào sau đây?",
     "options": [
-      { "id": "opt_t8_3_a", "text": "Dễ dàng sao chép, lan truyền nhanh chóng và khó thu hồi triệt để", "is_correct": true },
-      { "id": "opt_t8_3_b", "text": "Hoàn toàn bảo mật và không bao giờ bị rò rỉ", "is_correct": false },
-      { "id": "opt_t8_3_c", "text": "Chỉ lưu trữ được trên giấy và sách vở in truyền thống", "is_correct": false },
-      { "id": "opt_t8_3_d", "text": "Không thể chia sẻ qua mạng Internet", "is_correct": false }
+      {
+        "id": "opt_t8_3_a",
+        "text": "Dễ dàng sao chép, lan truyền nhanh chóng và khó thu hồi triệt để",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t8_3_b",
+        "text": "Hoàn toàn bảo mật và không bao giờ bị rò rỉ",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t8_3_c",
+        "text": "Chỉ lưu trữ được trên giấy và sách vở in truyền thống",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t8_3_d",
+        "text": "Không thể chia sẻ qua mạng Internet",
+        "is_correct": false
+      }
     ],
-    "tags": ["tin_hoc_8", "thong_tin_so", "giua_ki_1"]
+    "tags": [
+      "tin_hoc_8",
+      "thong_tin_so",
+      "giua_ki_1"
+    ]
   },
   {
     "id": "q_tin9_gk1_4",
@@ -1657,12 +1717,32 @@ export const DEFAULT_QUESTION_BANK: Question[] = [
     "term": "Giữa kì I",
     "prompt": "Xét tính Đúng / Sai của các khẳng định sau về mạng máy tính và an toàn thông tin:",
     "items": [
-      { "id": "sub_t9_4_a", "text": "Mạng LAN là mạng kết nối các máy tính trong phạm vi hẹp như trường học, văn phòng.", "is_correct": true },
-      { "id": "sub_t9_4_b", "text": "Địa chỉ IP là định danh duy nhất của mỗi thiết bị khi tham gia vào mạng Internet.", "is_correct": true },
-      { "id": "sub_t9_4_c", "text": "Cáp mạng xoắn đôi (UTP) là phương tiện truyền dẫn không dây.", "is_correct": false },
-      { "id": "sub_t9_4_d", "text": "Trang web có giao thức https:// giúp mã hóa bảo mật thông tin tốt hơn http://.", "is_correct": true }
+      {
+        "id": "sub_t9_4_a",
+        "text": "Mạng LAN là mạng kết nối các máy tính trong phạm vi hẹp như trường học, văn phòng.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t9_4_b",
+        "text": "Địa chỉ IP là định danh duy nhất của mỗi thiết bị khi tham gia vào mạng Internet.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t9_4_c",
+        "text": "Cáp mạng xoắn đôi (UTP) là phương tiện truyền dẫn không dây.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t9_4_d",
+        "text": "Trang web có giao thức https:// giúp mã hóa bảo mật thông tin tốt hơn http://.",
+        "is_correct": true
+      }
     ],
-    "tags": ["tin_hoc_9", "mang_may_tinh", "dung_sai"]
+    "tags": [
+      "tin_hoc_9",
+      "mang_may_tinh",
+      "dung_sai"
+    ]
   },
   {
     "id": "q_tin7_ck1_5",
@@ -1672,1216 +1752,1782 @@ export const DEFAULT_QUESTION_BANK: Question[] = [
     "term": "Cuối kì I",
     "prompt": "Trong phần mềm bảng tính điện tử (MS Excel), cú pháp hàm nào sau đây dùng để tính tổng các ô từ A1 đến A5?",
     "options": [
-      { "id": "opt_t7_ck1_a", "text": "=SUM(A1:A5)", "is_correct": true },
-      { "id": "opt_t7_ck1_b", "text": "=AVERAGE(A1:A5)", "is_correct": false },
-      { "id": "opt_t7_ck1_c", "text": "=TOTAL(A1..A5)", "is_correct": false },
-      { "id": "opt_t7_ck1_d", "text": "=COUNT(A1:A5)", "is_correct": false }
+      {
+        "id": "opt_t7_ck1_a",
+        "text": "=SUM(A1:A5)",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_ck1_b",
+        "text": "=AVERAGE(A1:A5)",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_ck1_c",
+        "text": "=TOTAL(A1..A5)",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_ck1_d",
+        "text": "=COUNT(A1:A5)",
+        "is_correct": false
+      }
     ],
-    "tags": ["tin_hoc_7", "bang_tinh_excel", "cuoi_ki_1"]
+    "tags": [
+      "tin_hoc_7",
+      "bang_tinh_excel",
+      "cuoi_ki_1"
+    ]
   },
-{
-    "id": "q_tin6_1",
+  {
+    "id": "q_tin6_ot_1",
     "type": "single_choice",
     "prompt": "Thông tin là gì?",
     "options": [
       {
-        "id": "opt_t6_1_a",
-        "text": "Bất kì vật thể nào xung quanh chúng ta.",
-        "is_correct": false
+        "id": "opt_t6_ot_1_a",
+        "text": "Những gì đem lại hiểu biết cho con người về thế giới xung quanh và về chính bản thân mình.",
+        "is_correct": true
       },
       {
-        "id": "opt_t6_1_b",
+        "id": "opt_t6_ot_1_b",
         "text": "Các con số, chữ viết và hình ảnh trên trang giấy.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_1_c",
-        "text": "Các thiết bị điện tử có khả năng lưu trữ.",
+        "id": "opt_t6_ot_1_c",
+        "text": "Bất kì vật thể nào xung quanh chúng ta.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_1_d",
-        "text": "Những gì đem lại hiểu biết cho con người về thế giới xung quanh và về chính bản thân mình.",
-        "is_correct": true
+        "id": "opt_t6_ot_1_d",
+        "text": "Các thiết bị điện tử có khả năng lưu trữ.",
+        "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_2",
+    "id": "q_tin6_ot_2",
     "type": "single_choice",
     "prompt": "Dữ liệu là gì?",
     "options": [
       {
-        "id": "opt_t6_2_a",
-        "text": "Các thiết bị dùng để kết nối mạng.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_2_b",
-        "text": "Quá trình thu nhận và xử lí thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_2_c",
+        "id": "opt_t6_ot_2_a",
         "text": "Sự hiểu biết của con người.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_2_d",
+        "id": "opt_t6_ot_2_b",
         "text": "Thông tin được ghi lên vật mang tin.",
         "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_2_c",
+        "text": "Quá trình thu nhận và xử lí thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_2_d",
+        "text": "Các thiết bị dùng để kết nối mạng.",
+        "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_3",
+    "id": "q_tin6_ot_3",
     "type": "single_choice",
     "prompt": "Vật mang tin là gì?",
     "options": [
       {
-        "id": "opt_t6_3_a",
+        "id": "opt_t6_ot_3_a",
+        "text": "Những gì đem lại hiểu biết cho con người.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_3_b",
         "text": "Các thiết bị đầu cuối trong mạng máy tính.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_3_b",
-        "text": "Các phần mềm giúp máy tính hoạt động.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_3_c",
+        "id": "opt_t6_ot_3_c",
         "text": "Phương tiện được dùng để lưu trữ và truyền tải thông tin.",
         "is_correct": true
       },
       {
-        "id": "opt_t6_3_d",
-        "text": "Những gì đem lại hiểu biết cho con người.",
+        "id": "opt_t6_ot_3_d",
+        "text": "Các phần mềm giúp máy tính hoạt động.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_4",
+    "id": "q_tin6_ot_4",
     "type": "single_choice",
     "prompt": "Dữ liệu được thể hiện dưới những dạng cơ bản nào?",
     "options": [
       {
-        "id": "opt_t6_4_a",
-        "text": "Chỉ hình ảnh và âm thanh.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_4_b",
-        "text": "Âm thanh, hình ảnh, văn bản và các con số.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_4_c",
+        "id": "opt_t6_ot_4_a",
         "text": "Chỉ văn bản và con số.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_4_d",
+        "id": "opt_t6_ot_4_b",
+        "text": "Chỉ hình ảnh và âm thanh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_4_c",
+        "text": "Âm thanh, hình ảnh, văn bản và các con số.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_4_d",
         "text": "Các thiết bị phần cứng của máy tính.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_5",
+    "id": "q_tin6_ot_5",
+    "type": "single_choice",
+    "prompt": "Nhận định nào sau đây đúng về mối quan hệ giữa thông tin và dữ liệu?",
+    "options": [
+      {
+        "id": "opt_t6_ot_5_a",
+        "text": "Thông tin và dữ liệu là một, không có sự khác biệt.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_5_b",
+        "text": "Thông tin được ghi lên vật mang tin trở thành dữ liệu.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_5_c",
+        "text": "Thông tin luôn nằm trong máy tính, còn dữ liệu ở ngoài đời thực.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_5_d",
+        "text": "Dữ liệu chỉ có ý nghĩa đối với máy tính, không có ý nghĩa đối với con người.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_6",
+    "type": "single_choice",
+    "prompt": "Sự hiểu biết mà thông tin đem lại luôn phụ thuộc vào yếu tố nào?",
+    "options": [
+      {
+        "id": "opt_t6_ot_6_a",
+        "text": "Tốc độ của máy tính.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_6_b",
+        "text": "Độ lớn của vật mang tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_6_c",
+        "text": "Người tiếp nhận thông tin đó.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_6_d",
+        "text": "Dãy bit biểu diễn thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_7",
+    "type": "single_choice",
+    "prompt": "Khi đi trên đường, bạn Minh thấy đèn giao thông chuyển sang màu đỏ nên dừng lại. Trong trường hợp này, 'đèn giao thông chuyển màu đỏ' đóng vai trò là gì?",
+    "options": [
+      {
+        "id": "opt_t6_ot_7_a",
+        "text": "Thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_7_b",
+        "text": "Dữ liệu.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_7_c",
+        "text": "Quá trình xử lí.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_7_d",
+        "text": "Bộ nhớ.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_8",
+    "type": "single_choice",
+    "prompt": "Từ việc thấy đèn đỏ, bạn Minh biết rằng mình 'phải dừng xe lại để đảm bảo an toàn'. Điều mà Minh biết được gọi là gì?",
+    "options": [
+      {
+        "id": "opt_t6_ot_8_a",
+        "text": "Thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_8_b",
+        "text": "Dữ liệu.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_8_c",
+        "text": "Vật mang tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_8_d",
+        "text": "Thiết bị vào.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_9",
+    "type": "single_choice",
+    "prompt": "Trong tình huống bạn An xem mục dự báo thời tiết trên tivi, chiếc tivi đóng vai trò là gì?",
+    "options": [
+      {
+        "id": "opt_t6_ot_9_a",
+        "text": "Thiết bị kết nối mạng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_9_b",
+        "text": "Dữ liệu thời tiết.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_9_c",
+        "text": "Vật mang tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_9_d",
+        "text": "Bộ xử lí thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_10",
+    "type": "single_choice",
+    "prompt": "Phát biểu: 'Theo bảng thống kê, tháng 6 Đà Nẵng ít mưa nhất so với Hà Nội, Huế' là:",
+    "options": [
+      {
+        "id": "opt_t6_ot_10_a",
+        "text": "Vật mang tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_10_b",
+        "text": "Dữ liệu.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_10_c",
+        "text": "Bộ nhớ.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_10_d",
+        "text": "Thông tin.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_11",
+    "type": "single_choice",
+    "prompt": "Một em bé 3 tuổi nhìn thấy dòng chữ 'CẤM LỬA' trên biển cảnh báo nhưng không hiểu ý nghĩa. Đối với em bé, dòng chữ đó là:",
+    "options": [
+      {
+        "id": "opt_t6_ot_11_a",
+        "text": "Thông tin quan trọng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_11_b",
+        "text": "Dữ liệu nhưng không đem lại thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_11_c",
+        "text": "Vật mang tin vô hình.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_11_d",
+        "text": "Bộ xử lí thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_12",
+    "type": "single_choice",
+    "prompt": "Quá trình xử lí thông tin của con người gồm bao nhiêu hoạt động cơ bản?",
+    "options": [
+      {
+        "id": "opt_t6_ot_12_a",
+        "text": "2 hoạt động.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_12_b",
+        "text": "3 hoạt động.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_12_c",
+        "text": "4 hoạt động.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_12_d",
+        "text": "5 hoạt động.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_13",
+    "type": "single_choice",
+    "prompt": "Các hoạt động cơ bản của quá trình xử lí thông tin theo thứ tự hợp lí thường là:",
+    "options": [
+      {
+        "id": "opt_t6_ot_13_a",
+        "text": "Lưu trữ -> Xử lí -> Truyền -> Thu nhận.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_13_b",
+        "text": "Thu nhận -> Lưu trữ -> Xử lí -> Truyền.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_13_c",
+        "text": "Xử lí -> Thu nhận -> Lưu trữ -> Truyền.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_13_d",
+        "text": "Truyền -> Xử lí -> Thu nhận -> Lưu trữ.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_14",
     "type": "single_choice",
     "prompt": "Máy tính gồm bao nhiêu thành phần chính để thực hiện các hoạt động xử lí thông tin?",
     "options": [
       {
-        "id": "opt_t6_5_a",
+        "id": "opt_t6_ot_14_a",
+        "text": "3 (Thiết bị vào, thiết bị ra, phần mềm).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_14_b",
         "text": "4 (Thiết bị vào, bộ nhớ, bộ xử lí, thiết bị ra).",
         "is_correct": true
       },
       {
-        "id": "opt_t6_5_b",
+        "id": "opt_t6_ot_14_c",
         "text": "2 (Phần cứng, Phần mềm).",
         "is_correct": false
       },
       {
-        "id": "opt_t6_5_c",
+        "id": "opt_t6_ot_14_d",
         "text": "5 (Bàn phím, chuột, CPU, màn hình, máy in).",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_5_d",
-        "text": "3 (Thiết bị vào, thiết bị ra, phần mềm).",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_6",
+    "id": "q_tin6_ot_15",
     "type": "single_choice",
     "prompt": "Trong máy tính, thiết bị nào sau đây dùng để thu nhận thông tin (thiết bị vào)?",
     "options": [
       {
-        "id": "opt_t6_6_a",
+        "id": "opt_t6_ot_15_a",
+        "text": "Bàn phím, chuột, máy quét.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_15_b",
         "text": "Màn hình, máy in, loa.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_6_b",
-        "text": "Đĩa cứng, đĩa quang, thẻ nhớ.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_6_c",
+        "id": "opt_t6_ot_15_c",
         "text": "Bộ xử lí (CPU).",
         "is_correct": false
       },
       {
-        "id": "opt_t6_6_d",
-        "text": "Bàn phím, chuột, máy quét.",
-        "is_correct": true
+        "id": "opt_t6_ot_15_d",
+        "text": "Đĩa cứng, đĩa quang, thẻ nhớ.",
+        "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_7",
+    "id": "q_tin6_ot_16",
     "type": "single_choice",
     "prompt": "Bộ nhớ trong máy tính thực hiện chức năng gì?",
     "options": [
       {
-        "id": "opt_t6_7_a",
-        "text": "Truyền thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_7_b",
-        "text": "Xử lí thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_7_c",
+        "id": "opt_t6_ot_16_a",
         "text": "Thu nhận thông tin.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_7_d",
+        "id": "opt_t6_ot_16_b",
+        "text": "Xử lí thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_16_c",
+        "text": "Truyền thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_16_d",
         "text": "Lưu trữ thông tin.",
         "is_correct": true
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_8",
+    "id": "q_tin6_ot_17",
     "type": "single_choice",
     "prompt": "Bộ phận nào được ví như 'bộ não' của máy tính, đóng vai trò xử lí thông tin?",
     "options": [
       {
-        "id": "opt_t6_8_a",
-        "text": "Bộ xử lí (CPU).",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_8_b",
-        "text": "Thiết bị ra (Màn hình).",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_8_c",
+        "id": "opt_t6_ot_17_a",
         "text": "Bộ nhớ (RAM, Ổ cứng).",
         "is_correct": false
       },
       {
-        "id": "opt_t6_8_d",
+        "id": "opt_t6_ot_17_b",
+        "text": "Bộ xử lí (CPU).",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_17_c",
         "text": "Thiết bị vào (Bàn phím, chuột).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_17_d",
+        "text": "Thiết bị ra (Màn hình).",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "thong_tin_va_du_lieu",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_9",
+    "id": "q_tin6_ot_18",
+    "type": "single_choice",
+    "prompt": "Thiết bị ra của máy tính (như màn hình, máy in) tương ứng với hoạt động nào trong quá trình xử lí thông tin?",
+    "options": [
+      {
+        "id": "opt_t6_ot_18_a",
+        "text": "Thu nhận thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_18_b",
+        "text": "Xử lí thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_18_c",
+        "text": "Truyền/chia sẻ thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_18_d",
+        "text": "Lưu trữ thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_19",
+    "type": "single_choice",
+    "prompt": "Việc em chép bài trên bảng vào vở là hoạt động nào trong quá trình xử lí thông tin?",
+    "options": [
+      {
+        "id": "opt_t6_ot_19_a",
+        "text": "Thu nhận thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_19_b",
+        "text": "Xử lí thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_19_c",
+        "text": "Lưu trữ thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_19_d",
+        "text": "Truyền thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_20",
+    "type": "single_choice",
+    "prompt": "Em đang nghe chương trình ca nhạc trên đài phát thanh. Hoạt động nghe ca nhạc này là:",
+    "options": [
+      {
+        "id": "opt_t6_ot_20_a",
+        "text": "Thu nhận thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_20_b",
+        "text": "Xử lí thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_20_c",
+        "text": "Truyền thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_20_d",
+        "text": "Lưu trữ thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_21",
+    "type": "single_choice",
+    "prompt": "Não của cầu thủ phân tích vị trí thủ môn để sút bóng vào góc khung thành hở nhất. Đây là hoạt động:",
+    "options": [
+      {
+        "id": "opt_t6_ot_21_a",
+        "text": "Thu nhận thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_21_b",
+        "text": "Lưu trữ thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_21_c",
+        "text": "Xử lí thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_21_d",
+        "text": "Truyền thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_22",
+    "type": "single_choice",
+    "prompt": "Việc em thuyết trình chủ đề tình bạn trước toàn lớp thuộc hoạt động nào?",
+    "options": [
+      {
+        "id": "opt_t6_ot_22_a",
+        "text": "Thu nhận thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_22_b",
+        "text": "Truyền thông tin.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_22_c",
+        "text": "Xử lí thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_22_d",
+        "text": "Bộ nhớ thông tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_23",
+    "type": "single_choice",
+    "prompt": "Đặc điểm nào sau đây KHÔNG phải là ưu điểm của máy tính so với con người khi xử lí thông tin?",
+    "options": [
+      {
+        "id": "opt_t6_ot_23_a",
+        "text": "Tính toán với tốc độ cao, chính xác.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_23_b",
+        "text": "Làm việc liên tục bền bỉ ngày đêm.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_23_c",
+        "text": "Có khả năng tự tư duy, sáng tạo ra ý tưởng mới như con người.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_23_d",
+        "text": "Lưu trữ được lượng thông tin khổng lồ trong không gian nhỏ.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_24",
     "type": "single_choice",
     "prompt": "Thông tin trong máy tính thông dụng hiện nay được biểu diễn bằng các kí hiệu nào?",
     "options": [
       {
-        "id": "opt_t6_9_a",
+        "id": "opt_t6_ot_24_a",
         "text": "Các số từ 0 đến 9.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_9_b",
-        "text": "Hai kí hiệu 0 và 1.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_9_c",
+        "id": "opt_t6_ot_24_b",
         "text": "Các chữ cái từ A đến Z.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_9_d",
+        "id": "opt_t6_ot_24_c",
+        "text": "Hai kí hiệu 0 và 1.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_24_d",
         "text": "Hệ thống các mã vạch.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "bieu_dien_thong_tin",
-      "day_bit",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_10",
+    "id": "q_tin6_ot_25",
     "type": "single_choice",
     "prompt": "Đơn vị nhỏ nhất để lưu trữ thông tin trong máy tính là gì?",
     "options": [
       {
-        "id": "opt_t6_10_a",
-        "text": "Kilobyte.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_10_b",
-        "text": "Megabyte.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_10_c",
+        "id": "opt_t6_ot_25_a",
         "text": "Byte.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_10_d",
+        "id": "opt_t6_ot_25_b",
         "text": "Bit.",
         "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_25_c",
+        "text": "Kilobyte.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_25_d",
+        "text": "Megabyte.",
+        "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "bieu_dien_thong_tin",
-      "day_bit",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_11",
+    "id": "q_tin6_ot_26",
     "type": "single_choice",
     "prompt": "1 Byte có giá trị bằng bao nhiêu bit?",
     "options": [
       {
-        "id": "opt_t6_11_a",
-        "text": "10 bit.",
+        "id": "opt_t6_ot_26_a",
+        "text": "2 bit.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_11_b",
+        "id": "opt_t6_ot_26_b",
         "text": "8 bit.",
         "is_correct": true
       },
       {
-        "id": "opt_t6_11_c",
-        "text": "1024 bit.",
+        "id": "opt_t6_ot_26_c",
+        "text": "10 bit.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_11_d",
-        "text": "2 bit.",
+        "id": "opt_t6_ot_26_d",
+        "text": "1024 bit.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "bieu_dien_thong_tin",
-      "day_bit",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_12",
+    "id": "q_tin6_ot_27",
     "type": "single_choice",
     "prompt": "Dãy bit là gì?",
     "options": [
       {
-        "id": "opt_t6_12_a",
-        "text": "Bảng mã văn bản nội bộ.",
+        "id": "opt_t6_ot_27_a",
+        "text": "Dãy gồm các số từ 0 đến 9.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_12_b",
-        "text": "Dãy gồm những kí hiệu 0 và 1.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_12_c",
+        "id": "opt_t6_ot_27_b",
         "text": "Dãy gồm các kí tự bảng chữ cái.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_12_d",
-        "text": "Dãy gồm các số từ 0 đến 9.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "bieu_dien_thong_tin",
-      "day_bit",
-      "chu_de_a"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_13",
-    "type": "single_choice",
-    "prompt": "Trong các đơn vị đo dung lượng thông tin sau, đơn vị nào lớn nhất?",
-    "options": [
-      {
-        "id": "opt_t6_13_a",
-        "text": "Terabyte (TB).",
+        "id": "opt_t6_ot_27_c",
+        "text": "Dãy gồm những kí hiệu 0 và 1.",
         "is_correct": true
       },
       {
-        "id": "opt_t6_13_b",
-        "text": "Megabyte (MB).",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_13_c",
-        "text": "Byte (B).",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_13_d",
-        "text": "Gigabyte (GB).",
+        "id": "opt_t6_ot_27_d",
+        "text": "Bảng mã văn bản nội bộ.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "bieu_dien_thong_tin",
-      "day_bit",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_14",
-    "type": "single_choice",
-    "prompt": "Mạng máy tính là gì?",
-    "options": [
-      {
-        "id": "opt_t6_14_a",
-        "text": "Mạng lưới đường bộ nối các thành phố.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_14_b",
-        "text": "Phần mềm giúp máy tính kết nối Internet.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_14_c",
-        "text": "Hai hay nhiều máy tính và các thiết bị được kết nối để truyền thông tin cho nhau.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_14_d",
-        "text": "Tập hợp các thiết bị điện tử trong một căn nhà.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "mang_may_tinh",
-      "chu_de_b"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_15",
-    "type": "single_choice",
-    "prompt": "Các thành phần chính của một mạng máy tính bao gồm:",
-    "options": [
-      {
-        "id": "opt_t6_15_a",
-        "text": "Các thiết bị đầu cuối, các thiết bị kết nối và phần mềm mạng.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_15_b",
-        "text": "Bàn phím, chuột, màn hình và hệ điều hành.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_15_c",
-        "text": "Mạng có dây và mạng không dây.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_15_d",
-        "text": "Dây cáp mạng, điện thoại di động và máy in.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "mang_may_tinh",
-      "chu_de_b"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_16",
-    "type": "single_choice",
-    "prompt": "Thiết bị nào sau đây được gọi là thiết bị đầu cuối trong mạng máy tính?",
-    "options": [
-      {
-        "id": "opt_t6_16_a",
-        "text": "Máy tính để bàn, điện thoại thông minh, máy in.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_16_b",
-        "text": "Bộ chia (Hub).",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_16_c",
-        "text": "Dây dẫn cáp mạng.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_16_d",
-        "text": "Bộ định tuyến (Router).",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "mang_may_tinh",
-      "chu_de_b"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_17",
-    "type": "single_choice",
-    "prompt": "Nhận định nào sau đây đúng về mối quan hệ giữa thông tin và dữ liệu?",
-    "options": [
-      {
-        "id": "opt_t6_17_a",
-        "text": "Thông tin được ghi lên vật mang tin trở thành dữ liệu.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_17_b",
-        "text": "Dữ liệu chỉ có ý nghĩa đối với máy tính, không có ý nghĩa đối với con người.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_17_c",
-        "text": "Thông tin luôn nằm trong máy tính, còn dữ liệu ở ngoài đời thực.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_17_d",
-        "text": "Thông tin và dữ liệu là một, không có sự khác biệt.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_18",
-    "type": "single_choice",
-    "prompt": "Sự hiểu biết mà thông tin đem lại luôn phụ thuộc vào yếu tố nào?",
-    "options": [
-      {
-        "id": "opt_t6_18_a",
-        "text": "Độ lớn của vật mang tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_18_b",
-        "text": "Dãy bit biểu diễn thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_18_c",
-        "text": "Tốc độ của máy tính.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_18_d",
-        "text": "Người tiếp nhận thông tin đó.",
-        "is_correct": true
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_19",
-    "type": "single_choice",
-    "prompt": "Các hoạt động cơ bản của quá trình xử lí thông tin theo thứ tự hợp lí thường là:",
-    "options": [
-      {
-        "id": "opt_t6_19_a",
-        "text": "Truyền -> Xử lí -> Thu nhận -> Lưu trữ.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_19_b",
-        "text": "Xử lí -> Thu nhận -> Lưu trữ -> Truyền.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_19_c",
-        "text": "Thu nhận -> Lưu trữ -> Xử lí -> Truyền.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_19_d",
-        "text": "Lưu trữ -> Xử lí -> Truyền -> Thu nhận.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_20",
-    "type": "single_choice",
-    "prompt": "Thiết bị ra của máy tính (như màn hình, máy in) tương ứng với hoạt động nào trong quá trình xử lí thông tin?",
-    "options": [
-      {
-        "id": "opt_t6_20_a",
-        "text": "Thu nhận thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_20_b",
-        "text": "Xử lí thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_20_c",
-        "text": "Truyền/chia sẻ thông tin.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_20_d",
-        "text": "Lưu trữ thông tin.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_21",
-    "type": "single_choice",
-    "prompt": "Đặc điểm nào sau đây KHÔNG phải là ưu điểm của máy tính so với con người khi xử lí thông tin?",
-    "options": [
-      {
-        "id": "opt_t6_21_a",
-        "text": "Tính toán với tốc độ cao, chính xác.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_21_b",
-        "text": "Có khả năng tự tư duy, sáng tạo ra ý tưởng mới như con người.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_21_c",
-        "text": "Lưu trữ được lượng thông tin khổng lồ trong không gian nhỏ.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_21_d",
-        "text": "Làm việc liên tục bền bỉ ngày đêm.",
-        "is_correct": false
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_22",
+    "id": "q_tin6_ot_28",
     "type": "single_choice",
     "prompt": "1 Kilobyte (KB) xấp xỉ bằng bao nhiêu byte?",
     "options": [
       {
-        "id": "opt_t6_22_a",
+        "id": "opt_t6_ot_28_a",
         "text": "1 nghìn byte.",
         "is_correct": true
       },
       {
-        "id": "opt_t6_22_b",
-        "text": "1 nghìn tỉ byte.",
+        "id": "opt_t6_ot_28_b",
+        "text": "1 triệu byte.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_22_c",
+        "id": "opt_t6_ot_28_c",
         "text": "1 tỉ byte.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_22_d",
-        "text": "1 triệu byte.",
+        "id": "opt_t6_ot_28_d",
+        "text": "1 nghìn tỉ byte.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_23",
+    "id": "q_tin6_ot_29",
+    "type": "single_choice",
+    "prompt": "Trong các đơn vị đo dung lượng thông tin sau, đơn vị nào lớn nhất?",
+    "options": [
+      {
+        "id": "opt_t6_ot_29_a",
+        "text": "Byte (B).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_29_b",
+        "text": "Megabyte (MB).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_29_c",
+        "text": "Gigabyte (GB).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_29_d",
+        "text": "Terabyte (TB).",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_30",
     "type": "single_choice",
     "prompt": "Hình ảnh kĩ thuật số trong máy tính được cấu tạo từ đâu?",
     "options": [
       {
-        "id": "opt_t6_23_a",
+        "id": "opt_t6_ot_30_a",
+        "text": "Các đường thẳng và đường cong.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_30_b",
         "text": "Các mảnh ghép vật lí.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_23_b",
-        "text": "Các mã màu nước.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_23_c",
+        "id": "opt_t6_ot_30_c",
         "text": "Các điểm ảnh (pixel).",
         "is_correct": true
       },
       {
-        "id": "opt_t6_23_d",
-        "text": "Các đường thẳng và đường cong.",
+        "id": "opt_t6_ot_30_d",
+        "text": "Các mã màu nước.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_24",
+    "id": "q_tin6_ot_31",
     "type": "single_choice",
     "prompt": "Để máy tính có thể xử lí được văn bản, hình ảnh, âm thanh, tất cả các dữ liệu này cần được:",
     "options": [
       {
-        "id": "opt_t6_24_a",
-        "text": "Chuyển thành ngôn ngữ Tiếng Việt.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_24_b",
-        "text": "Phân loại theo thư mục riêng biệt.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_24_c",
+        "id": "opt_t6_ot_31_a",
         "text": "In ra giấy.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_24_d",
+        "id": "opt_t6_ot_31_b",
         "text": "Chuyển đổi thành dãy bit.",
         "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_31_c",
+        "text": "Chuyển thành ngôn ngữ Tiếng Việt.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_31_d",
+        "text": "Phân loại theo thư mục riêng biệt.",
+        "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_25",
+    "id": "q_tin6_ot_32",
+    "type": "single_choice",
+    "prompt": "Một thẻ nhớ có dung lượng 16 GB, một bức ảnh chụp có dung lượng khoảng 12 MB. Thẻ nhớ đó chứa được khoảng bao nhiêu bức ảnh? (Biết 1 GB = 1024 MB)",
+    "options": [
+      {
+        "id": "opt_t6_ot_32_a",
+        "text": "Khoảng 133 bức ảnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_32_b",
+        "text": "Khoảng 1024 bức ảnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_32_c",
+        "text": "Khoảng 1365 bức ảnh.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_32_d",
+        "text": "Khoảng 2048 bức ảnh.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_33",
     "type": "single_choice",
     "prompt": "Dữ liệu được lưu trữ trên đĩa quang (CD, DVD) hoặc thẻ nhớ được xếp vào thành phần nào của hệ thống xử lí thông tin máy tính?",
     "options": [
       {
-        "id": "opt_t6_25_a",
-        "text": "Thiết bị vào.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_25_b",
+        "id": "opt_t6_ot_33_a",
         "text": "Bộ nhớ trong.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_25_c",
+        "id": "opt_t6_ot_33_b",
         "text": "Bộ nhớ ngoài (Thiết bị lưu trữ thông tin).",
         "is_correct": true
       },
       {
-        "id": "opt_t6_25_d",
+        "id": "opt_t6_ot_33_c",
+        "text": "Thiết bị vào.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_33_d",
         "text": "Bộ xử lí.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "xu_li_thong_tin",
-      "thiet_bi",
-      "chu_de_a"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_26",
+    "id": "q_tin6_ot_34",
+    "type": "single_choice",
+    "prompt": "Kí tự 'A' được mã hoá trong máy tính thành dãy 01000001. Dãy này có độ dài là bao nhiêu?",
+    "options": [
+      {
+        "id": "opt_t6_ot_34_a",
+        "text": "1 bit.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_34_b",
+        "text": "8 bit (1 byte).",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_34_c",
+        "text": "8 byte.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_34_d",
+        "text": "1 KB.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_35",
+    "type": "single_choice",
+    "prompt": "Mạng máy tính là gì?",
+    "options": [
+      {
+        "id": "opt_t6_ot_35_a",
+        "text": "Tập hợp các thiết bị điện tử trong một căn nhà.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_35_b",
+        "text": "Hai hay nhiều máy tính và các thiết bị được kết nối để truyền thông tin cho nhau.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_35_c",
+        "text": "Mạng lưới đường bộ nối các thành phố.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_35_d",
+        "text": "Phần mềm giúp máy tính kết nối Internet.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_36",
+    "type": "single_choice",
+    "prompt": "Các thành phần chính của một mạng máy tính bao gồm:",
+    "options": [
+      {
+        "id": "opt_t6_ot_36_a",
+        "text": "Các thiết bị đầu cuối, các thiết bị kết nối và phần mềm mạng.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_36_b",
+        "text": "Bàn phím, chuột, màn hình và hệ điều hành.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_36_c",
+        "text": "Dây cáp mạng, điện thoại di động và máy in.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_36_d",
+        "text": "Mạng có dây và mạng không dây.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_37",
+    "type": "single_choice",
+    "prompt": "Thiết bị nào sau đây được gọi là thiết bị đầu cuối trong mạng máy tính?",
+    "options": [
+      {
+        "id": "opt_t6_ot_37_a",
+        "text": "Bộ chia (Hub).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_37_b",
+        "text": "Bộ định tuyến (Router).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_37_c",
+        "text": "Dây dẫn cáp mạng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_37_d",
+        "text": "Máy tính để bàn, điện thoại thông minh, máy in.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_38",
     "type": "single_choice",
     "prompt": "Thiết bị nào sau đây đóng vai trò là thiết bị kết nối trong mạng máy tính?",
     "options": [
       {
-        "id": "opt_t6_26_a",
-        "text": "Bộ chuyển mạch (Switch), Bộ định tuyến (Router).",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_26_b",
-        "text": "Hệ điều hành máy tính.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_26_c",
+        "id": "opt_t6_ot_38_a",
         "text": "Máy tính để bàn.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_26_d",
+        "id": "opt_t6_ot_38_b",
+        "text": "Bộ chuyển mạch (Switch), Bộ định tuyến (Router).",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_38_c",
         "text": "Tai nghe không dây.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_38_d",
+        "text": "Hệ điều hành máy tính.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_27",
+    "id": "q_tin6_ot_39",
     "type": "single_choice",
     "prompt": "Phần mềm mạng có vai trò gì trong mạng máy tính?",
     "options": [
       {
-        "id": "opt_t6_27_a",
-        "text": "Cung cấp nguồn điện cho các máy tính trong mạng.",
-        "is_correct": false
+        "id": "opt_t6_ot_39_a",
+        "text": "Duy trì quy tắc, điều khiển quá trình truyền dữ liệu trên mạng.",
+        "is_correct": true
       },
       {
-        "id": "opt_t6_27_b",
-        "text": "Là nơi người dùng thao tác lưu trữ trực tiếp.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_27_c",
+        "id": "opt_t6_ot_39_b",
         "text": "Là thiết bị vật lí để truyền tín hiệu không dây.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_27_d",
-        "text": "Duy trì quy tắc, điều khiển quá trình truyền dữ liệu trên mạng.",
-        "is_correct": true
-      }
-    ],
-    "tags": [
-      "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
-    ],
-    "grade": "Lớp 6",
-    "subject": "Tin học",
-    "term": "Giữa kì I"
-  },
-  {
-    "id": "q_tin6_28",
-    "type": "single_choice",
-    "prompt": "Nếu dung lượng của một tệp văn bản là 2 KB, thì tệp đó có dung lượng chính xác là bao nhiêu byte?",
-    "options": [
-      {
-        "id": "opt_t6_28_a",
-        "text": "2048 byte.",
-        "is_correct": true
-      },
-      {
-        "id": "opt_t6_28_b",
-        "text": "1024 byte.",
+        "id": "opt_t6_ot_39_c",
+        "text": "Là nơi người dùng thao tác lưu trữ trực tiếp.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_28_c",
-        "text": "2000 byte.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_28_d",
-        "text": "20000 byte.",
+        "id": "opt_t6_ot_39_d",
+        "text": "Cung cấp nguồn điện cho các máy tính trong mạng.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_29",
+    "id": "q_tin6_ot_40",
     "type": "single_choice",
-    "prompt": "Một thẻ nhớ có dung lượng 16 GB, một bức ảnh chụp có dung lượng khoảng 12 MB. Thẻ nhớ đó chứa được khoảng bao nhiêu bức ảnh? (Biết 1 GB = 1024 MB)",
+    "prompt": "Một trong những ưu điểm nổi bật của kết nối mạng không dây so với mạng có dây là gì?",
     "options": [
       {
-        "id": "opt_t6_29_a",
-        "text": "Khoảng 2048 bức ảnh.",
+        "id": "opt_t6_ot_40_a",
+        "text": "Không thể bị ảnh hưởng bởi nhiễu sóng hoặc thời tiết.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_29_b",
-        "text": "Khoảng 1024 bức ảnh.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_29_c",
-        "text": "Khoảng 133 bức ảnh.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_29_d",
-        "text": "Khoảng 1365 bức ảnh.",
+        "id": "opt_t6_ot_40_b",
+        "text": "Thiết bị có thể linh hoạt thay đổi vị trí mà vẫn duy trì kết nối mạng.",
         "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_40_c",
+        "text": "Luôn luôn miễn phí cước sử dụng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_40_d",
+        "text": "Tốc độ truyền tải luôn cao hơn mạng có dây trong mọi hoàn cảnh.",
+        "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_30",
+    "id": "q_tin6_ot_41",
     "type": "single_choice",
-    "prompt": "Ở phòng thực hành Tin học trường TH-THCS Pascal, giáo viên muốn gửi một tệp bài tập lập trình C++ từ máy chủ đến máy tính của tất cả học sinh. Mạng máy tính giúp thực hiện được việc nào sau đây?",
+    "prompt": "Việc 5 máy tính trong phòng làm việc cùng chia sẻ để dùng chung một chiếc máy in minh hoạ cho lợi ích nào của mạng máy tính?",
     "options": [
       {
-        "id": "opt_t6_30_a",
-        "text": "Chia sẻ thiết bị.",
+        "id": "opt_t6_ot_41_a",
+        "text": "Trao đổi dữ liệu.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_30_b",
+        "id": "opt_t6_ot_41_b",
+        "text": "Liên lạc với nhau.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_41_c",
+        "text": "Dùng chung các thiết bị trên mạng.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t6_ot_41_d",
+        "text": "Truy cập Internet tốc độ cao.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_42",
+    "type": "single_choice",
+    "prompt": "Bạn Khoa gửi một tệp báo cáo bằng Word từ máy tính của mình sang máy tính của bạn An. Đây là tính năng gì của mạng máy tính?",
+    "options": [
+      {
+        "id": "opt_t6_ot_42_a",
+        "text": "Dùng chung thiết bị.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_42_b",
+        "text": "Điều khiển thiết bị kết nối.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_42_c",
         "text": "Trao đổi dữ liệu.",
         "is_correct": true
       },
       {
-        "id": "opt_t6_30_c",
-        "text": "Tăng dung lượng ổ cứng.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_30_d",
-        "text": "Xử lí thông tin thay học sinh.",
+        "id": "opt_t6_ot_42_d",
+        "text": "Bảo mật dữ liệu mạng.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_31",
+    "id": "q_tin6_ot_43",
     "type": "single_choice",
-    "prompt": "Để thiết kế một bảng LED thông báo trong trường chỉ hiển thị đúng hai màu là xanh navy và vàng gold, hệ thống máy tính điều khiển cần ít nhất bao nhiêu bit để biểu diễn mỗi điểm ảnh (pixel) trên bảng LED đó?",
+    "prompt": "Đường truyền dữ liệu 'không nhìn thấy' thường sử dụng công nghệ nào để truyền tín hiệu?",
     "options": [
       {
-        "id": "opt_t6_31_a",
-        "text": "8 bit.",
+        "id": "opt_t6_ot_43_a",
+        "text": "Dây cáp quang.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_31_b",
-        "text": "1 bit.",
+        "id": "opt_t6_ot_43_b",
+        "text": "Dây cáp đồng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_43_c",
+        "text": "Sóng vô tuyến (wifi, bluetooth...).",
         "is_correct": true
       },
       {
-        "id": "opt_t6_31_c",
-        "text": "16 bit.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_31_d",
-        "text": "2 bit.",
+        "id": "opt_t6_ot_43_d",
+        "text": "Sóng siêu âm.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_32",
+    "id": "q_tin6_ot_44",
     "type": "single_choice",
-    "prompt": "Khi đang chơi một trận đấu FC Online, việc não bộ của người chơi phân tích chiến thuật 4-1-2-3 của đối phương để quyết định thực hiện một đường chuyền dài tương ứng với hoạt động nào trong quá trình xử lí thông tin?",
+    "prompt": "Trường học cung cấp điểm truy cập mạng (Access Point) tại thư viện để học sinh dùng điện thoại tra cứu. Đây là ứng dụng của loại mạng nào?",
     "options": [
       {
-        "id": "opt_t6_32_a",
-        "text": "Thu nhận thông tin.",
+        "id": "opt_t6_ot_44_a",
+        "text": "Mạng có dây cục bộ.",
         "is_correct": false
       },
       {
-        "id": "opt_t6_32_b",
-        "text": "Truyền thông tin.",
-        "is_correct": false
-      },
-      {
-        "id": "opt_t6_32_c",
-        "text": "Xử lí thông tin.",
+        "id": "opt_t6_ot_44_b",
+        "text": "Mạng không dây.",
         "is_correct": true
       },
       {
-        "id": "opt_t6_32_d",
-        "text": "Lưu trữ thông tin.",
+        "id": "opt_t6_ot_44_c",
+        "text": "Mạng viễn thông cố định.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t6_ot_44_d",
+        "text": "Mạng lưới đường sắt.",
         "is_correct": false
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "ung_dung_mang",
-      "chu_de_b"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_33",
+    "id": "q_tin6_ot_45",
+    "type": "true_false",
+    "prompt": "Đọc các phát biểu sau về 'Thông tin và dữ liệu':",
+    "items": [
+      {
+        "id": "sub_t6_ot_45_a",
+        "text": "Thông tin là những gì đem lại hiểu biết cho con người về thế giới xung quanh.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_45_b",
+        "text": "Dữ liệu là thông tin được ghi lên vật mang tin.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_45_c",
+        "text": "Mọi dữ liệu (ví dụ như bản tin thời tiết) đều mang lại thông tin cho tất cả mọi đối tượng tiếp nhận bất kể độ tuổi hay trình độ.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t6_ot_45_d",
+        "text": "Tấm bảng ghi giá vé xe là dữ liệu, còn chữ viết trên đó là vật mang tin.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_1_thong_tin_va_du_lieu"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_46",
+    "type": "true_false",
+    "prompt": "Đọc các phát biểu sau về 'Quá trình xử lí thông tin của con người':",
+    "items": [
+      {
+        "id": "sub_t6_ot_46_a",
+        "text": "Quá trình xử lí thông tin của con người chỉ gồm 3 hoạt động cơ bản: thu nhận, xử lí và truyền thông tin.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t6_ot_46_b",
+        "text": "Ở hoạt động thu nhận thông tin, con người nhận thông tin từ thế giới bên ngoài nhờ vào các giác quan.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_46_c",
+        "text": "Thông tin chỉ được lưu trữ trong bộ não con người, không thể lưu trữ bằng cách ghi chép ra ngoài.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t6_ot_46_d",
+        "text": "Việc bộ não liên kết các thông tin đã có, so sánh, phân tích để đưa ra kết luận được gọi là hoạt động xử lí thông tin.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_47",
+    "type": "true_false",
+    "prompt": "Đọc các phát biểu sau về 'Xử lí thông tin trong máy tính':",
+    "items": [
+      {
+        "id": "sub_t6_ot_47_a",
+        "text": "Bàn phím, chuột máy tính đóng vai trò là các thiết bị thu nhận thông tin (thiết bị vào).",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_47_b",
+        "text": "Màn hình máy tính có chức năng phân tích, xử lí thông tin giống như bộ não của con người.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t6_ot_47_c",
+        "text": "Máy tính có ưu điểm vượt trội là tính toán với tốc độ rất cao, chính xác và có thể làm việc bền bỉ.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_47_d",
+        "text": "Khác với con người, máy tính hiện nay có thể dễ dàng thu nhận trực tiếp thông tin về mùi vị nhờ bộ xử lí CPU.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_2_xu_li_thong_tin"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_48",
     "type": "true_false",
     "prompt": "Đọc các phát biểu sau về 'Biểu diễn và đo lượng thông tin trong máy tính':",
     "items": [
       {
-        "id": "sub_t6_1_a",
+        "id": "sub_t6_ot_48_a",
         "text": "Trong máy tính, mọi loại thông tin (văn bản, hình ảnh, âm thanh) đều được chuyển thành dãy các kí hiệu 0 và 1.",
         "is_correct": true
       },
       {
-        "id": "sub_t6_1_b",
+        "id": "sub_t6_ot_48_b",
         "text": "Bit là đơn vị lớn nhất dùng để đo dung lượng thông tin.",
         "is_correct": false
       },
       {
-        "id": "sub_t6_1_c",
+        "id": "sub_t6_ot_48_c",
         "text": "Trong biểu diễn hình ảnh đen trắng, mỗi điểm ảnh (pixel) bắt buộc phải dùng 8 bit để biểu diễn.",
         "is_correct": false
       },
       {
-        "id": "sub_t6_1_d",
+        "id": "sub_t6_ot_48_d",
         "text": "Đơn vị 1 Kilobyte (KB) có giá trị xấp xỉ 1 nghìn byte (chính xác là 1024 byte).",
         "is_correct": true
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "trac_nghiem_dung_sai",
-      "giua_ki_1"
+      "on_tap_thuong_xuyen",
+      "bai_3_thong_tin_trong_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
   },
   {
-    "id": "q_tin6_34",
+    "id": "q_tin6_ot_49",
     "type": "true_false",
     "prompt": "Đọc các phát biểu sau về 'Mạng máy tính':",
     "items": [
       {
-        "id": "sub_t6_2_a",
+        "id": "sub_t6_ot_49_a",
         "text": "Mạng máy tính là mạng lưới gồm hai hay nhiều máy tính và thiết bị được kết nối để truyền thông tin cho nhau.",
         "is_correct": true
       },
       {
-        "id": "sub_t6_2_b",
+        "id": "sub_t6_ot_49_b",
         "text": "Lợi ích của mạng máy tính chỉ dừng lại ở việc dùng chung máy in, không thể trao đổi các tệp tin qua lại.",
         "is_correct": false
       },
       {
-        "id": "sub_t6_2_c",
+        "id": "sub_t6_ot_49_c",
         "text": "Việc chia sẻ dữ liệu qua mạng giúp người dùng dễ dàng gửi một tệp ảnh cho nhau mà không cần chép qua USB.",
         "is_correct": true
       },
       {
-        "id": "sub_t6_2_d",
+        "id": "sub_t6_ot_49_d",
         "text": "Phần mềm mạng có vai trò như luật lệ giao thông, giúp điều khiển quá trình truyền dữ liệu.",
         "is_correct": true
       }
     ],
     "tags": [
       "tin_hoc_6",
-      "trac_nghiem_dung_sai",
-      "giua_ki_1"
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
     ],
     "grade": "Lớp 6",
     "subject": "Tin học",
-    "term": "Giữa kì I"
+    "term": "Ôn tập thường xuyên"
+  },
+  {
+    "id": "q_tin6_ot_50",
+    "type": "true_false",
+    "prompt": "Đọc các phát biểu sau về 'Thành phần mạng và kết nối mạng':",
+    "items": [
+      {
+        "id": "sub_t6_ot_50_a",
+        "text": "Máy tính để bàn, điện thoại di động thông minh được xếp vào nhóm thiết bị đầu cuối của mạng máy tính.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_50_b",
+        "text": "Bộ định tuyến (Router) và Điểm truy cập không dây (Access Point) là các thiết bị kết nối.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t6_ot_50_c",
+        "text": "Sử dụng mạng có dây sẽ tránh được hoàn toàn các sự cố như đứt dây do chuột cắn hay mưa bão so với mạng không dây.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t6_ot_50_d",
+        "text": "Mạng không dây giúp các thiết bị (như điện thoại, laptop) có thể linh hoạt thay đổi vị trí mà vẫn duy trì được kết nối mạng.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_6",
+      "on_tap_thuong_xuyen",
+      "bai_4_mang_may_tinh"
+    ],
+    "grade": "Lớp 6",
+    "subject": "Tin học",
+    "term": "Ôn tập thường xuyên"
   }
 ];
 
