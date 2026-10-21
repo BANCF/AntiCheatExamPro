@@ -24,6 +24,7 @@ import {
   X
 } from 'lucide-react';
 import { KNOWN_GRADES, KNOWN_SUBJECTS, KNOWN_TERMS, getQuestionClassification } from '../../utils/questionClassification';
+import { MathRenderer } from '../common/MathRenderer';
 
 interface ClassManagementTabProps {
   classes: ClassRoom[];
@@ -104,7 +105,9 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
   const [examFormTitle, setExamFormTitle] = useState('');
   const [examFormMode, setExamFormMode] = useState<'bank' | 'pdf' | 'default'>('bank');
   const [examFormDuration, setExamFormDuration] = useState(15);
-  const [examFormQuestionCount, setExamFormQuestionCount] = useState(10);
+  const [examFormQuestionCount, setExamFormQuestionCount] = useState(20);
+  const [examFormSingleChoiceCount, setExamFormSingleChoiceCount] = useState(16);
+  const [examFormTrueFalseCount, setExamFormTrueFalseCount] = useState(4);
   const [examFormTerm, setExamFormTerm] = useState('Ôn tập thường xuyên');
   const [examFormPinCode, setExamFormPinCode] = useState('');
 
@@ -154,9 +157,11 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
     setTargetClassForExam(c);
     const existingCfg = c.examConfig || {};
 
-    setExamFormTitle(c.examTitle || `Kiểm Tra ${c.subject} - Lớp ${c.code}`);
     setExamFormDuration(existingCfg.duration_minutes || config.duration_minutes || 15);
-    setExamFormQuestionCount(existingCfg.total_questions_to_pick || config.total_questions_to_pick || 10);
+    setExamFormQuestionCount(existingCfg.total_questions_to_pick || config.total_questions_to_pick || 20);
+    const existingDist = existingCfg.distribution || config.distribution || { single_choice: 16, true_false: 4 };
+    setExamFormSingleChoiceCount(existingDist.single_choice ?? 16);
+    setExamFormTrueFalseCount(existingDist.true_false ?? 4);
     setExamFormTerm(existingCfg.target_term || 'Ôn tập thường xuyên');
     setExamFormPinCode(c.pinCode);
 
@@ -253,14 +258,25 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
         duration_minutes: Number(examFormDuration)
       };
     } else if (examFormMode === 'bank') {
+      const sc = Math.max(0, Number(examFormSingleChoiceCount) || 0);
+      const tf = Math.max(0, Number(examFormTrueFalseCount) || 0);
+      const totalQ = sc + tf;
+      if (totalQ === 0) {
+        showToast('error', 'Vui lòng chọn ít nhất 1 câu hỏi (Trắc nghiệm hoặc Đúng/Sai)!');
+        return;
+      }
       updatedConfig = {
         ...targetClassForExam.examConfig,
         exam_mode: 'bank',
         target_grade: targetClassForExam.grade,
         target_subject: targetClassForExam.subject,
         target_term: examFormTerm,
-        duration_minutes: Number(examFormDuration),
-        total_questions_to_pick: Number(examFormQuestionCount)
+        duration_minutes: Number(examFormDuration) || 15,
+        total_questions_to_pick: totalQ,
+        distribution: {
+          single_choice: sc,
+          true_false: tf
+        }
       };
     } else {
       // Default / Inherit from global config
@@ -279,7 +295,8 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
 
     onSaveClass(updatedClass);
     setIsExamConfigModalOpen(false);
-    showToast('success', `Đã ra đề thành công cho Lớp ${updatedClass.code} (${examFormMode === 'pdf' ? 'Đề PDF ' + pdfTotalQ + ' câu' : 'Ngân hàng ' + examFormQuestionCount + ' câu'})!`);
+    const totalCount = examFormSingleChoiceCount + examFormTrueFalseCount;
+    showToast('success', `Đã ra đề thành công cho Lớp ${updatedClass.code} (${examFormMode === 'pdf' ? 'Đề PDF ' + pdfTotalQ + ' câu' : 'Ngân hàng ' + totalCount + ' câu (' + examFormSingleChoiceCount + ' TN + ' + examFormTrueFalseCount + ' Đúng/Sai)'})!`);
   };
 
   const handleToggleActive = (c: ClassRoom) => {
@@ -366,6 +383,14 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
       return matchGrade && matchSubject && matchTerm;
     });
   }, [bank, targetClassForExam, examFormTerm]);
+
+  const availableSingleChoiceQuestions = useMemo(() => {
+    return availableBankQuestionsForTarget.filter((q) => q.type === 'single_choice');
+  }, [availableBankQuestionsForTarget]);
+
+  const availableTrueFalseQuestions = useMemo(() => {
+    return availableBankQuestionsForTarget.filter((q) => q.type === 'true_false');
+  }, [availableBankQuestionsForTarget]);
 
   const filteredClasses = classes.filter((c) => {
     const q = searchTerm.toLowerCase();
@@ -878,8 +903,9 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
                     <p className="text-slate-500 text-[11px] leading-relaxed">
                       Tự động bốc ngẫu nhiên câu hỏi từ kho, xáo trộn thứ tự câu và đáp án chống gian lận.
                     </p>
-                    <div className="mt-2.5 pt-2 border-t border-slate-200/60 font-semibold text-indigo-700 text-[11px]">
-                      Kho hiện có: <strong>{availableBankQuestionsForTarget.length} câu</strong> {targetClassForExam.subject} {targetClassForExam.grade}
+                    <div className="mt-2.5 pt-2 border-t border-slate-200/60 font-semibold text-indigo-700 text-[11px] flex items-center justify-between">
+                      <span>Kho: <strong>{availableBankQuestionsForTarget.length} câu</strong> {targetClassForExam.subject} {targetClassForExam.grade}</span>
+                      <span className="text-[10px] text-slate-500 font-normal">({availableSingleChoiceQuestions.length} TN • {availableTrueFalseQuestions.length} Đúng/Sai)</span>
                     </div>
                   </div>
 
@@ -913,31 +939,32 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
 
               {/* KHỐI CẤU HÌNH CHI TIẾT THEO HÌNH THỨC ĐÃ CHỌN */}
               {examFormMode === 'bank' && (
-                <div className="p-4 rounded-2xl bg-indigo-50/40 border border-indigo-200 space-y-3">
+                <div className="p-4 rounded-2xl bg-indigo-50/40 border border-indigo-200 space-y-3.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-indigo-950 flex items-center gap-1.5">
+                    <span className="font-bold text-indigo-950 flex items-center gap-1.5 text-xs">
                       <Sparkles className="w-4 h-4 text-amber-500" />
-                      Cấu hình bốc đề từ Ngân hàng:
+                      Cấu hình cơ cấu bốc đề từ Ngân hàng:
                     </span>
                     <button
                       type="button"
                       onClick={() => setShowSamplePreview(!showSamplePreview)}
-                      className="text-indigo-700 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                      className="text-indigo-700 font-bold hover:underline flex items-center gap-1 cursor-pointer text-xs"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>{showSamplePreview ? 'Ẩn xem trước' : 'Xem trước câu hỏi mẫu'}</span>
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Dòng 1: Đợt thi & Thời gian làm bài */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block font-semibold text-slate-700 mb-1">
-                        Đợt thi / Học kỳ
+                        Đợt thi / Học kỳ nguồn
                       </label>
                       <select
                         value={examFormTerm}
                         onChange={(e) => setExamFormTerm(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:border-indigo-600 cursor-pointer"
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:border-indigo-600 cursor-pointer text-xs"
                       >
                         <option value="all">Tất cả đợt thi</option>
                         {KNOWN_TERMS.map((t) => (
@@ -947,30 +974,13 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
                         ))}
                       </select>
                       <span className="text-[10px] text-slate-500 mt-0.5 block">
-                        Chọn 'Ôn tập thường xuyên'
+                        Kho có tổng cộng {availableBankQuestionsForTarget.length} câu phù hợp
                       </span>
                     </div>
 
                     <div>
                       <label className="block font-semibold text-slate-700 mb-1">
-                        Số câu hỏi bốc
-                      </label>
-                      <input
-                        type="number"
-                        min={1}
-                        max={Math.max(100, availableBankQuestionsForTarget.length)}
-                        value={examFormQuestionCount}
-                        onChange={(e) => setExamFormQuestionCount(Number(e.target.value))}
-                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
-                      />
-                      <span className="text-[10px] text-slate-500 mt-0.5 block">
-                        Có {availableBankQuestionsForTarget.length} câu khả dụng
-                      </span>
-                    </div>
-
-                    <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Thời gian làm (phút)
+                        Thời gian làm bài (phút)
                       </label>
                       <input
                         type="number"
@@ -978,25 +988,176 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
                         max={180}
                         value={examFormDuration}
                         onChange={(e) => setExamFormDuration(Number(e.target.value))}
-                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-indigo-600 text-xs"
                       />
                       <span className="text-[10px] text-slate-500 mt-0.5 block">
-                        Tiêu chuẩn 45 phút
+                        Tiêu chuẩn 15 phút (kiểm tra 15p) hoặc 45 phút
                       </span>
+                    </div>
+                  </div>
+
+                  {/* Dòng 2: Cơ cấu bốc 2 dạng câu hỏi (Trắc nghiệm đơn & Đúng/Sai) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    {/* Card 1: Trắc nghiệm A-B-C-D */}
+                    <div className="p-3.5 rounded-xl bg-white border border-indigo-200 space-y-2 shadow-2xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                          <span className="w-5 h-5 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center text-[10px] font-black">I</span>
+                          <span>1. Trắc nghiệm A-B-C-D</span>
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-indigo-50 border border-indigo-200 text-[10px] font-semibold text-indigo-700">
+                          Kho có {availableSingleChoiceQuestions.length} câu
+                        </span>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={0}
+                            max={availableSingleChoiceQuestions.length}
+                            value={examFormSingleChoiceCount}
+                            onChange={(e) => setExamFormSingleChoiceCount(Math.max(0, Number(e.target.value)))}
+                            className="w-24 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-indigo-950 font-black text-sm focus:outline-none focus:border-indigo-600"
+                          />
+                          <span className="text-xs text-slate-600 font-medium">câu chọn 1 đáp án</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                        <span className="text-slate-400">Chọn nhanh:</span>
+                        {[0, 10, 12, 16, 20, availableSingleChoiceQuestions.length].filter((n, idx, arr) => n <= availableSingleChoiceQuestions.length && arr.indexOf(n) === idx).map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setExamFormSingleChoiceCount(n)}
+                            className={`px-1.5 py-0.5 rounded border transition-colors cursor-pointer ${
+                              examFormSingleChoiceCount === n
+                                ? 'bg-indigo-600 text-white border-indigo-600 font-bold'
+                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            {n === availableSingleChoiceQuestions.length ? `Tất cả (${n})` : `${n} câu`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Card 2: Trắc nghiệm Đúng/Sai */}
+                    <div className="p-3.5 rounded-xl bg-white border border-purple-200 space-y-2 shadow-2xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                          <span className="w-5 h-5 rounded-md bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-black">II</span>
+                          <span>2. Trắc nghiệm Đúng / Sai</span>
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-purple-50 border border-purple-200 text-[10px] font-semibold text-purple-700">
+                          Kho có {availableTrueFalseQuestions.length} câu
+                        </span>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={0}
+                            max={availableTrueFalseQuestions.length}
+                            value={examFormTrueFalseCount}
+                            onChange={(e) => setExamFormTrueFalseCount(Math.max(0, Number(e.target.value)))}
+                            className="w-24 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-purple-950 font-black text-sm focus:outline-none focus:border-purple-600"
+                          />
+                          <span className="text-xs text-slate-600 font-medium">câu chùm ý (a, b, c, d)</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                        <span className="text-slate-400">Chọn nhanh:</span>
+                        {[0, 2, 4, 6, availableTrueFalseQuestions.length].filter((n, idx, arr) => n <= availableTrueFalseQuestions.length && arr.indexOf(n) === idx).map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setExamFormTrueFalseCount(n)}
+                            className={`px-1.5 py-0.5 rounded border transition-colors cursor-pointer ${
+                              examFormTrueFalseCount === n
+                                ? 'bg-purple-600 text-white border-purple-600 font-bold'
+                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            {n === availableTrueFalseQuestions.length ? `Tất cả (${n})` : `${n} câu`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dòng 3: Thanh tổng kết cấu hình đề thi */}
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border border-indigo-200/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <Sliders className="w-4 h-4 text-indigo-600 shrink-0" />
+                      <span className="font-semibold text-slate-800">
+                        Tổng cộng đề thi bốc cho học sinh: <strong className="text-indigo-700 text-sm font-black">{examFormSingleChoiceCount + examFormTrueFalseCount} câu</strong>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[11px] font-medium text-slate-600">
+                      <span className="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-bold">{examFormSingleChoiceCount} câu A-B-C-D</span>
+                      <span>+</span>
+                      <span className="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold">{examFormTrueFalseCount} câu Đúng/Sai ({examFormTrueFalseCount * 4} ý)</span>
                     </div>
                   </div>
 
                   {/* Sample questions preview */}
                   {showSamplePreview && (
-                    <div className="mt-3 p-3 rounded-xl bg-white border border-indigo-200 space-y-2 max-h-40 overflow-y-auto">
-                      <div className="font-bold text-slate-800 text-[11px]">
-                        Một số câu hỏi mẫu sẽ được chọn ngẫu nhiên:
+                    <div className="mt-3 p-3.5 rounded-xl bg-white border border-indigo-200 space-y-3 max-h-60 overflow-y-auto">
+                      <div className="font-bold text-slate-800 text-xs flex items-center justify-between border-b pb-2">
+                        <span>Mẫu câu hỏi ngẫu nhiên sẽ được bốc:</span>
+                        <span className="text-[11px] text-slate-500">Mỗi học sinh sẽ có mã đề và thứ tự xáo trộn riêng</span>
                       </div>
-                      {availableBankQuestionsForTarget.slice(0, 3).map((q, i) => (
-                        <div key={q.id} className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-[11px]">
-                          <strong>Câu {i + 1}:</strong> {q.prompt}
+
+                      {/* Sample Single Choice */}
+                      {availableSingleChoiceQuestions.length > 0 && examFormSingleChoiceCount > 0 && (
+                        <div className="space-y-1.5">
+                          <span className="text-[11px] font-bold text-indigo-700 uppercase tracking-wider block">
+                            Mẫu Trắc nghiệm 4 lựa chọn A-B-C-D:
+                          </span>
+                          {availableSingleChoiceQuestions.slice(0, 2).map((q, i) => (
+                            <div key={q.id} className="p-2.5 rounded-lg bg-indigo-50/40 border border-indigo-200 text-xs space-y-1">
+                              <div className="font-semibold text-slate-900">
+                                <strong>Câu {i + 1}:</strong> <MathRenderer text={q.prompt} />
+                              </div>
+                              <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-600 pl-2">
+                                {q.options.map((opt, oIdx) => (
+                                  <div key={opt.id} className="truncate">
+                                    {['A', 'B', 'C', 'D'][oIdx]}. {opt.text}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
+
+                      {/* Sample True/False */}
+                      {availableTrueFalseQuestions.length > 0 && examFormTrueFalseCount > 0 && (
+                        <div className="space-y-1.5 pt-1">
+                          <span className="text-[11px] font-bold text-purple-700 uppercase tracking-wider block">
+                            Mẫu Trắc nghiệm Đúng / Sai (Chùm 4 ý):
+                          </span>
+                          {availableTrueFalseQuestions.slice(0, 1).map((q, i) => (
+                            <div key={q.id} className="p-2.5 rounded-lg bg-purple-50/40 border border-purple-200 text-xs space-y-1.5">
+                              <div className="font-semibold text-slate-900">
+                                <strong>Câu {i + 1}:</strong> <MathRenderer text={q.prompt} />
+                              </div>
+                              <div className="space-y-1 pl-2 text-[11px]">
+                                {q.items.map((item, itemIdx) => (
+                                  <div key={item.id} className="flex items-center justify-between bg-white p-1 rounded border border-purple-100">
+                                    <span>{['a', 'b', 'c', 'd'][itemIdx]}) {item.text}</span>
+                                    <span className="font-bold text-[10px] text-purple-700 px-1.5 py-0.2 bg-purple-50 rounded">Đúng / Sai</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
