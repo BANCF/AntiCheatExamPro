@@ -12,6 +12,10 @@
       "destination": "/api/classes?id=:id"
     },
     {
+      "source": "/api/submissions/:id",
+      "destination": "/api/submissions?id=:id"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

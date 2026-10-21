@@ -3547,6 +3547,26 @@
   },
   "submissions": [
     {
+      "submission_id": "sub_1792569268326_6860",
+      "exam_id": "cls_1792567614945",
+      "exam_title": "Kiểm tra Tin học - 6A01",
+      "student_name": "Tran Van B",
+      "student_class": "6A01",
+      "assigned_code": "101",
+      "start_time": "2026-10-21T07:54:28.326Z",
+      "submit_time": "2026-10-21T07:54:28.326Z",
+      "status": "SUBMITTED",
+      "violation_count": 0,
+      "violations_log": [],
+      "student_answers": {
+        "q_tin6_1": "opt_6_1_a"
+      },
+      "calculated_score": 0,
+      "total_questions": 105,
+      "correct_points_earned": 0,
+      "max_possible_points": 105
+    },
+    {
       "submission_id": "sub_1792175574498_7817",
       "student_name": "Bằng",
       "student_class": "7C",
@@ -5125,6 +5145,64 @@
       },
       "isActive": true,
       "description": "Phòng thi Vật lí 12A3"
+    },
+    {
+      "id": "cls_1792567614945",
+      "code": "6A01",
+      "name": "Lớp 6A01",
+      "grade": "Lớp 6",
+      "subject": "Tin học",
+      "teacherName": "Giáo viên bộ môn",
+      "pinCode": "1234",
+      "examTitle": "Kiểm tra Tin học - 6A01",
+      "examConfig": {
+        "duration_minutes": 15,
+        "total_questions_to_pick": 10,
+        "target_grade": "Lớp 6",
+        "target_subject": "Tin học",
+        "target_term": "Ôn tập thường xuyên",
+        "distribution": {
+          "single_choice": 8,
+          "true_false": 2
+        }
+      },
+      "isActive": true,
+      "description": "",
+      "createdAt": "2026-10-21T07:26:54.945Z"
+    },
+    {
+      "id": "cls_1792567645972",
+      "code": "6A_TEST_NO_DIST",
+      "name": "Lớp Test No Dist",
+      "grade": "Lớp 6",
+      "subject": "Tin học",
+      "teacherName": "Giáo viên bộ môn",
+      "pinCode": "1111",
+      "examTitle": "Kiểm tra Tin học - 6A_TEST_NO_DIST",
+      "examConfig": {
+        "duration_minutes": 15,
+        "total_questions_to_pick": 10,
+        "target_grade": "Lớp 6",
+        "target_subject": "Tin học",
+        "target_term": "Ôn tập thường xuyên"
+      },
+      "isActive": true,
+      "description": "",
+      "createdAt": "2026-10-21T07:27:25.972Z"
+    },
+    {
+      "id": "cls_1792568761348",
+      "code": "TEST99",
+      "name": "Lop 99",
+      "grade": "Lớp 7",
+      "subject": "Tin học",
+      "teacherName": "Giáo viên bộ môn",
+      "pinCode": "9999",
+      "examTitle": "Kiểm tra Bộ môn - TEST99",
+      "examConfig": {},
+      "isActive": true,
+      "description": "",
+      "createdAt": "2026-10-21T07:46:01.348Z"
     }
   ]
 }

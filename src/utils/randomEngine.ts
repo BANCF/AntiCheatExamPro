@@ -95,9 +95,62 @@ export function generateStudentExam(
   const shuffledSingle = shuffleArray(singleChoicePool, prng);
   const shuffledTF = shuffleArray(trueFalsePool, prng);
 
-  // Pick counts based on distribution or proportional fallback
-  const scCount = Math.min(config.distribution.single_choice, shuffledSingle.length);
-  const tfCount = Math.min(config.distribution.true_false, shuffledTF.length);
+  // Determine desired total questions to pick
+  let desiredTotal = Number(config.total_questions_to_pick) || 0;
+  if (!desiredTotal) {
+    if (config.distribution) {
+      desiredTotal = (Number(config.distribution.single_choice) || 0) + (Number(config.distribution.true_false) || 0);
+    }
+  }
+  if (!desiredTotal || desiredTotal <= 0) {
+    desiredTotal = Math.min(pool.length, 20);
+  }
+
+  // Determine requested single choice and true/false counts
+  let desiredSC: number;
+  let desiredTF: number;
+
+  if (
+    config.distribution &&
+    typeof config.distribution.single_choice === 'number' &&
+    typeof config.distribution.true_false === 'number'
+  ) {
+    desiredSC = Math.max(0, config.distribution.single_choice);
+    desiredTF = Math.max(0, config.distribution.true_false);
+
+    // If sum of distribution doesn't match total_questions_to_pick, adjust proportionally
+    const distSum = desiredSC + desiredTF;
+    if (config.total_questions_to_pick && distSum !== config.total_questions_to_pick && distSum > 0) {
+      const ratioSC = desiredSC / distSum;
+      desiredSC = Math.round(config.total_questions_to_pick * ratioSC);
+      desiredTF = config.total_questions_to_pick - desiredSC;
+    }
+  } else {
+    // No explicit distribution specified: allocate ~80% single choice, ~20% true/false if TF available
+    if (shuffledTF.length > 0) {
+      desiredTF = Math.min(shuffledTF.length, Math.max(1, Math.round(desiredTotal * 0.2)));
+      desiredSC = desiredTotal - desiredTF;
+    } else {
+      desiredSC = desiredTotal;
+      desiredTF = 0;
+    }
+  }
+
+  // Pick counts based on pool availability and compensate if one pool is short
+  let scCount = Math.min(desiredSC, shuffledSingle.length);
+  let tfCount = Math.min(desiredTF, shuffledTF.length);
+
+  let remainingNeeded = desiredTotal - (scCount + tfCount);
+  if (remainingNeeded > 0 && scCount < shuffledSingle.length) {
+    const addSC = Math.min(remainingNeeded, shuffledSingle.length - scCount);
+    scCount += addSC;
+    remainingNeeded -= addSC;
+  }
+  if (remainingNeeded > 0 && tfCount < shuffledTF.length) {
+    const addTF = Math.min(remainingNeeded, shuffledTF.length - tfCount);
+    tfCount += addTF;
+    remainingNeeded -= addTF;
+  }
 
   const pickedSingle = shuffledSingle.slice(0, scCount);
   const pickedTF = shuffledTF.slice(0, tfCount);

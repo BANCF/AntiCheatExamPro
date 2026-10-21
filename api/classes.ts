@@ -1,8 +1,10 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { getClasses, saveClass, deleteClass, parseJsonBody, sendJson } from './_storage';
+import { getClasses, saveClass, deleteClass, parseJsonBody, sendJson, handleCors } from './_storage';
 import { ClassRoom } from '../src/types/exam';
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (handleCors(req, res)) return;
+
   const method = (req.method || 'GET').toUpperCase();
 
   if (method === 'GET') {
@@ -12,26 +14,31 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   if (method === 'POST') {
     const body = await parseJsonBody(req);
-    const { id, code, name, grade, subject, teacherName, pinCode, examTitle, examConfig, isActive, description } = body;
+    const { id, code, name, grade, subject, teacherName, pinCode, examTitle, examConfig, isActive, description, createdAt } = body;
 
     if (!code || !name) {
       return sendJson(res, 400, { error: 'Mã lớp và Tên lớp là bắt buộc!' });
     }
 
+    const classes = await getClasses();
     const normalizedCode = code.trim().toUpperCase();
+    const existing = classes.find(
+      (c) => (id && c.id === id) || c.code.trim().toUpperCase() === normalizedCode
+    );
+
     const classItem: ClassRoom = {
-      id: id || `cls_${Date.now()}`,
+      id: id || existing?.id || `cls_${Date.now()}`,
       code: normalizedCode,
       name: name.trim(),
-      grade: grade || 'Lớp 6',
-      subject: subject || 'Tin học',
-      teacherName: teacherName || 'Giáo viên bộ môn',
-      pinCode: (pinCode || '2026').trim(),
-      examTitle: examTitle?.trim() || `Kiểm tra ${subject || 'Bộ môn'} - ${normalizedCode}`,
-      examConfig: examConfig || {},
-      isActive: isActive !== undefined ? Boolean(isActive) : true,
-      description: description || '',
-      createdAt: new Date().toISOString()
+      grade: grade || existing?.grade || 'Lớp 6',
+      subject: subject || existing?.subject || 'Tin học',
+      teacherName: teacherName || existing?.teacherName || 'Giáo viên bộ môn',
+      pinCode: (pinCode || existing?.pinCode || '2026').trim(),
+      examTitle: examTitle?.trim() || existing?.examTitle || `Kiểm tra ${subject || 'Bộ môn'} - ${normalizedCode}`,
+      examConfig: examConfig || existing?.examConfig || {},
+      isActive: isActive !== undefined ? Boolean(isActive) : (existing?.isActive ?? true),
+      description: description !== undefined ? description : (existing?.description || ''),
+      createdAt: existing ? existing.createdAt : (createdAt || new Date().toISOString())
     };
 
     await saveClass(classItem);

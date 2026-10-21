@@ -247,7 +247,39 @@
     2. Nâng cấp cơ chế đồng bộ nền (Polling 3.5s): Áp dụng thuật toán **Merge thông minh (Map theo submission_id)**, tuyệt đối không dùng mảng rỗng `[]` để xóa sạch bài nộp đã có.
     3. Thêm hàm kiểm tra `safeJsonFetch` tránh xung đột phản hồi HTML của Vercel SPA rewrite.
 
+### 5. Khắc phục toàn diện các lỗi hệ thống theo Báo cáo Kiểm định (13 Bugs Resolved):
+- **Sửa Bug #1 & #8 (Tính điểm đề PDF/Bank chuẩn xác cho từng lớp trên Vercel):**
+  - Tệp: `api/exam/submit.ts`
+  - Khắc phục: Tìm kiếm `matchedClass` từ `student_class` và xây dựng `effectiveConfig` hợp nhất cấu hình riêng của lớp với cấu hình toàn cục. Áp dụng `calculateExamScore` với `effectiveConfig` để chấm điểm đúng đáp án PDF và ma trận câu hỏi của từng lớp cụ thể.
+- **Sửa Bug #2 & #10 (Khởi tạo và validate tiêu đề bài thi khi Ra Đề Cho Lớp):**
+  - Tệp: `src/components/teacher/ClassManagementTab.tsx`
+  - Khắc phục: Khởi tạo sẵn `setExamFormTitle(c.examTitle || ...)` khi mở modal "Ra Đề Cho Lớp". Bổ sung validate không cho phép lưu nếu tiêu đề bài thi bị để trống.
+- **Sửa Bug #3 (Bổ sung distribution ma trận đề cho các lớp mặc định):**
+  - Tệp: `src/data/defaultClasses.ts`
+  - Khắc phục: Cung cấp `distribution: { single_choice, true_false }` cụ thể cho các lớp 7A1, 7A2 (8 TN + 2 Đ/S), 10A1 (16 TN + 4 Đ/S), 12A3 (20 TN + 5 Đ/S).
+- **Sửa Bug #4 (Thứ tự merge lớp học từ máy chủ):**
+  - Tệp: `src/App.tsx`
+  - Khắc phục: Sắp xếp thứ tự nạp `DEFAULT_CLASSES` -> `prev` (LocalStorage) -> `serverClasses` (Server). Nhờ đó dữ liệu mới nhất từ máy chủ luôn được ưu tiên cập nhật, không bị dữ liệu cũ ở trình duyệt đè lên.
+- **Sửa Bug #5 (Loại bỏ Polling trùng lặp gây quá tải):**
+  - Tệp: `src/components/teacher/GradebookTab.tsx`
+  - Khắc phục: Xóa bỏ interval poll 3s chạy song song trong `GradebookTab.tsx`. Toàn bộ dữ liệu bảng điểm được cập nhật qua polling tập trung tại `App.tsx` và WebSocket realtime.
+- **Sửa Bug #6 (Lưu phiên làm bài & Tự động Reconnect trên Vercel Serverless):**
+  - Tệp: `api/_storage.ts`, `api/exam/start.ts`, `api/exam/submit.ts`
+  - Khắc phục: Bổ sung các hàm lưu trữ phiên thi hoạt động (`saveActiveStudentSession`, `getActiveStudentSession`, `deleteActiveStudentSession`) lưu vào Upstash Redis với TTL tự hủy. Thí sinh bị rớt mạng hoặc tải lại trang sẽ tự động kết nối lại đúng đề thi và thời gian còn lại.
+- **Sửa Bug #7 (Bảo toàn ngày tạo createdAt khi cập nhật lớp):**
+  - Tệp: `api/classes.ts`
+  - Khắc phục: Tra cứu bản ghi lớp học cũ trước khi ghi đè, bảo toàn giá trị `existing.createdAt` nguyên bản.
+- **Sửa Bug #9 (Xử lý xóa lớp & bài nộp tương thích 100% Vercel & Express):**
+  - Tệp: `vercel.json`, `api/submissions.ts`, `api/classes.ts`, `src/services/api.ts`
+  - Khắc phục: Bổ sung rewrite `/api/submissions/:id` -> `/api/submissions?id=:id` trong `vercel.json`. Hỗ trợ trích xuất ID đa năng (URL path segment, query param `?id=...`, JSON body) và thêm `handleCors` cho các API Serverless.
+- **Sửa Bug #11 (Hỗ trợ Toggle bỏ chọn đáp án PDF & Đồng bộ văn bản nhanh):**
+  - Tệp: `src/components/teacher/ClassManagementTab.tsx`
+  - Khắc phục: Trong bảng đáp án PDF của lớp, click lần 2 vào cùng phương án sẽ hủy chọn (Toggle) và tự động cập nhật lại ô chuỗi đáp án nhanh.
+- **Sửa Bug #13 (Regex nhận diện đáp án tiếng Việt đa năng):**
+  - Tệp: `src/components/teacher/ClassManagementTab.tsx`
+  - Khắc phục: Nâng cấp regex `/(?:(?:câu|cau|q|question)\s*)?(\d+)[\s.:-]*([a-dA-D])/giu` hỗ trợ nhận dạng linh hoạt tất cả các biến thể "Câu", "CÂU", "cau", "Q1", "Question 1"...
+
 ---
 
-*Nhật ký được cập nhật lần cuối vào: 18/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
+*Nhật ký được cập nhật lần cuối vào: 22/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
 

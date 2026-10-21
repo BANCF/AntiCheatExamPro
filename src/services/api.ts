@@ -73,7 +73,7 @@ export async function clearSubmissionsApi(): Promise<boolean> {
 
 export async function deleteSubmissionApi(id: string): Promise<boolean> {
   try {
-    const res = await fetch(`${API_BASE}/submissions/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API_BASE}/submissions/${id}?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     return res.ok;
   } catch (err) {
     console.warn('API deleteSubmissionApi failed:', err);
@@ -98,6 +98,7 @@ export async function startStudentExamApi(params: {
   studentName: string;
   studentClass: string;
   pin?: string;
+  forceNew?: boolean;
 }): Promise<{
   attemptId: string;
   assignedCode: string;
@@ -116,7 +117,8 @@ export async function startStudentExamApi(params: {
       body: JSON.stringify({
         student_name: params.studentName,
         student_class: params.studentClass,
-        pin: params.pin
+        pin: params.pin,
+        forceNew: params.forceNew
       })
     });
     const contentType = res.headers.get('content-type') || '';
@@ -285,8 +287,8 @@ export async function saveClassApi(classItem: Partial<ClassRoom>): Promise<boole
 
 export async function deleteClassApi(id: string): Promise<boolean> {
   try {
-    const res = await fetch(`${API_BASE}/classes/${id}`, { method: 'DELETE' });
-    return res.ok && (res.headers.get('content-type')?.includes('application/json') ?? false);
+    const res = await fetch(`${API_BASE}/classes/${id}?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    return res.ok;
   } catch (err) {
     console.warn('API deleteClassApi failed:', err);
     return false;

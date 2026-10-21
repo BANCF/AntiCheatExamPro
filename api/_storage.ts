@@ -257,7 +257,10 @@ export async function getClasses(): Promise<ClassRoom[]> {
 
 export async function saveClass(classItem: ClassRoom): Promise<void> {
   const current = await getClasses();
-  const existingIdx = current.findIndex((c) => c.id === classItem.id || c.code === classItem.code);
+  const normalizedCode = classItem.code.trim().toUpperCase();
+  const existingIdx = current.findIndex(
+    (c) => c.id === classItem.id || c.code.trim().toUpperCase() === normalizedCode
+  );
   let updated: ClassRoom[];
   if (existingIdx >= 0) {
     updated = [...current];
@@ -279,7 +282,8 @@ export async function saveClass(classItem: ClassRoom): Promise<void> {
 
 export async function deleteClass(idOrCode: string): Promise<void> {
   const current = await getClasses();
-  const updated = current.filter((c) => c.id !== idOrCode && c.code !== idOrCode);
+  const target = idOrCode.trim().toUpperCase();
+  const updated = current.filter((c) => c.id !== idOrCode && c.code.trim().toUpperCase() !== target);
   const redis = getRedis();
   if (redis) {
     try {
@@ -342,3 +346,69 @@ export async function deleteTeacher(id: string): Promise<void> {
   }
   memoryTeachers = updated;
 }
+
+// ---------------- ACTIVE EXAM SESSIONS ----------------
+export interface ActiveStudentSession {
+  attemptId: string;
+  studentName: string;
+  studentClass: string;
+  assignedCode: string;
+  sanitizedQuestions: any[];
+  durationSeconds: number;
+  startTime: string;
+  totalQuestions: number;
+}
+
+const memorySessions = new Map<string, ActiveStudentSession>();
+
+function getSessionKey(studentClass: string, studentName: string): string {
+  return `exam:session:${studentClass.trim().toUpperCase()}:${studentName.trim().toUpperCase()}`;
+}
+
+export async function getActiveStudentSession(
+  studentClass: string,
+  studentName: string
+): Promise<ActiveStudentSession | null> {
+  const key = getSessionKey(studentClass, studentName);
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const session = await redis.get<ActiveStudentSession>(key);
+      if (session && session.attemptId) return session;
+    } catch (err) {
+      console.error('Error reading active session from Redis:', err);
+    }
+  }
+  return memorySessions.get(key) || null;
+}
+
+export async function saveActiveStudentSession(session: ActiveStudentSession): Promise<void> {
+  const key = getSessionKey(session.studentClass, session.studentName);
+  const redis = getRedis();
+  const ttl = Math.max(300, (session.durationSeconds || 900) + 600);
+  if (redis) {
+    try {
+      await redis.set(key, session, { ex: ttl });
+    } catch (err) {
+      console.error('Error saving active session to Redis:', err);
+    }
+  }
+  memorySessions.set(key, session);
+}
+
+export async function deleteActiveStudentSession(
+  studentClass: string,
+  studentName: string
+): Promise<void> {
+  const key = getSessionKey(studentClass, studentName);
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.del(key);
+    } catch (err) {
+      console.error('Error deleting active session from Redis:', err);
+    }
+  }
+  memorySessions.delete(key);
+}
+

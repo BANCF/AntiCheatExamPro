@@ -76,76 +76,91 @@ class ServerStore {
     }
   }
 
-  private persistTimer: NodeJS.Timeout | null = null;
-
   public persist() {
-    if (this.persistTimer) {
-      clearTimeout(this.persistTimer);
-    }
-    this.persistTimer = setTimeout(() => {
-      try {
-        if (!fs.existsSync(DATA_DIR)) {
-          fs.mkdirSync(DATA_DIR, { recursive: true });
-        }
-        const data: StoredData = {
-          bank: this.bank,
-          config: this.config,
-          submissions: this.submissions,
-          teachers: this.teachers,
-          classes: this.classes
-        };
-        fs.promises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8').catch((err) => {
-          console.error('Async persist error:', err);
-        });
-      } catch (err) {
-        console.error('Failed to schedule store persist:', err);
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
       }
-    }, 500);
+      const data: StoredData = {
+        bank: this.bank,
+        config: this.config,
+        submissions: this.submissions,
+        teachers: this.teachers,
+        classes: this.classes
+      };
+      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (err) {
+      console.error('Failed to persist store:', err);
+    }
   }
 
-  public getOrCreateStudentExam(studentName: string, studentClass: string, classOverride?: ClassRoom) {
+  public getOrCreateStudentExam(
+    studentName: string,
+    studentClass: string,
+    classOverride?: ClassRoom,
+    forceNew: boolean = false
+  ) {
     const normName = studentName.trim().toLowerCase();
     const normClass = studentClass.trim().toLowerCase();
 
-    for (const [_id, student] of this.activeStudents.entries()) {
-      if (
-        student.studentName.trim().toLowerCase() === normName &&
-        student.studentClass.trim().toLowerCase() === normClass &&
-        student.status !== 'SUBMITTED' &&
-        student.status !== 'FORCE_SUBMITTED'
-      ) {
-        const sanitizedQuestions = student.pickedOriginalQuestions.map((q) => {
-          if (q.type === 'single_choice') {
-            return {
-              id: q.id,
-              type: 'single_choice' as const,
-              prompt: q.prompt,
-              tags: q.tags,
-              options: q.options.map(({ id, text }) => ({ id, text }))
-            };
-          } else {
-            return {
-              id: q.id,
-              type: 'true_false' as const,
-              prompt: q.prompt,
-              tags: q.tags,
-              items: q.items.map(({ id, text }) => ({ id, text }))
-            };
+    if (!forceNew) {
+      for (const [_id, student] of this.activeStudents.entries()) {
+        if (
+          student.studentName.trim().toLowerCase() === normName &&
+          student.studentClass.trim().toLowerCase() === normClass &&
+          student.status !== 'SUBMITTED' &&
+          student.status !== 'FORCE_SUBMITTED'
+        ) {
+          // If the class has a specific question count and the existing session has a different count, start fresh!
+          const expectedQCount = classOverride?.examConfig?.total_questions_to_pick;
+          if (expectedQCount && student.totalQuestions !== expectedQCount) {
+            this.activeStudents.delete(student.attemptId);
+            break;
           }
-        });
 
-        const elapsedSec = Math.floor((Date.now() - new Date(student.startTime).getTime()) / 1000);
-        const remainingSeconds = Math.max(10, student.durationSeconds - elapsedSec);
+          const sanitizedQuestions = student.pickedOriginalQuestions.map((q) => {
+            if (q.type === 'single_choice') {
+              return {
+                id: q.id,
+                type: 'single_choice' as const,
+                prompt: q.prompt,
+                tags: q.tags,
+                options: q.options.map(({ id, text }) => ({ id, text }))
+              };
+            } else {
+              return {
+                id: q.id,
+                type: 'true_false' as const,
+                prompt: q.prompt,
+                tags: q.tags,
+                items: q.items.map(({ id, text }) => ({ id, text }))
+              };
+            }
+          });
 
-        return {
-          attemptId: student.attemptId,
-          assignedCode: student.assignedCode,
-          sanitizedQuestions,
-          durationSeconds: student.durationSeconds,
-          remainingSeconds,
-          startTime: student.startTime,
-          isReconnected: true
-        };
+          const elapsedSec = Math.floor((Date.now() - new Date(student.startTime).getTime()) / 1000);
+          const remainingSeconds = Math.max(10, student.durationSeconds - elapsedSec);
+
+          return {
+            attemptId: student.attemptId,
+            assignedCode: student.assignedCode,
+            sanitizedQuestions,
+            durationSeconds: student.durationSeconds,
+            remainingSeconds,
+            startTime: student.startTime,
+            isReconnected: true
+          };
+        }
+      }
+    } else {
+      // Remove any pending old attempt for this student in this class so we start 100% clean
+      for (const [id, student] of this.activeStudents.entries()) {
+        if (
+          student.studentName.trim().toLowerCase() === normName &&
+          student.studentClass.trim().toLowerCase() === normClass
+        ) {
+          this.activeStudents.delete(id);
+        }
       }
     }
 
@@ -153,17 +168,24 @@ class ServerStore {
   }
 
   public startStudentExam(studentName: string, studentClass: string, classOverride?: ClassRoom) {
-    const effectiveConfig: ExamConfig = classOverride?.examConfig
-      ? {
-          ...this.config,
-          ...classOverride.examConfig,
-          title: classOverride.examTitle || this.config.title,
-          duration_minutes: classOverride.examConfig.duration_minutes || this.config.duration_minutes
-        }
-      : {
-          ...this.config,
-          title: classOverride?.examTitle || this.config.title
-        };
+    const classCfg = classOverride?.examConfig || {};
+    const effectiveTotal = classCfg.total_questions_to_pick ?? this.config.total_questions_to_pick ?? 10;
+    
+    let effectiveDist = classCfg.distribution;
+    if (!effectiveDist && effectiveTotal) {
+      const tf = Math.max(0, Math.min(6, Math.round(effectiveTotal * 0.2)));
+      const sc = effectiveTotal - tf;
+      effectiveDist = { single_choice: sc, true_false: tf };
+    }
+
+    const effectiveConfig: ExamConfig = {
+      ...this.config,
+      ...classCfg,
+      title: classOverride?.examTitle || this.config.title,
+      duration_minutes: classCfg.duration_minutes || this.config.duration_minutes,
+      total_questions_to_pick: effectiveTotal,
+      distribution: effectiveDist || this.config.distribution
+    };
 
     if (effectiveConfig.exam_mode === 'pdf') {
       const totalQ = effectiveConfig.pdf_total_questions || (effectiveConfig.pdf_answer_key ? Object.keys(effectiveConfig.pdf_answer_key).length : 40);
@@ -361,9 +383,9 @@ class ServerStore {
       violations_log: params.violationsLog,
       student_answers: params.answers,
       calculated_score: calculatedScore,
-      total_questions: effectiveConfig.exam_mode === 'pdf' ? totalPossiblePoints : originalQuestions.length,
+      total_questions: params.incomingRecord?.total_questions ?? (effectiveConfig.exam_mode === 'pdf' ? totalPossiblePoints : originalQuestions.length),
       correct_points_earned: earnedPoints,
-      max_possible_points: totalPossiblePoints
+      max_possible_points: params.incomingRecord?.max_possible_points ?? totalPossiblePoints
     };
 
     // Deduplicate: replace any existing record with same submission_id or same student + class + assigned_code

@@ -206,7 +206,7 @@ app.delete('/api/classes/:id', (req, res) => {
 
 // Start Student Exam
 app.post('/api/exam/start', (req, res) => {
-  const { student_name, student_class, pin } = req.body;
+  const { student_name, student_class, pin, forceNew } = req.body;
 
   if (!student_name?.trim() || !student_class?.trim()) {
     return res.status(400).json({ error: 'Vui lòng cung cấp Họ tên và Mã lớp học' });
@@ -241,7 +241,7 @@ app.post('/api/exam/start', (req, res) => {
     return res.status(403).json({ error: 'Mã PIN phòng thi không hợp lệ!' });
   }
 
-  const examSession = serverStore.getOrCreateStudentExam(student_name.trim(), normClass, matchedClass);
+  const examSession = serverStore.getOrCreateStudentExam(student_name.trim(), normClass, matchedClass, Boolean(forceNew));
 
   // Notify teacher of new student joined
   io.to('teacher_room').emit('student:new_session', {

@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { ExamConfig, ClassRoom } from '../../types/exam';
+import { fetchClassesApi } from '../../services/api';
+import { getStoredClasses } from '../../utils/storage';
 import { ShieldAlert, Clock, HelpCircle, CheckCircle2, Lock, Sparkles, ArrowRight, AlertTriangle, School, Check, BookOpen, KeyRound } from 'lucide-react';
 
 interface ExamLobbyProps {
@@ -39,7 +41,7 @@ export const ExamLobby: React.FC<ExamLobbyProps> = ({
   const effectiveDuration = matchedClass?.examConfig?.duration_minutes || config.duration_minutes;
   const effectiveQuestions = matchedClass?.examConfig?.total_questions_to_pick || config.total_questions_to_pick;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanName = studentName.trim();
     const cleanClass = studentClass.trim().toUpperCase();
@@ -54,20 +56,36 @@ export const ExamLobby: React.FC<ExamLobbyProps> = ({
       return;
     }
 
+    // Try finding class from props, then localStorage, then backend server
+    let targetClass = matchedClass;
+    if (!targetClass) {
+      const stored = getStoredClasses();
+      targetClass = stored.find((c) => c.code.trim().toUpperCase() === cleanClass) || null;
+    }
+    if (!targetClass) {
+      try {
+        const remoteClasses = await fetchClassesApi();
+        if (remoteClasses && Array.isArray(remoteClasses)) {
+          targetClass = remoteClasses.find((c) => c.code.trim().toUpperCase() === cleanClass) || null;
+        }
+      } catch {}
+    }
+
     // Class validation
-    if (classes.length > 0) {
-      if (!matchedClass) {
-        setError(`Mã lớp "${cleanClass}" không tồn tại trên hệ thống! Vui lòng nhập đúng mã lớp do giáo viên cung cấp (VD: 7A1, 7A2, 10A1...).`);
+    if (classes.length > 0 || targetClass) {
+      if (!targetClass) {
+        const availableCodes = classes.map((c) => c.code).join(', ');
+        setError(`Mã lớp "${cleanClass}" không tồn tại trên hệ thống! Vui lòng nhập đúng mã lớp đã tạo${availableCodes ? ` (Gợi ý các lớp đang mở: ${availableCodes})` : ''}.`);
         return;
       }
 
-      if (!matchedClass.isActive) {
-        setError(`Phòng thi của lớp ${matchedClass.code} (${matchedClass.name}) hiện đang ĐÓNG. Vui lòng chờ thầy cô mở phòng thi!`);
+      if (!targetClass.isActive) {
+        setError(`Phòng thi của lớp ${targetClass.code} (${targetClass.name}) hiện đang ĐÓNG. Vui lòng chờ thầy cô mở phòng thi!`);
         return;
       }
 
-      if (matchedClass.pinCode && cleanPin !== matchedClass.pinCode.trim()) {
-        setError(`Mã PIN bài thi không chính xác cho lớp ${matchedClass.code}! Vui lòng hỏi lại giáo viên bộ môn.`);
+      if (targetClass.pinCode && cleanPin !== targetClass.pinCode.trim()) {
+        setError(`Mã PIN bài thi không chính xác cho lớp ${targetClass.code}! Vui lòng hỏi lại giáo viên bộ môn.`);
         return;
       }
     } else {
@@ -79,7 +97,7 @@ export const ExamLobby: React.FC<ExamLobbyProps> = ({
     }
 
     setError(null);
-    onStartExam(cleanName, cleanClass, cleanPin, matchedClass || undefined);
+    onStartExam(cleanName, cleanClass, cleanPin, targetClass || undefined);
   };
 
   return (

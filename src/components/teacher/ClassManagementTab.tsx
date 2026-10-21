@@ -45,7 +45,7 @@ function parseAnswerKeyString(input: string, total: number): Record<string, stri
   const result: Record<string, string> = {};
   if (!input || !input.trim()) return result;
 
-  const regex = /(?:câu\s*)?(\d+)[\s.:-]*([a-dA-D])/gi;
+  const regex = /(?:(?:câu|cau|q|question)\s*)?(\d+)[\s.:-]*([a-dA-D])/giu;
   let match: RegExpExecArray | null;
   let count = 0;
 
@@ -155,13 +155,24 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
   // Open Dedicated Visual Exam Creation Modal for a Class
   const handleOpenExamConfig = (c: ClassRoom) => {
     setTargetClassForExam(c);
+    setExamFormTitle(c.examTitle || `Kiểm Tra ${c.subject} - Lớp ${c.code}`);
     const existingCfg = c.examConfig || {};
-
+    const totalQ = existingCfg.total_questions_to_pick || 10;
     setExamFormDuration(existingCfg.duration_minutes || config.duration_minutes || 15);
-    setExamFormQuestionCount(existingCfg.total_questions_to_pick || config.total_questions_to_pick || 20);
-    const existingDist = existingCfg.distribution || config.distribution || { single_choice: 16, true_false: 4 };
-    setExamFormSingleChoiceCount(existingDist.single_choice ?? 16);
-    setExamFormTrueFalseCount(existingDist.true_false ?? 4);
+    setExamFormQuestionCount(totalQ);
+
+    let defaultSC = 8;
+    let defaultTF = 2;
+    if (existingCfg.distribution && typeof existingCfg.distribution.single_choice === 'number' && typeof existingCfg.distribution.true_false === 'number') {
+      defaultSC = existingCfg.distribution.single_choice;
+      defaultTF = existingCfg.distribution.true_false;
+    } else {
+      defaultTF = Math.max(0, Math.min(6, Math.round(totalQ * 0.2)));
+      defaultSC = totalQ - defaultTF;
+    }
+
+    setExamFormSingleChoiceCount(defaultSC);
+    setExamFormTrueFalseCount(defaultTF);
     setExamFormTerm(existingCfg.target_term || 'Ôn tập thường xuyên');
     setExamFormPinCode(c.pinCode);
 
@@ -224,7 +235,12 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
         total_questions_to_pick: 10,
         target_grade: formGrade,
         target_subject: formSubject,
-        exam_mode: 'bank'
+        target_term: 'Ôn tập thường xuyên',
+        exam_mode: 'bank',
+        distribution: {
+          single_choice: 8,
+          true_false: 2
+        }
       },
       isActive: formIsActive,
       description: formDescription.trim(),
@@ -240,6 +256,11 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
   const handleSaveExamConfigForClass = (e: React.FormEvent) => {
     e.preventDefault();
     if (!targetClassForExam) return;
+
+    if (!examFormTitle.trim()) {
+      showToast('error', 'Vui lòng nhập Tên bài kiểm tra của lớp!');
+      return;
+    }
 
     let updatedConfig: Partial<ExamConfig> = {};
 
@@ -351,12 +372,23 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
     reader.readAsDataURL(file);
   };
 
-  // Quick answer key setter
+  // Quick answer key setter with toggle support
   const handleSetAnswerKey = (qNum: number, letter: string) => {
-    setPdfAnswerMap((prev) => ({
-      ...prev,
-      [String(qNum)]: letter
-    }));
+    setPdfAnswerMap((prev) => {
+      const next = { ...prev };
+      const key = String(qNum);
+      if (next[key] === letter) {
+        delete next[key];
+      } else {
+        next[key] = letter;
+      }
+      const quickText = Object.entries(next)
+        .sort((a, b) => Number(a[0]) - Number(b[0]))
+        .map(([k, v]) => `${k}${v}`)
+        .join(' ');
+      setPdfQuickPasteText(quickText);
+      return next;
+    });
   };
 
   // Quick paste text parser

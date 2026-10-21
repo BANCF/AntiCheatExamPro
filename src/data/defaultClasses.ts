@@ -63,7 +63,11 @@ export const DEFAULT_CLASSES: ClassRoom[] = [
       total_questions_to_pick: 10,
       target_grade: 'Lớp 7',
       target_subject: 'Tin học',
-      exam_mode: 'bank'
+      exam_mode: 'bank',
+      distribution: {
+        single_choice: 8,
+        true_false: 2
+      }
     },
     isActive: true,
     description: 'Bài thi trắc nghiệm khách quan ngẫu nhiên hóa đề cho lớp 7A1'
@@ -82,7 +86,11 @@ export const DEFAULT_CLASSES: ClassRoom[] = [
       total_questions_to_pick: 10,
       target_grade: 'Lớp 7',
       target_subject: 'Tin học',
-      exam_mode: 'bank'
+      exam_mode: 'bank',
+      distribution: {
+        single_choice: 8,
+        true_false: 2
+      }
     },
     isActive: true,
     description: 'Bài thi trắc nghiệm riêng biệt cho học sinh lớp 7A2'
@@ -101,7 +109,11 @@ export const DEFAULT_CLASSES: ClassRoom[] = [
       total_questions_to_pick: 20,
       target_grade: 'Lớp 10',
       target_subject: 'Toán học',
-      exam_mode: 'bank'
+      exam_mode: 'bank',
+      distribution: {
+        single_choice: 16,
+        true_false: 4
+      }
     },
     isActive: true,
     description: 'Phòng thi Toán lớp 10A1 có công thức LaTeX'
@@ -120,7 +132,11 @@ export const DEFAULT_CLASSES: ClassRoom[] = [
       total_questions_to_pick: 25,
       target_grade: 'Lớp 12',
       target_subject: 'Vật lí',
-      exam_mode: 'bank'
+      exam_mode: 'bank',
+      distribution: {
+        single_choice: 20,
+        true_false: 5
+      }
     },
     isActive: true,
     description: 'Phòng thi Vật lí 12A3 chống gian lận đa lớp'

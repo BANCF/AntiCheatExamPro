@@ -25,6 +25,7 @@ import {
   getStoredClasses,
   saveStoredClasses
 } from './utils/storage';
+import { DEFAULT_CLASSES } from './data/defaultClasses';
 import { generateAllExamVariants, generateStudentExam, buildSubmissionRecord } from './utils/randomEngine';
 import { TeacherConsole } from './components/teacher/TeacherConsole';
 import { ExamLobby } from './components/student/ExamLobby';
@@ -131,12 +132,14 @@ export function App() {
     });
 
     fetchSubmissionsApi().then((serverSubmissions) => {
-      if (serverSubmissions && Array.isArray(serverSubmissions) && serverSubmissions.length > 0) {
+      if (serverSubmissions && Array.isArray(serverSubmissions)) {
         setSubmissions((prev) => {
           const map = new Map<string, SubmissionRecord>();
           prev.forEach((s) => map.set(s.submission_id, s));
           serverSubmissions.forEach((s) => map.set(s.submission_id, s));
-          const merged = Array.from(map.values());
+          const merged = Array.from(map.values()).sort(
+            (a, b) => new Date(b.submit_time).getTime() - new Date(a.submit_time).getTime()
+          );
           saveSubmissions(merged);
           return merged;
         });
@@ -144,14 +147,64 @@ export function App() {
     });
 
     fetchClassesApi().then((serverClasses) => {
-      if (serverClasses && Array.isArray(serverClasses) && serverClasses.length > 0) {
-        setClasses(serverClasses);
-        saveStoredClasses(serverClasses);
+      if (serverClasses && Array.isArray(serverClasses)) {
+        setClasses((prev) => {
+          const map = new Map<string, ClassRoom>();
+          DEFAULT_CLASSES.forEach((c: ClassRoom) => map.set(c.code.toUpperCase(), c));
+          prev.forEach((c: ClassRoom) => map.set(c.code.toUpperCase(), c));
+          serverClasses.forEach((c: ClassRoom) => map.set(c.code.toUpperCase(), c));
+          const merged = Array.from(map.values());
+          saveStoredClasses(merged);
+          return merged;
+        });
       }
     });
   }, []);
 
-  // Real-time listener for submissions from remote students
+  // Cross-tab synchronization via storage events (ensures new class / submission is instantly reflected across tabs)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'anticheat_classes_v1' && e.newValue) {
+        try {
+          const updated = JSON.parse(e.newValue);
+          if (Array.isArray(updated)) setClasses(updated);
+        } catch {}
+      }
+      if (e.key === 'anticheat_exam_submissions_v1' && e.newValue) {
+        try {
+          const updated = JSON.parse(e.newValue);
+          if (Array.isArray(updated)) setSubmissions(updated);
+        } catch {}
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Background polling (every 3s) for submissions when in teacher mode to guarantee instant gradebook updates
+  useEffect(() => {
+    if (appMode !== 'teacher') return;
+    const pollInterval = setInterval(() => {
+      fetchSubmissionsApi().then((remote) => {
+        if (remote && Array.isArray(remote)) {
+          setSubmissions((prev) => {
+            const map = new Map<string, SubmissionRecord>();
+            prev.forEach((s) => map.set(s.submission_id, s));
+            remote.forEach((s) => map.set(s.submission_id, s));
+            getStoredSubmissions().forEach((s) => map.set(s.submission_id, s));
+            const merged = Array.from(map.values()).sort(
+              (a, b) => new Date(b.submit_time).getTime() - new Date(a.submit_time).getTime()
+            );
+            saveSubmissions(merged);
+            return merged;
+          });
+        }
+      });
+    }, 3000);
+    return () => clearInterval(pollInterval);
+  }, [appMode]);
+
+  // Real-time listener for submissions from remote students via WebSocket
   useEffect(() => {
     const socket = getSocket();
     const handleRemoteSubmitted = ({ submission }: { submission: SubmissionRecord }) => {
@@ -417,23 +470,30 @@ export function App() {
     pin: string,
     matchedClass?: ClassRoom
   ) => {
-    const effectiveConfig: ExamConfig = matchedClass?.examConfig
-      ? {
-          ...config,
-          ...matchedClass.examConfig,
-          title: matchedClass.examTitle || config.title,
-          duration_minutes: matchedClass.examConfig.duration_minutes || config.duration_minutes
-        }
-      : {
-          ...config,
-          title: matchedClass?.examTitle || config.title
-        };
+    const classCfg = matchedClass?.examConfig || {};
+    const effectiveTotal = classCfg.total_questions_to_pick ?? config.total_questions_to_pick ?? 10;
+    let effectiveDist = classCfg.distribution;
+    if (!effectiveDist && effectiveTotal) {
+      const tf = Math.max(0, Math.min(6, Math.round(effectiveTotal * 0.2)));
+      const sc = effectiveTotal - tf;
+      effectiveDist = { single_choice: sc, true_false: tf };
+    }
 
-    // 1. Try starting via Backend Server
+    const effectiveConfig: ExamConfig = {
+      ...config,
+      ...classCfg,
+      title: matchedClass?.examTitle || config.title,
+      duration_minutes: classCfg.duration_minutes || config.duration_minutes,
+      total_questions_to_pick: effectiveTotal,
+      distribution: effectiveDist || config.distribution
+    };
+
+    // 1. Try starting via Backend Server (forceNew: true ensures fresh exam with class's configured questions)
     const serverSession = await startStudentExamApi({
       studentName,
       studentClass,
-      pin
+      pin,
+      forceNew: true
     });
 
     if (serverSession && (serverSession as any).error) {

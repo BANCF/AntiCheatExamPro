@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { SubmissionRecord, Question, ClassRoom } from '../../types/exam';
 import { exportGradebookToExcel } from '../../utils/excelHelper';
 import { fetchSubmissionsApi } from '../../services/api';
+import { getStoredSubmissions } from '../../utils/storage';
 import { getSocket } from '../../services/socket';
 import { MathRenderer } from '../common/MathRenderer';
 import {
@@ -101,20 +102,24 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
     }
   }, [initialClassFilter]);
 
-  // Manual refresh from backend
+  // Manual refresh from backend and local storage
   const handleManualRefresh = async () => {
     setIsRefreshing(true);
     try {
       const remote = await fetchSubmissionsApi();
-      if (remote && Array.isArray(remote)) {
-        setSubmissions((prev) => {
-          const map = new Map<string, SubmissionRecord>();
-          prev.forEach((s) => map.set(s.submission_id, s));
+      const stored = getStoredSubmissions();
+      setSubmissions((prev) => {
+        const map = new Map<string, SubmissionRecord>();
+        prev.forEach((s) => map.set(s.submission_id, s));
+        if (remote && Array.isArray(remote)) {
           remote.forEach((s) => map.set(s.submission_id, s));
-          return Array.from(map.values());
-        });
-        showToast('Đã làm mới dữ liệu bảng điểm từ máy chủ!');
-      }
+        }
+        stored.forEach((s) => map.set(s.submission_id, s));
+        return Array.from(map.values()).sort(
+          (a, b) => new Date(b.submit_time).getTime() - new Date(a.submit_time).getTime()
+        );
+      });
+      showToast('Đã làm mới dữ liệu bảng điểm thành công!');
     } finally {
       setTimeout(() => setIsRefreshing(false), 500);
     }
@@ -151,26 +156,6 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
     };
   }, []);
 
-  // 🔄 BACKGROUND POLLING (Every 4s) to guarantee zero desync
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const remote = await fetchSubmissionsApi();
-        if (remote && Array.isArray(remote) && remote.length > 0) {
-          setSubmissions((prev) => {
-            const map = new Map<string, SubmissionRecord>();
-            prev.forEach((s) => map.set(s.submission_id, s));
-            remote.forEach((s) => map.set(s.submission_id, s));
-            return Array.from(map.values());
-          });
-        }
-      } catch {
-        // Ignore silent background network errors
-      }
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   // Collect unique exams
   const availableExams = useMemo(() => {
@@ -337,10 +322,36 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
         </div>
         <div className="flex items-center gap-2 text-xs text-indigo-700">
           <span className="text-[11px] px-2 py-0.5 rounded-md bg-white border border-indigo-200 font-mono font-medium">
-            Đồng bộ: Tự động 4s / WebSocket
+            Đồng bộ: Tự động 3s / WebSocket
           </span>
+          <button
+            type="button"
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            className="px-3 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer text-xs disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Đang cập nhật...' : 'Làm mới dữ liệu'}</span>
+          </button>
         </div>
       </div>
+
+      {/* Active Filter Clear Banner */}
+      {selectedClass !== 'all' && (
+        <div className="flex items-center justify-between p-3 px-4 rounded-2xl bg-purple-50 border border-purple-200 text-purple-900 text-xs">
+          <div className="flex items-center gap-2 font-semibold">
+            <GraduationCap className="w-4 h-4 text-purple-600" />
+            <span>Đang lọc bảng điểm chỉ riêng cho <strong>Lớp {selectedClass}</strong> ({totalCount} bài)</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSelectedClass('all')}
+            className="px-3 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold transition-colors cursor-pointer text-xs"
+          >
+            Hiển thị tất cả các lớp
+          </button>
+        </div>
+      )}
 
       {/* Metrics Banner (Dynamic based on selected class and filters) */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
