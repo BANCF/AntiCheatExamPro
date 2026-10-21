@@ -39,6 +39,8 @@ import {
   saveExamConfigApi,
   fetchSubmissionsApi,
   clearSubmissionsApi,
+  deleteSubmissionApi,
+  deduplicateSubmissionsApi,
   startStudentExamApi,
   submitStudentExamApi,
   fetchClassesApi,
@@ -99,6 +101,7 @@ export function App() {
     violationCount: number;
     examId?: string;
     examTitle?: string;
+    effectiveConfig?: ExamConfig;
   } | null>(null);
 
   // Completed receipt state
@@ -183,6 +186,33 @@ export function App() {
     setSubmissions([]);
     saveSubmissions([]);
     clearSubmissionsApi();
+  };
+
+  const handleDeleteSubmission = (submissionId: string) => {
+    setSubmissions((prev) => {
+      const updated = prev.filter((s) => s.submission_id !== submissionId);
+      saveSubmissions(updated);
+      return updated;
+    });
+    deleteSubmissionApi(submissionId);
+  };
+
+  const handleDeduplicateSubmissions = async () => {
+    const seen = new Set<string>();
+    const unique: SubmissionRecord[] = [];
+    const sorted = [...submissions].sort(
+      (a, b) => new Date(b.submit_time).getTime() - new Date(a.submit_time).getTime()
+    );
+    for (const sub of sorted) {
+      const key = `${sub.student_name.trim().toLowerCase()}_${sub.student_class.trim().toLowerCase()}_${sub.assigned_code}_${sub.exam_id || 'def'}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(sub);
+      }
+    }
+    setSubmissions(unique);
+    saveSubmissions(unique);
+    await deduplicateSubmissionsApi();
   };
 
   // Add realistic mock submissions for quick teacher evaluation
@@ -470,7 +500,8 @@ export function App() {
       violationsLog: [],
       violationCount: 0,
       examId: matchedClass?.id || config.exam_id,
-      examTitle: matchedClass?.examTitle || config.title
+      examTitle: matchedClass?.examTitle || config.title,
+      effectiveConfig
     };
 
     setCurrentSession(sessionData);
@@ -546,9 +577,11 @@ export function App() {
 
     const submitTime = new Date().toISOString();
     let submissionId = `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    const effectiveCfg = currentSession.effectiveConfig || config;
 
     // Build the complete submission record locally IMMEDIATELY
     const record = buildSubmissionRecord({
+      submissionId,
       studentName: currentSession.studentName,
       studentClass: currentSession.studentClass,
       assignedCode: currentSession.assignedCode,
@@ -559,8 +592,9 @@ export function App() {
       violationsLog: finalLogs,
       studentAnswers: answers,
       originalQuestions: currentSession.pickedOriginalQuestions.length > 0 ? currentSession.pickedOriginalQuestions : bank,
-      examId: currentSession.examId || config.exam_id,
-      examTitle: currentSession.examTitle || config.title
+      examId: currentSession.examId || effectiveCfg.exam_id,
+      examTitle: currentSession.examTitle || effectiveCfg.title,
+      config: effectiveCfg
     });
 
     // Save locally immediately to guarantee it is NEVER lost
@@ -582,6 +616,11 @@ export function App() {
 
       if (apiResult && apiResult.submission_id) {
         submissionId = apiResult.submission_id;
+        if (submissionId !== record.submission_id) {
+          record.submission_id = submissionId;
+          const currentList = getStoredSubmissions().filter((s) => s.submission_id !== record.submission_id);
+          saveSubmissions([record, ...currentList]);
+        }
       }
     } catch (err) {
       console.warn('Backend submit sync failed, preserved locally:', err);
@@ -592,11 +631,20 @@ export function App() {
       if (serverSubmissions && Array.isArray(serverSubmissions) && serverSubmissions.length > 0) {
         setSubmissions((prev) => {
           const map = new Map<string, SubmissionRecord>();
-          prev.forEach((s) => map.set(s.submission_id, s));
-          serverSubmissions.forEach((s) => map.set(s.submission_id, s));
-          const merged = Array.from(map.values());
-          saveSubmissions(merged);
-          return merged;
+          const seenKey = new Set<string>();
+          const all = [...prev, ...serverSubmissions];
+          all.sort((a, b) => new Date(b.submit_time).getTime() - new Date(a.submit_time).getTime());
+          const deduped: SubmissionRecord[] = [];
+          for (const s of all) {
+            const key = `${s.student_name.trim().toLowerCase()}_${s.student_class.trim().toLowerCase()}_${s.assigned_code}`;
+            if (!seenKey.has(key) && !map.has(s.submission_id)) {
+              seenKey.add(key);
+              map.set(s.submission_id, s);
+              deduped.push(s);
+            }
+          }
+          saveSubmissions(deduped);
+          return deduped;
         });
       }
     });
@@ -731,6 +779,8 @@ export function App() {
             onSaveClass={handleSaveClass}
             onDeleteClass={handleDeleteClass}
             onClearSubmissions={handleClearSubmissions}
+            onDeleteSubmission={handleDeleteSubmission}
+            onDeduplicateSubmissions={handleDeduplicateSubmissions}
             onAddSampleSubmissions={handleAddSampleSubmissions}
             onLaunchStudentExam={(classItem) => {
               if (classItem) {

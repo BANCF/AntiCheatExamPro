@@ -173,17 +173,60 @@ export function generateAllExamVariants(
 }
 
 /**
- * Score student's submission against original questions (master key)
+ * Score student's submission against original questions or PDF answer key
  * Scale: 0.0 - 10.0
  */
 export function calculateExamScore(
   studentAnswers: StudentAnswers,
-  originalQuestions: Question[]
+  originalQuestions: Question[],
+  configOrKey?: Partial<ExamConfig> | Record<string, string>
 ): {
   calculatedScore: number;
   earnedPoints: number;
   totalPossiblePoints: number;
 } {
+  // Check if PDF exam mode
+  const isPdf =
+    (configOrKey && 'exam_mode' in configOrKey && configOrKey.exam_mode === 'pdf') ||
+    (configOrKey && 'pdf_answer_key' in configOrKey && configOrKey.pdf_answer_key) ||
+    (configOrKey && !('exam_mode' in configOrKey) && !('title' in configOrKey) && Object.keys(configOrKey).length > 0 && typeof Object.values(configOrKey)[0] === 'string');
+
+  if (isPdf) {
+    let answerKey: Record<string, string> = {};
+    let totalQ = 40;
+
+    if (configOrKey && 'pdf_answer_key' in configOrKey && configOrKey.pdf_answer_key) {
+      answerKey = (typeof configOrKey.pdf_answer_key === 'object' ? configOrKey.pdf_answer_key : {}) as Record<string, string>;
+      totalQ = Number(configOrKey.pdf_total_questions) || Object.keys(answerKey).length || originalQuestions.length || 40;
+    } else if (configOrKey && !('exam_mode' in configOrKey)) {
+      answerKey = configOrKey as Record<string, string>;
+      totalQ = Object.keys(answerKey).length || originalQuestions.length || 40;
+    }
+
+    if (totalQ === 0) totalQ = Math.max(Object.keys(answerKey).length, originalQuestions.length || 40);
+
+    let earnedPoints = 0;
+    for (let i = 1; i <= totalQ; i++) {
+      const qKey = String(i);
+      const studentAns = studentAnswers[qKey];
+      const correctAns = answerKey[qKey];
+      if (
+        studentAns &&
+        correctAns &&
+        String(studentAns).trim().toUpperCase() === String(correctAns).trim().toUpperCase()
+      ) {
+        earnedPoints += 1.0;
+      }
+    }
+
+    const calculatedScore = totalQ > 0 ? Math.round((earnedPoints / totalQ) * 10 * 100) / 100 : 0;
+    return {
+      calculatedScore,
+      earnedPoints,
+      totalPossiblePoints: totalQ
+    };
+  }
+
   let earnedPoints = 0;
   let totalPossiblePoints = 0;
 
@@ -235,6 +278,7 @@ export function calculateExamScore(
  * Create full submission record
  */
 export function buildSubmissionRecord(params: {
+  submissionId?: string;
   studentName: string;
   studentClass: string;
   assignedCode: string;
@@ -247,14 +291,16 @@ export function buildSubmissionRecord(params: {
   originalQuestions: Question[];
   examId?: string;
   examTitle?: string;
+  config?: Partial<ExamConfig>;
 }): SubmissionRecord {
   const { calculatedScore, earnedPoints, totalPossiblePoints } = calculateExamScore(
     params.studentAnswers,
-    params.originalQuestions
+    params.originalQuestions,
+    params.config
   );
 
   return {
-    submission_id: `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+    submission_id: params.submissionId || `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
     exam_id: params.examId,
     exam_title: params.examTitle,
     student_name: params.studentName.trim(),
@@ -267,7 +313,7 @@ export function buildSubmissionRecord(params: {
     violations_log: params.violationsLog,
     student_answers: params.studentAnswers,
     calculated_score: calculatedScore,
-    total_questions: params.originalQuestions.length,
+    total_questions: params.config?.exam_mode === 'pdf' ? totalPossiblePoints : params.originalQuestions.length,
     correct_points_earned: earnedPoints,
     max_possible_points: totalPossiblePoints
   };

@@ -152,6 +152,31 @@ export async function addSubmission(sub: SubmissionRecord): Promise<void> {
   memorySubmissions = [sub, ...memorySubmissions.filter((s) => s.submission_id !== sub.submission_id)];
 }
 
+export async function deleteSubmission(id: string): Promise<boolean> {
+  const redis = getRedis();
+  if (redis) {
+    try {
+      let list = await redis.get<any>('exam:submissions');
+      if (typeof list === 'string') {
+        try {
+          list = JSON.parse(list);
+        } catch {
+          list = [];
+        }
+      }
+      const currentList = Array.isArray(list) ? list : [];
+      const updated = currentList.filter((s: any) => s.submission_id !== id && s.attempt_id !== id);
+      await redis.set('exam:submissions', updated);
+      return true;
+    } catch (err) {
+      console.error('Error deleting submission in Redis:', err);
+    }
+  }
+  const prevCount = memorySubmissions.length;
+  memorySubmissions = memorySubmissions.filter((s) => s.submission_id !== id && (s as any).attempt_id !== id);
+  return memorySubmissions.length !== prevCount;
+}
+
 export async function clearSubmissions(): Promise<void> {
   const redis = getRedis();
   if (redis) {

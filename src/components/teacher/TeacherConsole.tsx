@@ -19,6 +19,8 @@ interface TeacherConsoleProps {
   onSaveClass: (classItem: ClassRoom) => void;
   onDeleteClass: (classId: string) => void;
   onClearSubmissions: () => void;
+  onDeleteSubmission?: (id: string) => void;
+  onDeduplicateSubmissions?: () => void;
   onAddSampleSubmissions: () => void;
   onLaunchStudentExam: (classItem?: ClassRoom) => void;
   onLogoutTeacher?: () => void;
@@ -36,12 +38,15 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
   onSaveClass,
   onDeleteClass,
   onClearSubmissions,
+  onDeleteSubmission,
+  onDeduplicateSubmissions,
   onAddSampleSubmissions,
   onLaunchStudentExam,
   onLogoutTeacher,
   onSwitchTeacher
 }) => {
   const [activeTab, setActiveTab] = useState<'live' | 'classes' | 'bank' | 'config' | 'gradebook' | 'teachers'>('classes');
+  const [gradebookClassFilter, setGradebookClassFilter] = useState<string>('all');
 
   const isAdmin = currentTeacher?.role === 'admin';
 
@@ -191,7 +196,8 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
             onSaveClass={onSaveClass}
             onDeleteClass={onDeleteClass}
             onLaunchClassExam={(c) => onLaunchStudentExam(c)}
-            onViewClassSubmissions={(_classCode) => {
+            onViewClassSubmissions={(classCode) => {
+              setGradebookClassFilter(classCode);
               setActiveTab('gradebook');
             }}
           />
@@ -213,7 +219,11 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
             submissions={submissions}
             examTitle={config.title}
             bank={bank}
+            classes={classes}
+            initialClassFilter={gradebookClassFilter}
             onClearSubmissions={onClearSubmissions}
+            onDeleteSubmission={onDeleteSubmission}
+            onDeduplicateSubmissions={onDeduplicateSubmissions}
             onAddSampleSubmissions={onAddSampleSubmissions}
           />
         )}

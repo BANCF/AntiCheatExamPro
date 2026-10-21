@@ -71,6 +71,29 @@ export async function clearSubmissionsApi(): Promise<boolean> {
   }
 }
 
+export async function deleteSubmissionApi(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/submissions/${id}`, { method: 'DELETE' });
+    return res.ok;
+  } catch (err) {
+    console.warn('API deleteSubmissionApi failed:', err);
+    return false;
+  }
+}
+
+export async function deduplicateSubmissionsApi(): Promise<number> {
+  try {
+    const res = await fetch(`${API_BASE}/submissions/deduplicate`, { method: 'POST' });
+    if (res.ok) {
+      const data = await res.json();
+      return data?.removedCount || 0;
+    }
+  } catch (err) {
+    console.warn('API deduplicateSubmissionsApi failed:', err);
+  }
+  return 0;
+}
+
 export async function startStudentExamApi(params: {
   studentName: string;
   studentClass: string;
@@ -139,6 +162,7 @@ export async function submitStudentExamApi(params: {
         answers: params.answers,
         status: params.status,
         violations_log: params.violationsLog,
+        submission_id: params.submissionRecord?.submission_id,
         submission_record: params.submissionRecord
       })
     });

@@ -257,6 +257,41 @@ class ServerStore {
     };
   }
 
+  public deleteSubmission(idOrAttempt: string): boolean {
+    const prevCount = this.submissions.length;
+    this.submissions = this.submissions.filter(
+      (s) => s.submission_id !== idOrAttempt && (s as any).attempt_id !== idOrAttempt
+    );
+    if (this.submissions.length !== prevCount) {
+      this.persist();
+      return true;
+    }
+    return false;
+  }
+
+  public deduplicateSubmissions(): number {
+    const initialCount = this.submissions.length;
+    const seen = new Set<string>();
+    const unique: SubmissionRecord[] = [];
+
+    // Sort by submit_time desc so the latest valid submission is kept
+    const sorted = [...this.submissions].sort(
+      (a, b) => new Date(b.submit_time).getTime() - new Date(a.submit_time).getTime()
+    );
+
+    for (const sub of sorted) {
+      const key = `${sub.student_name.trim().toLowerCase()}_${sub.student_class.trim().toLowerCase()}_${sub.assigned_code}_${sub.exam_id || 'default'}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(sub);
+      }
+    }
+
+    this.submissions = unique;
+    this.persist();
+    return initialCount - unique.length;
+  }
+
   public submitStudentExam(params: {
     attemptId: string;
     studentName: string;
@@ -265,43 +300,55 @@ class ServerStore {
     answers: StudentAnswers;
     status: 'SUBMITTED' | 'FORCE_SUBMITTED';
     violationsLog: ViolationLog[];
+    submissionId?: string;
+    incomingRecord?: SubmissionRecord;
   }): SubmissionRecord {
     const existing = this.activeStudents.get(params.attemptId);
     const originalQuestions = existing ? existing.pickedOriginalQuestions : this.bank;
+
+    const matchedClass = this.classes.find(
+      (c) => c.code.trim().toUpperCase() === params.studentClass.trim().toUpperCase()
+    );
+
+    const effectiveConfig: ExamConfig = matchedClass?.examConfig
+      ? {
+          ...this.config,
+          ...matchedClass.examConfig,
+          title: matchedClass.examTitle || this.config.title,
+          duration_minutes: matchedClass.examConfig.duration_minutes || this.config.duration_minutes
+        }
+      : {
+          ...this.config,
+          title: matchedClass?.examTitle || this.config.title
+        };
+
+    const examId = matchedClass?.id || this.config.exam_id;
+    const examTitle = matchedClass?.examTitle || this.config.title;
 
     let calculatedScore = 0;
     let earnedPoints = 0;
     let totalPossiblePoints = 0;
 
-    if (this.config.exam_mode === 'pdf') {
-      const answerKey = this.config.pdf_answer_key || {};
-      const totalQ = this.config.pdf_total_questions || (Object.keys(answerKey).length || 40);
-      totalPossiblePoints = totalQ;
-
-      for (let i = 1; i <= totalQ; i++) {
-        const studentAns = params.answers[String(i)];
-        const correctAns = answerKey[String(i)];
-        if (studentAns && correctAns && String(studentAns).trim().toUpperCase() === String(correctAns).trim().toUpperCase()) {
-          earnedPoints += 1;
-        }
-      }
-      calculatedScore = totalPossiblePoints > 0 ? Math.round((earnedPoints / totalPossiblePoints) * 10 * 100) / 100 : 0;
+    if (params.incomingRecord && typeof params.incomingRecord.calculated_score === 'number' && effectiveConfig.exam_mode !== 'pdf') {
+      calculatedScore = params.incomingRecord.calculated_score;
+      earnedPoints = params.incomingRecord.correct_points_earned ?? calculatedScore;
+      totalPossiblePoints = params.incomingRecord.max_possible_points ?? originalQuestions.length;
     } else {
-      const res = calculateExamScore(params.answers, originalQuestions);
+      const res = calculateExamScore(params.answers, originalQuestions, effectiveConfig);
       calculatedScore = res.calculatedScore;
       earnedPoints = res.earnedPoints;
       totalPossiblePoints = res.totalPossiblePoints;
     }
 
-    const matchedClass = this.classes.find(
-      (c) => c.code.trim().toUpperCase() === params.studentClass.trim().toUpperCase()
-    );
-    const examId = matchedClass?.id || this.config.exam_id;
-    const examTitle = matchedClass?.examTitle || this.config.title;
-
     const submitTime = new Date().toISOString();
+    // Prefer client's existing submission ID or reuse duplicate attempt
+    const targetId =
+      params.submissionId ||
+      params.incomingRecord?.submission_id ||
+      `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+
     const submission: SubmissionRecord = {
-      submission_id: `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+      submission_id: targetId,
       exam_id: examId,
       exam_title: examTitle,
       student_name: params.studentName.trim(),
@@ -314,12 +361,31 @@ class ServerStore {
       violations_log: params.violationsLog,
       student_answers: params.answers,
       calculated_score: calculatedScore,
-      total_questions: originalQuestions.length,
+      total_questions: effectiveConfig.exam_mode === 'pdf' ? totalPossiblePoints : originalQuestions.length,
       correct_points_earned: earnedPoints,
       max_possible_points: totalPossiblePoints
     };
 
-    this.submissions = [submission, ...this.submissions.filter((s) => s.submission_id !== submission.submission_id)];
+    // Deduplicate: replace any existing record with same submission_id or same student + class + assigned_code
+    const normName = params.studentName.trim().toLowerCase();
+    const normClass = params.studentClass.trim().toLowerCase();
+
+    this.submissions = [
+      submission,
+      ...this.submissions.filter((s) => {
+        if (s.submission_id === targetId) return false;
+        if (
+          s.student_name.trim().toLowerCase() === normName &&
+          s.student_class.trim().toLowerCase() === normClass &&
+          s.assigned_code === params.assignedCode &&
+          (s.exam_id === examId || !s.exam_id)
+        ) {
+          return false;
+        }
+        return true;
+      })
+    ];
+
     this.persist();
 
     if (existing) {

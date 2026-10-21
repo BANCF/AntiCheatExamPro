@@ -12,6 +12,13 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   }
 
   if (method === 'DELETE') {
+    const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+    const id = url.searchParams.get('id');
+    if (id) {
+      const { deleteSubmission } = await import('./_storage');
+      await deleteSubmission(id);
+      return sendJson(res, 200, { success: true, message: `Submission ${id} deleted` });
+    }
     await clearSubmissions();
     return sendJson(res, 200, { success: true, message: 'All submissions cleared' });
   }

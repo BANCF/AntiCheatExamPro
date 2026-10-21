@@ -268,20 +268,37 @@ app.post('/api/exam/start', (req, res) => {
 
 // Submit Exam
 app.post('/api/exam/submit', (req, res) => {
-  const { attempt_id, student_name, student_class, assigned_code, answers, status, violations_log } = req.body;
+  const {
+    attempt_id,
+    student_name,
+    student_class,
+    assigned_code,
+    answers,
+    status,
+    violations_log,
+    submission_id,
+    submissionId,
+    submission_record,
+    submissionRecord
+  } = req.body;
 
-  if (!attempt_id) {
+  const incomingRecord = submission_record || submissionRecord;
+  const targetSubmissionId = submission_id || submissionId || incomingRecord?.submission_id;
+
+  if (!attempt_id && !incomingRecord?.attempt_id && !targetSubmissionId) {
     return res.status(400).json({ error: 'Thiếu attempt_id' });
   }
 
   const submission = serverStore.submitStudentExam({
-    attemptId: attempt_id,
-    studentName: student_name || 'Học sinh',
-    studentClass: student_class || 'Lớp',
-    assignedCode: assigned_code || '101',
-    answers: answers || {},
-    status: status === 'FORCE_SUBMITTED' ? 'FORCE_SUBMITTED' : 'SUBMITTED',
-    violationsLog: violations_log || []
+    attemptId: attempt_id || incomingRecord?.attempt_id || targetSubmissionId,
+    studentName: student_name || incomingRecord?.student_name || 'Học sinh',
+    studentClass: student_class || incomingRecord?.student_class || 'Lớp',
+    assignedCode: assigned_code || incomingRecord?.assigned_code || '101',
+    answers: answers || incomingRecord?.student_answers || {},
+    status: (status === 'FORCE_SUBMITTED' || incomingRecord?.status === 'FORCE_SUBMITTED') ? 'FORCE_SUBMITTED' : 'SUBMITTED',
+    violationsLog: violations_log || incomingRecord?.violations_log || [],
+    submissionId: targetSubmissionId,
+    incomingRecord
   });
 
   // Notify teacher room & all teacher dashboards in real-time
@@ -294,7 +311,7 @@ app.post('/api/exam/submit', (req, res) => {
     attemptId: attempt_id
   });
 
-  // Send receipt without score
+  // Send receipt without score for privacy
   res.json({
     success: true,
     submission_id: submission.submission_id,
@@ -311,6 +328,50 @@ app.get('/api/submissions', (_req, res) => {
   res.json(serverStore.submissions);
 });
 
+// Save or sync submission from client
+app.post('/api/submissions', (req, res) => {
+  const record = req.body;
+  if (!record || (!record.submission_id && !record.attempt_id)) {
+    return res.status(400).json({ error: 'Bản ghi bài nộp không hợp lệ' });
+  }
+
+  const existingIdx = serverStore.submissions.findIndex(
+    (s) => s.submission_id === record.submission_id || (record.attempt_id && (s as any).attempt_id === record.attempt_id)
+  );
+
+  if (existingIdx >= 0) {
+    serverStore.submissions[existingIdx] = { ...serverStore.submissions[existingIdx], ...record };
+  } else {
+    serverStore.submissions = [record, ...serverStore.submissions];
+  }
+  serverStore.persist();
+
+  io.to('teacher_room').emit('student:submitted', {
+    submission: record,
+    attemptId: record.attempt_id || record.submission_id
+  });
+
+  res.json({ success: true, submission: record });
+});
+
+// Delete individual submission by ID
+app.delete('/api/submissions/:id', (req, res) => {
+  const { id } = req.params;
+  const deleted = serverStore.deleteSubmission(id);
+  if (deleted) {
+    io.to('teacher_room').emit('submission:deleted', { submissionId: id });
+    return res.json({ success: true, message: `Đã xóa bài nộp ${id}` });
+  }
+  return res.status(404).json({ error: 'Không tìm thấy bài nộp cần xóa' });
+});
+
+// Deduplicate submissions
+app.post('/api/submissions/deduplicate', (_req, res) => {
+  const removed = serverStore.deduplicateSubmissions();
+  res.json({ success: true, removedCount: removed });
+});
+
+// Clear all submissions
 app.delete('/api/submissions', (_req, res) => {
   serverStore.submissions = [];
   serverStore.persist();
