@@ -4015,7 +4015,7 @@ function generateStudentExam(seedInput, bank, config, customAssignedCode) {
   const pickedTF = shuffledTF.slice(0, tfCount);
   const combinedOriginal = shuffleArray([...pickedSingle, ...pickedTF], prng);
   const assignedCode = customAssignedCode || String(100 + seed % 900);
-  const sanitizedQuestions = combinedOriginal.map((q) => {
+  const sanitizedQuestions2 = combinedOriginal.map((q) => {
     if (q.type === "single_choice") {
       const shuffledOptions = shuffleArray(q.options, prng);
       const cleanOptions = shuffledOptions.map(({ id, text }) => ({ id, text }));
@@ -4040,7 +4040,7 @@ function generateStudentExam(seedInput, bank, config, customAssignedCode) {
     }
   });
   return {
-    sanitizedQuestions,
+    sanitizedQuestions: sanitizedQuestions2,
     pickedOriginalQuestions: combinedOriginal,
     assignedCode,
     seed
@@ -4148,7 +4148,7 @@ async function handler(req, res) {
     const durationSeconds = (effectiveConfig.duration_minutes || 45) * 60;
     const startTime = (/* @__PURE__ */ new Date()).toISOString();
     let assignedCode = "101";
-    let sanitizedQuestions = [];
+    let seed = 2026;
     if (effectiveConfig.exam_mode === "pdf") {
       const totalQ = expectedQCount;
       assignedCode = String(100 + Math.floor(Math.random() * 15));
@@ -4169,6 +4169,7 @@ async function handler(req, res) {
       const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
       assignedCode = pickedVariant.assignedCode;
       sanitizedQuestions = pickedVariant.sanitizedQuestions;
+      seed = pickedVariant.seed;
     }
     await saveActiveStudentSession({
       attemptId,
@@ -4183,6 +4184,7 @@ async function handler(req, res) {
     return sendJson(res, 200, {
       attemptId,
       assignedCode,
+      seed,
       sanitizedQuestions,
       durationSeconds,
       remainingSeconds: durationSeconds,

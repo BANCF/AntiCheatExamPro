@@ -88,6 +88,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const calculatedScore = scoreRes.calculatedScore;
       const earnedPoints = scoreRes.earnedPoints;
       const totalPossiblePoints = scoreRes.totalPossiblePoints;
+      const totalQ = scoreRes.totalQuestions || Object.keys(targetAnswers).length || 10;
 
       const submitTime = incomingRecord?.submit_time || new Date().toISOString();
       const startTime = incomingRecord?.start_time || submitTime;
@@ -100,7 +101,10 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
           calculated_score: calculatedScore,
           correct_points_earned: earnedPoints,
           max_possible_points: totalPossiblePoints,
-          total_questions: totalPossiblePoints || Object.keys(targetAnswers).length || 10
+          total_questions: totalQ,
+          correct_answers_count: scoreRes.correctAnswersCount,
+          per_question_scores: scoreRes.perQuestionScores,
+          per_question_max_points: scoreRes.perQuestionMaxPoints
         };
       } else {
         finalRecord = {
@@ -117,9 +121,12 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
           violations_log: violations_log || incomingRecord?.violations_log || [],
           student_answers: targetAnswers,
           calculated_score: calculatedScore,
-          total_questions: totalPossiblePoints || Object.keys(targetAnswers).length || 10,
+          total_questions: totalQ,
           correct_points_earned: earnedPoints,
-          max_possible_points: totalPossiblePoints
+          max_possible_points: totalPossiblePoints,
+          correct_answers_count: scoreRes.correctAnswersCount,
+          per_question_scores: scoreRes.perQuestionScores,
+          per_question_max_points: scoreRes.perQuestionMaxPoints
         };
       }
     }

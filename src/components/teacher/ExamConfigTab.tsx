@@ -597,60 +597,226 @@ export const ExamConfigTab: React.FC<ExamConfigTabProps> = ({
                   </div>
                 </div>
               ) : (
-                /* BANK RANDOMIZER SPECIFIC SECTION */
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-                  <div className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Layers className="w-4 h-4 text-indigo-600" />
-                    <span>Cơ Cấu Số Lượng Câu Hỏi Bốc Ngẫu Nhiên</span>
+                /* BANK RANDOMIZER SPECIFIC SECTION: SETUP CƠ CẤU VÀ ĐIỂM SỐ TỪNG PHẦN */
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                      <Layers className="w-4 h-4 text-indigo-600" />
+                      <span>Cơ Cấu Số Lượng & Điểm Số Từng Phần (Tự Động Chia Đều Điểm)</span>
+                    </div>
+                    {/* Quick presets */}
+                    <div className="flex items-center gap-1 text-[11px]">
+                      <span className="text-slate-400">Gợi ý mẫu:</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            distribution: {
+                              ...formData.distribution,
+                              single_choice: Math.min(28, singleChoiceBankCount),
+                              true_false: Math.min(4, trueFalseBankCount),
+                              single_choice_points: 7.0,
+                              true_false_points: 3.0
+                            }
+                          });
+                        }}
+                        className="px-2 py-0.5 rounded bg-white hover:bg-indigo-50 text-indigo-700 border border-slate-200 hover:border-indigo-300 font-semibold cursor-pointer"
+                      >
+                        28 TN (7đ) + 4 Đ/S (3đ)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            distribution: {
+                              ...formData.distribution,
+                              single_choice: Math.min(40, singleChoiceBankCount),
+                              true_false: 0,
+                              single_choice_points: 10.0,
+                              true_false_points: 0.0
+                            }
+                          });
+                        }}
+                        className="px-2 py-0.5 rounded bg-white hover:bg-indigo-50 text-indigo-700 border border-slate-200 hover:border-indigo-300 font-semibold cursor-pointer"
+                      >
+                        40 TN (10đ)
+                      </button>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="font-semibold text-slate-700">Trắc nghiệm chọn 1 đáp án (Single Choice):</span>
-                        <span className="text-slate-400">Có {singleChoiceBankCount} câu</span>
+                    {/* Phần I: Trắc nghiệm chọn 1 đáp án */}
+                    <div className="p-3.5 rounded-xl bg-white border border-indigo-200 space-y-2.5 shadow-2xs">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-bold text-slate-800 flex items-center gap-1">
+                          <span className="w-4 h-4 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-[10px] font-black">I</span>
+                          Trắc nghiệm chọn 1 đáp án:
+                        </span>
+                        <span className="text-slate-400 text-[11px]">Kho có {singleChoiceBankCount} câu</span>
                       </div>
-                      <input
-                        type="number"
-                        min={0}
-                        max={singleChoiceBankCount}
-                        value={formData.distribution.single_choice}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            distribution: {
-                              ...formData.distribution,
-                              single_choice: Number(e.target.value) || 0
-                            }
-                          })
-                        }
-                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-indigo-600"
-                      />
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Số câu bốc</label>
+                          <input
+                            type="number"
+                            min={0}
+                            max={singleChoiceBankCount}
+                            value={formData.distribution.single_choice}
+                            onChange={(e) => {
+                              const sc = Math.max(0, Number(e.target.value) || 0);
+                              setFormData({
+                                ...formData,
+                                distribution: {
+                                  ...formData.distribution,
+                                  single_choice: sc
+                                }
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-indigo-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Tổng điểm Phần I</label>
+                          <input
+                            type="number"
+                            step={0.25}
+                            min={0}
+                            max={10}
+                            value={formData.distribution.single_choice_points ?? (formData.distribution.true_false > 0 ? 7.0 : 10.0)}
+                            onChange={(e) => {
+                              const pts = Math.max(0, Math.min(10, Number(e.target.value) || 0));
+                              setFormData({
+                                ...formData,
+                                distribution: {
+                                  ...formData.distribution,
+                                  single_choice_points: pts
+                                }
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-indigo-50/70 border border-indigo-200 text-xs font-mono font-black text-indigo-900 focus:outline-none focus:border-indigo-600"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="p-2 rounded-lg bg-indigo-50/60 border border-indigo-100 text-[11px] text-indigo-900 flex items-center justify-between">
+                        <span>⚡ Tự động chia:</span>
+                        <span className="font-mono font-bold text-indigo-700">
+                          {formData.distribution.single_choice > 0
+                            ? `${((formData.distribution.single_choice_points ?? (formData.distribution.true_false > 0 ? 7.0 : 10.0)) / formData.distribution.single_choice).toFixed(3)} điểm / câu`
+                            : '0 điểm'}
+                        </span>
+                      </div>
                     </div>
 
-                    <div>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="font-semibold text-slate-700">Trắc nghiệm Đúng / Sai (True / False):</span>
-                        <span className="text-slate-400">Có {trueFalseBankCount} câu</span>
+                    {/* Phần II: Trắc nghiệm Đúng / Sai */}
+                    <div className="p-3.5 rounded-xl bg-white border border-purple-200 space-y-2.5 shadow-2xs">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-bold text-slate-800 flex items-center gap-1">
+                          <span className="w-4 h-4 rounded bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-black">II</span>
+                          Trắc nghiệm Đúng / Sai:
+                        </span>
+                        <span className="text-slate-400 text-[11px]">Kho có {trueFalseBankCount} câu</span>
                       </div>
-                      <input
-                        type="number"
-                        min={0}
-                        max={trueFalseBankCount}
-                        value={formData.distribution.true_false}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            distribution: {
-                              ...formData.distribution,
-                              true_false: Number(e.target.value) || 0
-                            }
-                          })
-                        }
-                        className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-indigo-600"
-                      />
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Số câu bốc</label>
+                          <input
+                            type="number"
+                            min={0}
+                            max={trueFalseBankCount}
+                            value={formData.distribution.true_false}
+                            onChange={(e) => {
+                              const tf = Math.max(0, Number(e.target.value) || 0);
+                              setFormData({
+                                ...formData,
+                                distribution: {
+                                  ...formData.distribution,
+                                  true_false: tf
+                                }
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-indigo-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Tổng điểm Phần II</label>
+                          <input
+                            type="number"
+                            step={0.25}
+                            min={0}
+                            max={10}
+                            value={formData.distribution.true_false_points ?? (formData.distribution.true_false > 0 ? 3.0 : 0.0)}
+                            onChange={(e) => {
+                              const pts = Math.max(0, Math.min(10, Number(e.target.value) || 0));
+                              setFormData({
+                                ...formData,
+                                distribution: {
+                                  ...formData.distribution,
+                                  true_false_points: pts
+                                }
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-purple-50/70 border border-purple-200 text-xs font-mono font-black text-purple-900 focus:outline-none focus:border-purple-600"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="p-2 rounded-lg bg-purple-50/60 border border-purple-100 text-[11px] text-purple-900 flex items-center justify-between">
+                        <span>⚡ Tự động chia:</span>
+                        <span className="font-mono font-bold text-purple-700">
+                          {formData.distribution.true_false > 0
+                            ? `${((formData.distribution.true_false_points ?? 3.0) / formData.distribution.true_false).toFixed(3)} điểm / câu`
+                            : '0 điểm'}
+                        </span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Summary Bar for total exam points */}
+                  {(() => {
+                    const scPts = formData.distribution.single_choice_points ?? (formData.distribution.true_false > 0 ? 7.0 : 10.0);
+                    const tfPts = formData.distribution.true_false_points ?? (formData.distribution.true_false > 0 ? 3.0 : 0.0);
+                    const totalPts = Math.round((scPts + tfPts) * 100) / 100;
+                    const isOk = Math.abs(totalPts - 10.0) < 0.05;
+
+                    return (
+                      <div className={`p-2.5 rounded-xl border text-xs flex flex-wrap items-center justify-between gap-2 ${
+                        isOk ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'
+                      }`}>
+                        <div className="flex items-center gap-2">
+                          <Sparkles className={`w-4 h-4 ${isOk ? 'text-emerald-600' : 'text-amber-600'}`} />
+                          <span>
+                            Tổng điểm bài thi: <strong className="font-mono text-sm">{totalPts.toFixed(1)} / 10.0 điểm</strong>
+                            {isOk ? ' (Chuẩn thang 10 Bộ GD&ĐT ✓)' : ' (Chưa đúng thang 10.0)'}
+                          </span>
+                        </div>
+                        {!isOk && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newSC = Math.round(Math.max(1, 10.0 - tfPts) * 100) / 100;
+                              setFormData({
+                                ...formData,
+                                distribution: {
+                                  ...formData.distribution,
+                                  single_choice_points: newSC
+                                }
+                              });
+                            }}
+                            className="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] cursor-pointer"
+                          >
+                            Cân đối về 10.0 điểm
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 

@@ -3877,70 +3877,145 @@ async function deleteActiveStudentSession(studentClass, studentName) {
 
 // src/utils/randomEngine.ts
 function calculateExamScore(studentAnswers, originalQuestions, configOrKey) {
-  const isPdf = configOrKey && "exam_mode" in configOrKey && configOrKey.exam_mode === "pdf" || configOrKey && "pdf_answer_key" in configOrKey && configOrKey.pdf_answer_key || configOrKey && !("exam_mode" in configOrKey) && !("title" in configOrKey) && Object.keys(configOrKey).length > 0 && typeof Object.values(configOrKey)[0] === "string";
+  const perQuestionScores = {};
+  const perQuestionMaxPoints = {};
+  let correctAnswersCount = 0;
+  const isPdf = configOrKey && "exam_mode" in configOrKey && configOrKey.exam_mode === "pdf" || configOrKey && "pdf_answer_key" in configOrKey && Boolean(configOrKey.pdf_answer_key) || configOrKey && !("exam_mode" in configOrKey) && !("title" in configOrKey) && Object.keys(configOrKey).length > 0 && typeof Object.values(configOrKey)[0] === "string";
   if (isPdf) {
     let answerKey = {};
     let totalQ = 40;
+    let totalPoints = 10;
     if (configOrKey && "pdf_answer_key" in configOrKey && configOrKey.pdf_answer_key) {
       answerKey = typeof configOrKey.pdf_answer_key === "object" ? configOrKey.pdf_answer_key : {};
       totalQ = Number(configOrKey.pdf_total_questions) || Object.keys(answerKey).length || originalQuestions.length || 40;
+      totalPoints = Number(configOrKey.pdf_total_points) || 10;
     } else if (configOrKey && !("exam_mode" in configOrKey)) {
       answerKey = configOrKey;
       totalQ = Object.keys(answerKey).length || originalQuestions.length || 40;
+      totalPoints = 10;
     }
     if (totalQ === 0) totalQ = Math.max(Object.keys(answerKey).length, originalQuestions.length || 40);
+    const pointPerQ = totalQ > 0 ? totalPoints / totalQ : 0;
     let earnedPoints2 = 0;
     for (let i = 1; i <= totalQ; i++) {
       const qKey = String(i);
       const studentAns = studentAnswers[qKey];
       const correctAns = answerKey[qKey];
+      perQuestionMaxPoints[qKey] = Math.round(pointPerQ * 1e3) / 1e3;
       if (studentAns && correctAns && String(studentAns).trim().toUpperCase() === String(correctAns).trim().toUpperCase()) {
-        earnedPoints2 += 1;
+        earnedPoints2 += pointPerQ;
+        correctAnswersCount += 1;
+        perQuestionScores[qKey] = Math.round(pointPerQ * 1e3) / 1e3;
+      } else {
+        perQuestionScores[qKey] = 0;
       }
     }
-    const calculatedScore2 = totalQ > 0 ? Math.round(earnedPoints2 / totalQ * 10 * 100) / 100 : 0;
+    const calculatedScore2 = totalPoints > 0 ? Math.round(earnedPoints2 / totalPoints * 10 * 100) / 100 : 0;
     return {
-      calculatedScore: calculatedScore2,
-      earnedPoints: earnedPoints2,
-      totalPossiblePoints: totalQ
+      calculatedScore: Math.min(10, calculatedScore2),
+      earnedPoints: Math.round(earnedPoints2 * 100) / 100,
+      totalPossiblePoints: Math.round(totalPoints * 100) / 100,
+      correctAnswersCount,
+      totalQuestions: totalQ,
+      perQuestionScores,
+      perQuestionMaxPoints
     };
   }
-  let earnedPoints = 0;
-  let totalPossiblePoints = 0;
-  for (const q of originalQuestions) {
-    if (q.type === "single_choice") {
-      totalPossiblePoints += 1;
-      const selectedOptId = studentAnswers[q.id];
-      const correctOpt = q.options.find((opt) => opt.is_correct);
-      if (correctOpt && selectedOptId === correctOpt.id) {
-        earnedPoints += 1;
-      }
-    } else if (q.type === "true_false") {
-      const subItemsCount = q.items.length || 1;
-      const subItemWeight = 1 / subItemsCount;
-      totalPossiblePoints += 1;
-      const userAnsObj = studentAnswers[q.id] || {};
-      let questionEarned = 0;
-      for (const item of q.items) {
-        if (typeof item.is_correct === "boolean") {
-          const userVal = userAnsObj[item.id];
-          if (userVal === item.is_correct) {
-            questionEarned += subItemWeight;
-          }
-        }
-      }
-      earnedPoints += questionEarned;
+  const config = configOrKey && "exam_id" in configOrKey ? configOrKey : {};
+  let questionsToScore = originalQuestions;
+  const answeredKeys = Object.keys(studentAnswers);
+  if (answeredKeys.length > 0 && originalQuestions.length > answeredKeys.length && originalQuestions.length > 50) {
+    const matchedOnly = originalQuestions.filter((q) => q.id in studentAnswers);
+    if (matchedOnly.length > 0) {
+      questionsToScore = matchedOnly;
     }
   }
-  let rawScore = 0;
-  if (totalPossiblePoints > 0) {
-    rawScore = earnedPoints / totalPossiblePoints * 10;
+  const scQuestions = questionsToScore.filter((q) => q.type === "single_choice");
+  const tfQuestions = questionsToScore.filter((q) => q.type === "true_false");
+  const dist = config.distribution;
+  let scTotalPoints;
+  let tfTotalPoints;
+  if (scQuestions.length > 0 && tfQuestions.length === 0) {
+    scTotalPoints = typeof dist?.single_choice_points === "number" && dist.single_choice_points > 0 ? dist.single_choice_points : 10;
+    tfTotalPoints = 0;
+  } else if (scQuestions.length === 0 && tfQuestions.length > 0) {
+    scTotalPoints = 0;
+    tfTotalPoints = typeof dist?.true_false_points === "number" && dist.true_false_points > 0 ? dist.true_false_points : 10;
+  } else if (scQuestions.length > 0 && tfQuestions.length > 0) {
+    if (typeof dist?.single_choice_points === "number" && typeof dist?.true_false_points === "number") {
+      scTotalPoints = dist.single_choice_points;
+      tfTotalPoints = dist.true_false_points;
+    } else if (typeof dist?.single_choice_points === "number") {
+      scTotalPoints = dist.single_choice_points;
+      tfTotalPoints = Math.max(0, 10 - scTotalPoints);
+    } else if (typeof dist?.true_false_points === "number") {
+      tfTotalPoints = dist.true_false_points;
+      scTotalPoints = Math.max(0, 10 - tfTotalPoints);
+    } else {
+      scTotalPoints = 7;
+      tfTotalPoints = 3;
+    }
+  } else {
+    scTotalPoints = 10;
+    tfTotalPoints = 0;
   }
-  const calculatedScore = Math.round(rawScore * 100) / 100;
+  const scPointPerQuestion = scQuestions.length > 0 ? scTotalPoints / scQuestions.length : 0;
+  const tfPointPerQuestion = tfQuestions.length > 0 ? tfTotalPoints / tfQuestions.length : 0;
+  let earnedPoints = 0;
+  for (const q of scQuestions) {
+    perQuestionMaxPoints[q.id] = Math.round(scPointPerQuestion * 1e3) / 1e3;
+    const selectedOptId = studentAnswers[q.id];
+    const correctOpt = q.options.find((opt) => opt.is_correct);
+    if (correctOpt && selectedOptId === correctOpt.id) {
+      earnedPoints += scPointPerQuestion;
+      correctAnswersCount += 1;
+      perQuestionScores[q.id] = Math.round(scPointPerQuestion * 1e3) / 1e3;
+    } else {
+      perQuestionScores[q.id] = 0;
+    }
+  }
+  for (const q of tfQuestions) {
+    perQuestionMaxPoints[q.id] = Math.round(tfPointPerQuestion * 1e3) / 1e3;
+    const subItemsCount = q.items.length || 4;
+    const userAnsObj = studentAnswers[q.id] || {};
+    let correctSubItems = 0;
+    for (const item of q.items) {
+      if (typeof item.is_correct === "boolean") {
+        const userVal = userAnsObj[item.id];
+        if (userVal === item.is_correct) {
+          correctSubItems += 1;
+        }
+      }
+    }
+    let questionRatio = 0;
+    if (subItemsCount === 4) {
+      if (correctSubItems === 1) questionRatio = 0.1;
+      else if (correctSubItems === 2) questionRatio = 0.25;
+      else if (correctSubItems === 3) questionRatio = 0.5;
+      else if (correctSubItems === 4) questionRatio = 1;
+    } else {
+      questionRatio = subItemsCount > 0 ? correctSubItems / subItemsCount : 0;
+    }
+    const questionScore = tfPointPerQuestion * questionRatio;
+    earnedPoints += questionScore;
+    perQuestionScores[q.id] = Math.round(questionScore * 1e3) / 1e3;
+    if (correctSubItems === subItemsCount) {
+      correctAnswersCount += 1;
+    }
+  }
+  const totalPossiblePoints = Math.round((scTotalPoints + tfTotalPoints) * 100) / 100 || 10;
+  let calculatedScore = 0;
+  if (totalPossiblePoints > 0) {
+    calculatedScore = Math.round(earnedPoints / totalPossiblePoints * 10 * 100) / 100;
+  }
   return {
-    calculatedScore,
+    calculatedScore: Math.min(10, Math.max(0, calculatedScore)),
     earnedPoints: Math.round(earnedPoints * 100) / 100,
-    totalPossiblePoints: Math.round(totalPossiblePoints * 100) / 100
+    totalPossiblePoints,
+    correctAnswersCount,
+    totalQuestions: questionsToScore.length,
+    perQuestionScores,
+    perQuestionMaxPoints
   };
 }
 
@@ -4001,6 +4076,7 @@ async function handler(req, res) {
       const calculatedScore = scoreRes.calculatedScore;
       const earnedPoints = scoreRes.earnedPoints;
       const totalPossiblePoints = scoreRes.totalPossiblePoints;
+      const totalQ = scoreRes.totalQuestions || Object.keys(targetAnswers).length || 10;
       const submitTime = incomingRecord?.submit_time || (/* @__PURE__ */ new Date()).toISOString();
       const startTime = incomingRecord?.start_time || submitTime;
       if (incomingRecord && incomingRecord.submission_id) {
@@ -4011,7 +4087,10 @@ async function handler(req, res) {
           calculated_score: calculatedScore,
           correct_points_earned: earnedPoints,
           max_possible_points: totalPossiblePoints,
-          total_questions: totalPossiblePoints || Object.keys(targetAnswers).length || 10
+          total_questions: totalQ,
+          correct_answers_count: scoreRes.correctAnswersCount,
+          per_question_scores: scoreRes.perQuestionScores,
+          per_question_max_points: scoreRes.perQuestionMaxPoints
         };
       } else {
         finalRecord = {
@@ -4028,9 +4107,12 @@ async function handler(req, res) {
           violations_log: violations_log || incomingRecord?.violations_log || [],
           student_answers: targetAnswers,
           calculated_score: calculatedScore,
-          total_questions: totalPossiblePoints || Object.keys(targetAnswers).length || 10,
+          total_questions: totalQ,
           correct_points_earned: earnedPoints,
-          max_possible_points: totalPossiblePoints
+          max_possible_points: totalPossiblePoints,
+          correct_answers_count: scoreRes.correctAnswersCount,
+          per_question_scores: scoreRes.perQuestionScores,
+          per_question_max_points: scoreRes.perQuestionMaxPoints
         };
       }
     }

@@ -102,6 +102,7 @@ export async function startStudentExamApi(params: {
 }): Promise<{
   attemptId: string;
   assignedCode: string;
+  seed?: number;
   sanitizedQuestions: SanitizedQuestion[];
   durationSeconds: number;
   remainingSeconds?: number;

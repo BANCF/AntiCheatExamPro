@@ -52,6 +52,8 @@ export type SanitizedQuestion = SanitizedSingleChoiceQuestion | SanitizedTrueFal
 export interface ExamDistribution {
   single_choice: number;
   true_false: number;
+  single_choice_points?: number; // Tổng điểm phần trắc nghiệm chọn 1 đáp án (VD: 7.0 hoặc 10.0)
+  true_false_points?: number;    // Tổng điểm phần trắc nghiệm đúng / sai (VD: 3.0 hoặc 0.0)
 }
 
 export type ExamMode = 'bank' | 'pdf';
@@ -104,6 +106,7 @@ export interface ExamConfig {
   pdf_total_questions?: number; // e.g. 40
   pdf_options_per_question?: number; // 4 (A, B, C, D)
   pdf_answer_key?: Record<string, string>; // e.g. { "1": "A", "2": "B" }
+  pdf_total_points?: number; // Thang điểm đề PDF, mặc định 10.0
   created_by_teacher_id?: string;
 }
 
@@ -152,6 +155,9 @@ export interface SubmissionRecord {
   total_questions: number;
   correct_points_earned?: number;
   max_possible_points?: number;
+  correct_answers_count?: number; // Số câu trả lời đúng
+  per_question_scores?: Record<string, number>; // Điểm đạt được của từng câu hỏi
+  per_question_max_points?: Record<string, number>; // Điểm tối đa của từng câu hỏi
 }
 
 export interface ExamSessionState {

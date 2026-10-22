@@ -22,7 +22,7 @@ export function exportGradebookToExcel(
       'Điểm Số (Thang 10)': sub.calculated_score.toFixed(2),
       'Trạng Thái Nộp': sub.status === 'FORCE_SUBMITTED' ? 'BỊ THU BÀI DO VI PHẠM' : 'Nộp bài hợp lệ',
       'Số Lần Vi Phạm': sub.violation_count,
-      'Điểm Đạt': `${sub.correct_points_earned ?? 0} / ${sub.max_possible_points ?? sub.total_questions}`,
+      'Điểm Đạt': `${(sub.correct_points_earned !== undefined ? sub.correct_points_earned : sub.calculated_score).toFixed(2)} / ${(sub.max_possible_points ?? 10.0).toFixed(1)} (${sub.correct_answers_count ?? '?'} / ${sub.total_questions} câu đúng)`,
       'Thời Gian Bắt Đầu': new Date(sub.start_time).toLocaleString('vi-VN'),
       'Thời Gian Nộp Bài': new Date(sub.submit_time).toLocaleString('vi-VN'),
       'Nhật Ký Vi Phạm': violationSummary

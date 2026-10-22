@@ -228,6 +228,7 @@ export function generateAllExamVariants(
 /**
  * Score student's submission against original questions or PDF answer key
  * Scale: 0.0 - 10.0
+ * Setup được điểm cho từng phần, tự động chia đều cho các câu trong phần đó.
  */
 export function calculateExamScore(
   studentAnswers: StudentAnswers,
@@ -237,93 +238,199 @@ export function calculateExamScore(
   calculatedScore: number;
   earnedPoints: number;
   totalPossiblePoints: number;
+  correctAnswersCount: number;
+  totalQuestions: number;
+  perQuestionScores: Record<string, number>;
+  perQuestionMaxPoints: Record<string, number>;
 } {
+  const perQuestionScores: Record<string, number> = {};
+  const perQuestionMaxPoints: Record<string, number> = {};
+  let correctAnswersCount = 0;
+
   // Check if PDF exam mode
   const isPdf =
     (configOrKey && 'exam_mode' in configOrKey && configOrKey.exam_mode === 'pdf') ||
-    (configOrKey && 'pdf_answer_key' in configOrKey && configOrKey.pdf_answer_key) ||
+    (configOrKey && 'pdf_answer_key' in configOrKey && Boolean(configOrKey.pdf_answer_key)) ||
     (configOrKey && !('exam_mode' in configOrKey) && !('title' in configOrKey) && Object.keys(configOrKey).length > 0 && typeof Object.values(configOrKey)[0] === 'string');
 
   if (isPdf) {
     let answerKey: Record<string, string> = {};
     let totalQ = 40;
+    let totalPoints = 10.0;
 
     if (configOrKey && 'pdf_answer_key' in configOrKey && configOrKey.pdf_answer_key) {
       answerKey = (typeof configOrKey.pdf_answer_key === 'object' ? configOrKey.pdf_answer_key : {}) as Record<string, string>;
       totalQ = Number(configOrKey.pdf_total_questions) || Object.keys(answerKey).length || originalQuestions.length || 40;
+      totalPoints = Number(configOrKey.pdf_total_points) || 10.0;
     } else if (configOrKey && !('exam_mode' in configOrKey)) {
       answerKey = configOrKey as Record<string, string>;
       totalQ = Object.keys(answerKey).length || originalQuestions.length || 40;
+      totalPoints = 10.0;
     }
 
     if (totalQ === 0) totalQ = Math.max(Object.keys(answerKey).length, originalQuestions.length || 40);
 
+    const pointPerQ = totalQ > 0 ? totalPoints / totalQ : 0;
     let earnedPoints = 0;
+
     for (let i = 1; i <= totalQ; i++) {
       const qKey = String(i);
       const studentAns = studentAnswers[qKey];
       const correctAns = answerKey[qKey];
+      perQuestionMaxPoints[qKey] = Math.round(pointPerQ * 1000) / 1000;
+
       if (
         studentAns &&
         correctAns &&
         String(studentAns).trim().toUpperCase() === String(correctAns).trim().toUpperCase()
       ) {
-        earnedPoints += 1.0;
+        earnedPoints += pointPerQ;
+        correctAnswersCount += 1;
+        perQuestionScores[qKey] = Math.round(pointPerQ * 1000) / 1000;
+      } else {
+        perQuestionScores[qKey] = 0;
       }
     }
 
-    const calculatedScore = totalQ > 0 ? Math.round((earnedPoints / totalQ) * 10 * 100) / 100 : 0;
+    const calculatedScore = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 10 * 100) / 100 : 0;
     return {
-      calculatedScore,
-      earnedPoints,
-      totalPossiblePoints: totalQ
+      calculatedScore: Math.min(10, calculatedScore),
+      earnedPoints: Math.round(earnedPoints * 100) / 100,
+      totalPossiblePoints: Math.round(totalPoints * 100) / 100,
+      correctAnswersCount,
+      totalQuestions: totalQ,
+      perQuestionScores,
+      perQuestionMaxPoints
     };
   }
 
-  let earnedPoints = 0;
-  let totalPossiblePoints = 0;
+  // --- BANK EXAM MODE: PHÂN BỔ ĐIỂM THEO TỪNG PHẦN ---
+  const config = (configOrKey && 'exam_id' in configOrKey ? configOrKey : {}) as Partial<ExamConfig>;
 
-  for (const q of originalQuestions) {
-    if (q.type === 'single_choice') {
-      totalPossiblePoints += 1.0;
-      const selectedOptId = studentAnswers[q.id];
-      const correctOpt = q.options.find((opt) => opt.is_correct);
-      if (correctOpt && selectedOptId === correctOpt.id) {
-        earnedPoints += 1.0;
-      }
-    } else if (q.type === 'true_false') {
-      // Each sub-item counts towards the question score
-      const subItemsCount = q.items.length || 1;
-      const subItemWeight = 1.0 / subItemsCount;
-      totalPossiblePoints += 1.0;
-
-      const userAnsObj = (studentAnswers[q.id] as Record<string, boolean>) || {};
-      let questionEarned = 0;
-
-      for (const item of q.items) {
-        if (typeof item.is_correct === 'boolean') {
-          const userVal = userAnsObj[item.id];
-          if (userVal === item.is_correct) {
-            questionEarned += subItemWeight;
-          }
-        }
-      }
-      earnedPoints += questionEarned;
+  // Defensive filtering: If originalQuestions was accidentally passed full bank (e.g. 105 items),
+  // filter down to only the questions that appear in student answers or match expected count
+  let questionsToScore = originalQuestions;
+  const answeredKeys = Object.keys(studentAnswers);
+  if (answeredKeys.length > 0 && originalQuestions.length > answeredKeys.length && originalQuestions.length > 50) {
+    const matchedOnly = originalQuestions.filter((q) => q.id in studentAnswers);
+    if (matchedOnly.length > 0) {
+      questionsToScore = matchedOnly;
     }
   }
 
-  // Convert to 10.0 scale
-  let rawScore = 0;
-  if (totalPossiblePoints > 0) {
-    rawScore = (earnedPoints / totalPossiblePoints) * 10;
+  // Group questions by section
+  const scQuestions = questionsToScore.filter((q) => q.type === 'single_choice');
+  const tfQuestions = questionsToScore.filter((q) => q.type === 'true_false');
+
+  const dist = config.distribution;
+  let scTotalPoints: number;
+  let tfTotalPoints: number;
+
+  if (scQuestions.length > 0 && tfQuestions.length === 0) {
+    // Only Single Choice section exists
+    scTotalPoints = typeof dist?.single_choice_points === 'number' && dist.single_choice_points > 0
+      ? dist.single_choice_points
+      : 10.0;
+    tfTotalPoints = 0;
+  } else if (scQuestions.length === 0 && tfQuestions.length > 0) {
+    // Only True/False section exists
+    scTotalPoints = 0;
+    tfTotalPoints = typeof dist?.true_false_points === 'number' && dist.true_false_points > 0
+      ? dist.true_false_points
+      : 10.0;
+  } else if (scQuestions.length > 0 && tfQuestions.length > 0) {
+    // Both sections exist
+    if (typeof dist?.single_choice_points === 'number' && typeof dist?.true_false_points === 'number') {
+      scTotalPoints = dist.single_choice_points;
+      tfTotalPoints = dist.true_false_points;
+    } else if (typeof dist?.single_choice_points === 'number') {
+      scTotalPoints = dist.single_choice_points;
+      tfTotalPoints = Math.max(0, 10.0 - scTotalPoints);
+    } else if (typeof dist?.true_false_points === 'number') {
+      tfTotalPoints = dist.true_false_points;
+      scTotalPoints = Math.max(0, 10.0 - tfTotalPoints);
+    } else {
+      // Default standard MOET 2025: e.g. 7.0 for Single Choice, 3.0 for True/False (or proportional)
+      scTotalPoints = 7.0;
+      tfTotalPoints = 3.0;
+    }
+  } else {
+    scTotalPoints = 10.0;
+    tfTotalPoints = 0;
   }
-  // Round to 2 decimal places
-  const calculatedScore = Math.round(rawScore * 100) / 100;
+
+  // Point per question in each section (Tự động chia điểm cho các câu trong phần)
+  const scPointPerQuestion = scQuestions.length > 0 ? scTotalPoints / scQuestions.length : 0;
+  const tfPointPerQuestion = tfQuestions.length > 0 ? tfTotalPoints / tfQuestions.length : 0;
+
+  let earnedPoints = 0;
+
+  // 1. Grade Single Choice Section
+  for (const q of scQuestions) {
+    perQuestionMaxPoints[q.id] = Math.round(scPointPerQuestion * 1000) / 1000;
+    const selectedOptId = studentAnswers[q.id];
+    const correctOpt = q.options.find((opt) => opt.is_correct);
+
+    if (correctOpt && selectedOptId === correctOpt.id) {
+      earnedPoints += scPointPerQuestion;
+      correctAnswersCount += 1;
+      perQuestionScores[q.id] = Math.round(scPointPerQuestion * 1000) / 1000;
+    } else {
+      perQuestionScores[q.id] = 0;
+    }
+  }
+
+  // 2. Grade True/False Section (Chuẩn Bộ GD&ĐT 2025: Đúng 1 ý = 10%, 2 ý = 25%, 3 ý = 50%, 4 ý = 100%)
+  for (const q of tfQuestions) {
+    perQuestionMaxPoints[q.id] = Math.round(tfPointPerQuestion * 1000) / 1000;
+    const subItemsCount = q.items.length || 4;
+    const userAnsObj = (studentAnswers[q.id] as Record<string, boolean>) || {};
+
+    let correctSubItems = 0;
+    for (const item of q.items) {
+      if (typeof item.is_correct === 'boolean') {
+        const userVal = userAnsObj[item.id];
+        if (userVal === item.is_correct) {
+          correctSubItems += 1;
+        }
+      }
+    }
+
+    let questionRatio = 0;
+    if (subItemsCount === 4) {
+      // Standard 4-item grading table
+      if (correctSubItems === 1) questionRatio = 0.1;
+      else if (correctSubItems === 2) questionRatio = 0.25;
+      else if (correctSubItems === 3) questionRatio = 0.5;
+      else if (correctSubItems === 4) questionRatio = 1.0;
+    } else {
+      // Linear fallback if custom number of sub-items
+      questionRatio = subItemsCount > 0 ? correctSubItems / subItemsCount : 0;
+    }
+
+    const questionScore = tfPointPerQuestion * questionRatio;
+    earnedPoints += questionScore;
+    perQuestionScores[q.id] = Math.round(questionScore * 1000) / 1000;
+
+    if (correctSubItems === subItemsCount) {
+      correctAnswersCount += 1;
+    }
+  }
+
+  const totalPossiblePoints = Math.round((scTotalPoints + tfTotalPoints) * 100) / 100 || 10.0;
+  let calculatedScore = 0;
+  if (totalPossiblePoints > 0) {
+    calculatedScore = Math.round((earnedPoints / totalPossiblePoints) * 10 * 100) / 100;
+  }
 
   return {
-    calculatedScore,
+    calculatedScore: Math.min(10, Math.max(0, calculatedScore)),
     earnedPoints: Math.round(earnedPoints * 100) / 100,
-    totalPossiblePoints: Math.round(totalPossiblePoints * 100) / 100
+    totalPossiblePoints,
+    correctAnswersCount,
+    totalQuestions: questionsToScore.length,
+    perQuestionScores,
+    perQuestionMaxPoints
   };
 }
 
@@ -346,7 +453,15 @@ export function buildSubmissionRecord(params: {
   examTitle?: string;
   config?: Partial<ExamConfig>;
 }): SubmissionRecord {
-  const { calculatedScore, earnedPoints, totalPossiblePoints } = calculateExamScore(
+  const {
+    calculatedScore,
+    earnedPoints,
+    totalPossiblePoints,
+    correctAnswersCount,
+    totalQuestions,
+    perQuestionScores,
+    perQuestionMaxPoints
+  } = calculateExamScore(
     params.studentAnswers,
     params.originalQuestions,
     params.config
@@ -366,8 +481,11 @@ export function buildSubmissionRecord(params: {
     violations_log: params.violationsLog,
     student_answers: params.studentAnswers,
     calculated_score: calculatedScore,
-    total_questions: params.config?.exam_mode === 'pdf' ? totalPossiblePoints : params.originalQuestions.length,
+    total_questions: totalQuestions,
     correct_points_earned: earnedPoints,
-    max_possible_points: totalPossiblePoints
+    max_possible_points: totalPossiblePoints,
+    correct_answers_count: correctAnswersCount,
+    per_question_scores: perQuestionScores,
+    per_question_max_points: perQuestionMaxPoints
   };
 }

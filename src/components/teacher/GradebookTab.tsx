@@ -908,10 +908,13 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
-                <span className="text-[11px] text-slate-600 font-medium block">Điểm đạt</span>
+                <span className="text-[11px] text-slate-600 font-medium block">Điểm đạt (Thang 10)</span>
                 <span className="text-base font-bold text-slate-800 font-mono">
-                  {selectedSubmission.correct_points_earned ?? 0} /{' '}
-                  {selectedSubmission.max_possible_points ?? selectedSubmission.total_questions}
+                  {(selectedSubmission.correct_points_earned !== undefined ? selectedSubmission.correct_points_earned : selectedSubmission.calculated_score).toFixed(2)} /{' '}
+                  {(selectedSubmission.max_possible_points ?? 10.0).toFixed(1)}
+                </span>
+                <span className="text-[10px] text-emerald-700 block mt-0.5 font-sans font-semibold">
+                  ({selectedSubmission.correct_answers_count ?? selectedSubmission.correct_points_earned ?? '?'} / {selectedSubmission.total_questions} câu đúng)
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
@@ -1071,6 +1074,12 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
                           const correctOpt = matchedQuestion.options.find((opt) => opt.is_correct);
                           const isCorrect = studentAnswer === correctOpt?.id;
                           const isSkipped = !studentAnswer;
+                          const qEarned = selectedSubmission.per_question_scores?.[qId] !== undefined
+                            ? selectedSubmission.per_question_scores[qId]
+                            : (isCorrect ? (selectedSubmission.calculated_score / Math.max(1, selectedSubmission.total_questions)) : 0);
+                          const qMax = selectedSubmission.per_question_max_points?.[qId] !== undefined
+                            ? selectedSubmission.per_question_max_points[qId]
+                            : ((selectedSubmission.max_possible_points || 10.0) / Math.max(1, selectedSubmission.total_questions));
 
                           return (
                             <div
@@ -1088,16 +1097,16 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
                                   Câu {qIdx + 1}:
                                 </span>
                                 {isCorrect ? (
-                                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center gap-1">
-                                    <Check className="w-3 h-3" /> ĐÚNG (+1.0 điểm)
+                                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center gap-1 font-mono">
+                                    <Check className="w-3 h-3" /> ĐÚNG (+{qEarned.toFixed(2)}đ)
                                   </span>
                                 ) : isSkipped ? (
-                                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[10px]">
-                                    CHƯA LÀM (0 điểm)
+                                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[10px] font-mono">
+                                    CHƯA LÀM (0đ / {qMax.toFixed(2)}đ)
                                   </span>
                                 ) : (
-                                  <span className="px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 font-bold text-[10px] flex items-center gap-1">
-                                    <X className="w-3 h-3" /> SAI (0 điểm)
+                                  <span className="px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 font-bold text-[10px] flex items-center gap-1 font-mono">
+                                    <X className="w-3 h-3" /> SAI (0đ / {qMax.toFixed(2)}đ)
                                   </span>
                                 )}
                               </div>
@@ -1157,14 +1166,24 @@ export const GradebookTab: React.FC<GradebookTabProps> = ({
 
                         // True/False question
                         const userAnsObj = (studentAnswer as Record<string, boolean>) || {};
+                        const tfEarned = selectedSubmission.per_question_scores?.[qId] ?? 0;
+                        const tfMax = selectedSubmission.per_question_max_points?.[qId] ?? 1.0;
+
                         return (
                           <div
                             key={qId}
                             className="p-4 rounded-2xl border border-slate-200 bg-white text-xs space-y-2.5 shadow-2xs"
                           >
-                            <span className="font-bold text-slate-800">
-                              Câu {qIdx + 1} (Trắc nghiệm Đúng / Sai):
-                            </span>
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-slate-800">
+                                Câu {qIdx + 1} (Trắc nghiệm Đúng / Sai):
+                              </span>
+                              <span className={`px-2 py-0.5 rounded-md font-mono text-[10px] font-bold ${
+                                tfEarned > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
+                              }`}>
+                                +{tfEarned.toFixed(2)} / {tfMax.toFixed(2)} điểm
+                              </span>
+                            </div>
                             <div className="font-semibold text-slate-900 leading-relaxed">
                               <MathRenderer text={matchedQuestion.prompt} />
                             </div>

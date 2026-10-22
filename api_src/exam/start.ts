@@ -114,7 +114,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const startTime = new Date().toISOString();
 
     let assignedCode = '101';
-    let sanitizedQuestions: SanitizedQuestion[] = [];
+    let seed = 2026;
 
     if (effectiveConfig.exam_mode === 'pdf') {
       const totalQ = expectedQCount;
@@ -136,6 +136,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const pickedVariant = variants[Math.floor(Math.random() * variants.length)];
       assignedCode = pickedVariant.assignedCode;
       sanitizedQuestions = pickedVariant.sanitizedQuestions;
+      seed = pickedVariant.seed;
     }
 
     // Persist active session in Redis/Memory for seamless reconnect
@@ -153,6 +154,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return sendJson(res, 200, {
       attemptId,
       assignedCode,
+      seed,
       sanitizedQuestions,
       durationSeconds,
       remainingSeconds: durationSeconds,

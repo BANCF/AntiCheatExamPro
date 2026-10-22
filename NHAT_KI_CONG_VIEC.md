@@ -310,5 +310,46 @@
 
 ---
 
+## 🚀 8. KHẮC PHỤC LỖI TÍNH ĐIỂM & TRIỂN KHAI CƠ CHẾ SETUP ĐIỂM THEO TỪNG PHẦN (22/10/2026)
+
+### 📌 Nguyên nhân sự cố hiển thị sai điểm (3.14 điểm & 33 / 105):
+1. **Lỗi rò rỉ toàn bộ ngân hàng câu hỏi vào bài chấm:**
+   - Khi học sinh làm bài thi từ Serverless API, server trả về `sanitizedQuestions`, nhưng biến câu hỏi gốc `pickedOriginalQuestions` ở client bị rỗng.
+   - Khi nộp bài (`handleSubmitExam` trong `src/App.tsx`), hệ thống lấy fallback là toàn bộ 105 câu hỏi trong ngân hàng (`bank`).
+   - Hàm chấm điểm lặp qua cả 105 câu của ngân hàng làm mẫu số (`totalPossiblePoints = 105`). Học sinh làm đề 40 câu của lớp 6G2, đúng được 33 câu, hệ thống chia cho 105 câu của ngân hàng $\to$ ra **3.14 điểm** (thay vì 8.25 điểm)!
+2. **Điểm số mỗi câu bị gán cứng (+1.0 điểm/câu):**
+   - Modal chi tiết bài làm (`GradebookTab.tsx`) gán cứng chữ `(+1.0 điểm)`.
+3. **Chưa có cấu hình setup điểm theo từng phần:**
+   - Giáo viên chưa có chỗ để nhập điểm cho Phần I (Trắc nghiệm) và Phần II (Đúng/Sai), và chưa có logic tự động chia đều điểm cho các câu trong phần đó.
+
+### 🛠️ Các giải pháp đã triển khai & hoàn thành:
+1. **Cập nhật Model Dữ Liệu (`src/types/exam.ts`):**
+   - Bổ sung `single_choice_points`, `true_false_points`, `pdf_total_points` vào `ExamDistribution` và `ExamConfig`.
+   - Bổ sung `correct_answers_count`, `per_question_scores`, `per_question_max_points` vào `SubmissionRecord`.
+2. **Nâng cấp Động cơ tính điểm (`src/utils/randomEngine.ts`):**
+   - Nâng cấp `calculateExamScore` tự động phân bổ điểm theo từng phần do giáo viên cài đặt.
+   - **Tự động chia đều điểm cho các câu hỏi trong phần:**
+     - Phần I (Trắc nghiệm): $\text{Điểm mỗi câu} = \frac{\text{Tổng điểm Phần I}}{\text{Số câu Trắc nghiệm}}$ (VD: 28 câu = 7.0 điểm $\to$ 0.25 đ/câu).
+     - Phần II (Đúng / Sai): $\text{Điểm mỗi câu} = \frac{\text{Tổng điểm Phần II}}{\text{Số câu Đúng/Sai}}$ (VD: 4 câu = 4.0 điểm $\to$ 1.0 đ/câu).
+     - Chấm điểm câu Đúng/Sai chuẩn theo Quy chế thi Bộ GD&ĐT 2025: Đúng 1 ý = 10%, 2 ý = 25%, 3 ý = 50%, 4 ý = 100%.
+   - Lọc an toàn chỉ chấm trên đúng các câu hỏi có trong bài thi của học sinh, loại bỏ hoàn toàn việc lấy 105 câu ngân hàng.
+3. **Sửa lỗi khôi phục & Nộp bài thi (`src/App.tsx`):**
+   - Trong `handleStartExam`: Reconstruct chính xác `pickedOriginalQuestions` từ danh sách `sanitizedQuestions` đối chiếu với ngân hàng.
+   - Trong `handleSubmitExam`: Bảo đảm `originalToGrade` chỉ chứa đúng các câu hỏi của bài thi.
+4. **Giao diện Cài đặt Điểm trực quan cho Giáo viên (`ExamConfigTab.tsx` & `ClassManagementTab.tsx`):**
+   - Thêm ô nhập số điểm cho Phần I và Phần II, kèm huy hiệu tính toán tự động `⚡ Tự động chia: X điểm / câu`.
+   - Bổ sung thanh tổng kết điểm trực quan: `Tổng điểm bài thi: 10.0 / 10.0 điểm ✓ Chuẩn thang 10 Bộ GD&ĐT` kèm nút tự cân đối về 10 điểm.
+   - Thêm các mẫu đề nhanh: `28 TN (7đ) + 4 Đ/S (3đ)` hoặc `40 TN (10đ)`.
+5. **Giao diện Hiển thị Điểm Học sinh & Giáo viên (`ExamRunner.tsx` & `GradebookTab.tsx` & `excelHelper.ts`):**
+   - Trong phòng thi: Tiêu đề câu hỏi hiển thị rõ ràng số điểm của câu (VD: `(0.25 điểm)`).
+   - Trong Bảng điểm giáo viên: Thẻ thống kê hiển thị chuẩn `Điểm đạt (Thang 10): 8.25 / 10.0 (33 / 40 câu đúng)`.
+   - Thẻ từng câu hỏi trong bài làm hiển thị đúng điểm đạt được: `✓ ĐÚNG (+0.25đ)` hoặc `✓ ĐÚNG (+1.00đ)`.
+   - File Excel xuất điểm chuẩn theo thang 10 kèm số câu đúng trên tổng số câu.
+6. **Đồng bộ Backend Serverless API (`api_src/exam/start.ts` & `api_src/exam/submit.ts`):**
+   - API trả về `seed` cho client và chấm điểm lưu vào Redis đúng chuẩn thang 10.
+   - Biên dịch thành công 9 file bundle ESM trong `api/` bằng `esbuild`.
+
+---
+
 *Nhật ký được cập nhật lần cuối vào: 22/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
 

@@ -523,9 +523,21 @@ export function App() {
       attemptId = serverSession.attemptId;
       assignedCode = serverSession.assignedCode;
       sanitizedQuestions = serverSession.sanitizedQuestions;
+      if (serverSession.seed) {
+        seed = serverSession.seed;
+      }
       durationSeconds = serverSession.durationSeconds;
       remainingSeconds = serverSession.remainingSeconds !== undefined ? serverSession.remainingSeconds : durationSeconds;
       startTime = serverSession.startTime;
+
+      // Reconstruct original questions with answer keys from bank based on sanitized questions
+      if (effectiveConfig.exam_mode === 'pdf') {
+        pickedOriginalQuestions = sanitizedQuestions as unknown as Question[];
+      } else {
+        pickedOriginalQuestions = sanitizedQuestions
+          .map((sq) => bank.find((bq) => bq.id === sq.id))
+          .filter((q): q is Question => Boolean(q));
+      }
     } else {
       // Offline fallback: generate locally using effectiveConfig
       if (effectiveConfig.exam_mode === 'pdf') {
@@ -650,6 +662,12 @@ export function App() {
     let submissionId = `sub_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
     const effectiveCfg = currentSession.effectiveConfig || config;
 
+    const originalToGrade = currentSession.pickedOriginalQuestions.length > 0
+      ? currentSession.pickedOriginalQuestions
+      : (currentSession.sanitizedQuestions.length > 0
+          ? currentSession.sanitizedQuestions.map((sq) => bank.find((bq) => bq.id === sq.id)).filter((q): q is Question => Boolean(q))
+          : bank.slice(0, effectiveCfg.total_questions_to_pick || 40));
+
     // Build the complete submission record locally IMMEDIATELY
     const record = buildSubmissionRecord({
       submissionId,
@@ -662,7 +680,7 @@ export function App() {
       violationCount: finalLogs.length,
       violationsLog: finalLogs,
       studentAnswers: answers,
-      originalQuestions: currentSession.pickedOriginalQuestions.length > 0 ? currentSession.pickedOriginalQuestions : bank,
+      originalQuestions: originalToGrade,
       examId: currentSession.examId || effectiveCfg.exam_id,
       examTitle: currentSession.examTitle || effectiveCfg.title,
       config: effectiveCfg

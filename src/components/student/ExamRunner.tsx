@@ -242,6 +242,26 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
 
   const currentQuestion = questions[currentIndex];
 
+  // Calculate question point value based on config
+  const questionPointValue = useMemo(() => {
+    if (!currentQuestion) return 0;
+    const dist = config?.distribution;
+    const scCount = questions.filter((q) => q.type === 'single_choice').length;
+    const tfCount = questions.filter((q) => q.type === 'true_false').length;
+
+    if (currentQuestion.type === 'single_choice') {
+      const scPoints = typeof dist?.single_choice_points === 'number'
+        ? dist.single_choice_points
+        : (tfCount > 0 ? 7.0 : 10.0);
+      return scCount > 0 ? Math.round((scPoints / scCount) * 1000) / 1000 : 0.25;
+    } else {
+      const tfPoints = typeof dist?.true_false_points === 'number'
+        ? dist.true_false_points
+        : (tfCount > 0 ? 3.0 : 0.0);
+      return tfCount > 0 ? Math.round((tfPoints / tfCount) * 1000) / 1000 : 1.0;
+    }
+  }, [currentQuestion, config, questions]);
+
   // Timer urgency style
   const timerColorClass = useMemo(() => {
     if (remainingSeconds < 60) return 'text-rose-700 animate-pulse bg-rose-50 border-rose-300';
@@ -437,6 +457,9 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                     {currentQuestion.type === 'single_choice'
                       ? 'Trắc nghiệm chọn 1 đáp án'
                       : 'Trắc nghiệm Đúng / Sai'}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold font-mono">
+                    ({questionPointValue} điểm)
                   </span>
                 </div>
                 {currentQuestion.tags && currentQuestion.tags.length > 0 && (
