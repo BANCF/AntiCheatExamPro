@@ -438,10 +438,16 @@ export function App() {
   useEffect(() => {
     const active = getStoredActiveSession();
     if (active && !active.is_submitted) {
+      const effectiveCfg: ExamConfig = active.effective_config || {
+        ...config,
+        title: active.exam_title || config.title,
+        duration_minutes: Math.ceil(active.duration_seconds / 60)
+      };
+
       // Find matching variant or reconstruct with exact seed & assigned code
-      const allVariants = generateAllExamVariants(bank, config);
+      const allVariants = generateAllExamVariants(bank, effectiveCfg);
       const matched = allVariants.find((v) => v.assignedCode === active.assigned_code);
-      const examGen = matched || generateStudentExam(active.seed, bank, config, active.assigned_code);
+      const examGen = matched || generateStudentExam(active.seed, bank, effectiveCfg, active.assigned_code);
 
       setCurrentSession({
         attemptId: active.attempt_id,
@@ -456,7 +462,10 @@ export function App() {
         remainingSeconds: active.remaining_seconds,
         startTime: active.start_time,
         violationsLog: active.violations_log,
-        violationCount: active.violation_count
+        violationCount: active.violation_count,
+        examId: active.exam_id,
+        examTitle: active.exam_title || effectiveCfg.title,
+        effectiveConfig: effectiveCfg
       });
       setStudentFlow('running');
       setAppMode('student');
@@ -581,7 +590,9 @@ export function App() {
       violation_count: 0,
       violations_log: [],
       is_submitted: false,
-      exam_id: config.exam_id
+      exam_id: matchedClass?.id || config.exam_id,
+      exam_title: matchedClass?.examTitle || effectiveConfig.title,
+      effective_config: effectiveConfig
     };
     saveActiveSession(storableSession);
 
@@ -872,7 +883,7 @@ export function App() {
 
             {studentFlow === 'running' && currentSession && (
               <ExamRunner
-                config={config}
+                config={currentSession.effectiveConfig || config}
                 attemptId={currentSession.attemptId}
                 studentName={currentSession.studentName}
                 studentClass={currentSession.studentClass}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ExamConfig, Question } from '../../types/exam';
+import { ExamConfig, Question, ClassRoom } from '../../types/exam';
 import { generateAllExamVariants } from '../../utils/randomEngine';
 import {
   Sliders,
@@ -28,6 +28,8 @@ import {
 interface ExamConfigTabProps {
   config: ExamConfig;
   bank: Question[];
+  classes?: ClassRoom[];
+  onSaveClass?: (classItem: ClassRoom) => void;
   onSaveConfig: (config: ExamConfig) => void;
   onLaunchExamMode: () => void;
 }
@@ -65,11 +67,14 @@ function parseAnswerKeyString(input: string, total: number): Record<string, stri
 export const ExamConfigTab: React.FC<ExamConfigTabProps> = ({
   config,
   bank,
+  classes = [],
+  onSaveClass,
   onSaveConfig,
   onLaunchExamMode
 }) => {
   const [formData, setFormData] = useState<ExamConfig>(config);
   const [examMode, setExamMode] = useState<'bank' | 'pdf'>(config.exam_mode || 'bank');
+  const [applyToClassOption, setApplyToClassOption] = useState<string>('all');
   const [copiedLink, setCopiedLink] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -194,6 +199,38 @@ export const ExamConfigTab: React.FC<ExamConfigTabProps> = ({
     };
 
     onSaveConfig(updated);
+
+    if (onSaveClass && classes && classes.length > 0) {
+      if (applyToClassOption === 'all') {
+        classes.forEach((c) => {
+          onSaveClass({
+            ...c,
+            examTitle: `${updated.title} (${c.code})`,
+            examConfig: {
+              ...c.examConfig,
+              ...updated,
+              target_grade: c.grade || updated.target_grade,
+              target_subject: c.subject || updated.target_subject
+            }
+          });
+        });
+      } else if (applyToClassOption !== 'global_only') {
+        const target = classes.find((c) => c.code === applyToClassOption);
+        if (target) {
+          onSaveClass({
+            ...target,
+            examTitle: `${updated.title} (${target.code})`,
+            examConfig: {
+              ...target.examConfig,
+              ...updated,
+              target_grade: target.grade || updated.target_grade,
+              target_subject: target.subject || updated.target_subject
+            }
+          });
+        }
+      }
+    }
+
     setSaveSuccess(true);
     setTimeout(() => setSaveSuccess(false), 3000);
   };
@@ -223,6 +260,29 @@ export const ExamConfigTab: React.FC<ExamConfigTabProps> = ({
               <span>Động cơ Fisher-Yates sinh sẵn <strong>{allVariants.length} mã đề chuẩn</strong> từ ngân hàng câu hỏi.</span>
             )}
           </p>
+
+          {/* Quick sync to class selector */}
+          {classes.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+              <span className="text-xs font-bold text-indigo-900 flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                Đồng bộ đề này cho:
+              </span>
+              <select
+                value={applyToClassOption}
+                onChange={(e) => setApplyToClassOption(e.target.value)}
+                className="px-2.5 py-1 rounded-lg bg-indigo-50/70 border border-indigo-200 text-indigo-950 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+              >
+                <option value="all">⚡ TẤT CẢ các lớp ({classes.length} lớp)</option>
+                {classes.map((c) => (
+                  <option key={c.id || c.code} value={c.code}>
+                    Chỉ lớp {c.code} ({c.name})
+                  </option>
+                ))}
+                <option value="global_only">Chỉ lưu làm Đề Thi Chung (Không đổi đề của lớp)</option>
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

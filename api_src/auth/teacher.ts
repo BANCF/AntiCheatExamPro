@@ -1,7 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { getTeachers, getExamConfig, parseJsonBody, sendJson } from '../_storage';
+import { getTeachers, getExamConfig, parseJsonBody, sendJson, handleCors } from '../_storage';
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (handleCors(req, res)) return;
+
   if ((req.method || 'GET').toUpperCase() !== 'POST') {
     return sendJson(res, 405, { error: 'Method Not Allowed' });
   }

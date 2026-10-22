@@ -296,6 +296,28 @@ export const ExamLobby: React.FC<ExamLobbyProps> = ({
                       <span>Học sinh phải điền chính xác mã lớp (VD: 7A1, 7A2, 10A1) do giáo viên cấp.</span>
                     )}
                   </p>
+                  {classes.length > 0 && (
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] text-slate-500 font-semibold">Chọn lớp:</span>
+                      {classes.map((c) => (
+                        <button
+                          key={c.id || c.code}
+                          type="button"
+                          onClick={() => {
+                            setStudentClass(c.code);
+                            setError(null);
+                          }}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer border ${
+                            studentClass.trim().toUpperCase() === c.code.trim().toUpperCase()
+                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                              : 'bg-slate-100 hover:bg-indigo-50 hover:border-indigo-300 text-slate-700 border-slate-200'
+                          }`}
+                        >
+                          {c.code}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Class-specific Exam PIN input */}

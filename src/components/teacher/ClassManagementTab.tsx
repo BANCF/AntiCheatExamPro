@@ -895,9 +895,38 @@ export const ClassManagementTab: React.FC<ClassManagementTabProps> = ({
             <form onSubmit={handleSaveExamConfigForClass} className="space-y-4 text-xs">
               {/* Tiêu đề bài kiểm tra */}
               <div>
-                <label className="block font-bold text-slate-800 mb-1">
-                  Tên bài kiểm tra của lớp <span className="text-rose-500">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-bold text-slate-800">
+                    Tên bài kiểm tra của lớp <span className="text-rose-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!targetClassForExam) return;
+                      setExamFormTitle(`${config.title} - ${targetClassForExam.code}`);
+                      setExamFormDuration(config.duration_minutes || 15);
+                      if (config.exam_mode === 'pdf') {
+                        setExamFormMode('pdf');
+                        setPdfFileUrl(config.pdf_url || '');
+                        setPdfFileName(config.pdf_filename || '');
+                        setPdfTotalQ(config.pdf_total_questions || 40);
+                        setPdfAnswerMap(config.pdf_answer_key || {});
+                      } else {
+                        setExamFormMode('bank');
+                        const sc = config.distribution?.single_choice || 16;
+                        const tf = config.distribution?.true_false || 4;
+                        setExamFormSingleChoiceCount(sc);
+                        setExamFormTrueFalseCount(tf);
+                        setExamFormQuestionCount(config.total_questions_to_pick || (sc + tf));
+                      }
+                      showToast('success', 'Đã sao chép cấu hình từ Đề Thi Chung sang lớp này!');
+                    }}
+                    className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-md border border-indigo-200 transition-colors"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Lấy cấu hình từ Đề Thi Chung</span>
+                  </button>
+                </div>
                 <input
                   type="text"
                   required

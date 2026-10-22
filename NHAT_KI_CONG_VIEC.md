@@ -281,5 +281,34 @@
 
 ---
 
+## 🚀 7. KHẮC PHỤC TOÀN DIỆN LỖI RA ĐỀ XONG VÀO LỚP KHÔNG THẤY ĐỀ TRÊN VERCEL (22/10/2026)
+
+### 📌 Nguyên nhân gốc rễ (Root Causes Identified):
+1. **Lỗi truyền props phòng thi trong `src/App.tsx` (Bug cốt lõi):**
+   - Khi học sinh vào phòng thi (`studentFlow === 'running'`), component `ExamRunner` nhận prop `config={config}` (cấu hình chung toàn cục) thay vì `config={currentSession.effectiveConfig || config}` (cấu hình bài thi riêng của lớp vừa ra).
+   - Dẫn đến: Toàn bộ tiêu đề đề thi mới, thời gian thi riêng, chế độ đề PDF/OMR sheet và ma trận câu hỏi riêng của lớp bị ghi đè bởi cấu hình đề chung cũ.
+2. **Lỗi đứt gãy đồng bộ giữa Cấu Hình Đề Thi Chung (`ExamConfigTab`) và Lớp Học (`ClassManagementTab`):**
+   - Khi giáo viên ra đề ở tab "Cấu Hình Đề Thi", đề thi chỉ lưu vào `config` toàn cục, không tự động cập nhật vào các lớp học hiện có (Lớp 6G01, 7A1, 7A2...). Do đó học sinh vào lớp vẫn hiển thị đề thi cũ của lớp đó.
+3. **Lỗi Serverless Vercel `FUNCTION_INVOCATION_FAILED` (HTTP 500):**
+   - Các file trong `api/` là TypeScript thuần import trực tiếp `../src/types/exam` và `../src/data/defaultClasses`. Trên Vercel runtime (Node.js ESM), việc import không có đuôi file `.js` và truy cập file ngoài thư mục `api/` gây lỗi `ERR_MODULE_NOT_FOUND` khiến toàn bộ API `/api/classes`, `/api/health`, `/api/exam/start` bị lỗi 500.
+   - Do đó, mọi lớp học mới hoặc đề thi mới ra không lưu được lên máy chủ mà chỉ nằm trong LocalStorage của máy giáo viên.
+4. **Mất cấu hình bài thi khi F5 tải lại trang:**
+   - Cơ chế khôi phục phiên thi (`getStoredActiveSession`) chỉ lưu các trường cơ bản, thiếu `effective_config` nên khi học sinh F5 bị quay về đề chung.
+
+### 🛠️ Các giải pháp đã triển khai & hoàn thành:
+1. **Sửa truyền prop `ExamRunner` & Lưu phiên làm bài (`src/App.tsx`, `src/types/exam.ts`):**
+   - Truyền `config={currentSession.effectiveConfig || config}` cho `ExamRunner`.
+   - Bổ sung `effective_config` và `exam_title` vào `ExamSessionState` để học sinh F5 vẫn giữ nguyên 100% đề thi của lớp.
+2. **Đồng bộ 2 chiều giữa Đề Thi Chung và Đề Của Từng Lớp:**
+   - Trong `ExamConfigTab.tsx`: Bổ sung tính năng "Đồng bộ đề này cho:" (Tất cả các lớp hoặc lớp cụ thể). Khi giáo viên bấm lưu đề, hệ thống lập tức cập nhật đề vào các lớp học tương ứng.
+   - Trong `ClassManagementTab.tsx`: Bổ sung nút "Lấy cấu hình từ Đề Thi Chung" ngay trong modal Ra Đề Cho Lớp để giáo viên sao chép đề chung sang lớp chỉ với 1 click.
+3. **Đóng gói độc lập toàn bộ Vercel Serverless Functions (`scripts/build-api.mjs`, `package.json`):**
+   - Xây dựng quy trình build tự động với `esbuild` đóng gói toàn bộ 9 endpoint API thành các file `.js` ESM độc lập trong `api/` (inlined mọi dependencies, xử lý CORS, bọc `try/catch` an toàn 100%).
+   - Kiểm thử native Node.js: Toàn bộ API `/api/classes`, `/api/health`, `/api/config` phản hồi HTTP 200 JSON chuẩn xác.
+4. **Tối ưu trải nghiệm vào phòng thi của học sinh (`src/components/student/ExamLobby.tsx`):**
+   - Bổ sung thanh chọn nhanh mã lớp (Quick-select class pills) ngay dưới ô nhập mã lớp, hiển thị trực quan các lớp đang mở (`6ONTAP`, `6G01`, `7A1`...) giúp học sinh và giáo viên click vào lớp thi thử tức thì mà không cần gõ phím.
+
+---
+
 *Nhật ký được cập nhật lần cuối vào: 22/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
 

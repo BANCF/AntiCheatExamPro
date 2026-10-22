@@ -194,7 +194,12 @@ export async function getQuestionBank(): Promise<Question[]> {
   const redis = getRedis();
   if (redis) {
     try {
-      const bank = await redis.get<Question[]>('exam:bank');
+      let bank = await redis.get<any>('exam:bank');
+      if (typeof bank === 'string') {
+        try {
+          bank = JSON.parse(bank);
+        } catch {}
+      }
       if (Array.isArray(bank) && bank.length > 0) return bank;
     } catch (err) {
       console.error('Error reading bank from Redis:', err);
@@ -220,7 +225,12 @@ export async function getExamConfig(): Promise<ExamConfig> {
   const redis = getRedis();
   if (redis) {
     try {
-      const config = await redis.get<ExamConfig>('exam:config');
+      let config = await redis.get<any>('exam:config');
+      if (typeof config === 'string') {
+        try {
+          config = JSON.parse(config);
+        } catch {}
+      }
       if (config && config.title) return config;
     } catch (err) {
       console.error('Error reading config from Redis:', err);
@@ -246,7 +256,12 @@ export async function getClasses(): Promise<ClassRoom[]> {
   const redis = getRedis();
   if (redis) {
     try {
-      const classes = await redis.get<ClassRoom[]>('exam:classes');
+      let classes = await redis.get<any>('exam:classes');
+      if (typeof classes === 'string') {
+        try {
+          classes = JSON.parse(classes);
+        } catch {}
+      }
       if (Array.isArray(classes) && classes.length > 0) return classes;
     } catch (err) {
       console.error('Error reading classes from Redis:', err);
@@ -300,7 +315,12 @@ export async function getTeachers(): Promise<TeacherAccount[]> {
   const redis = getRedis();
   if (redis) {
     try {
-      const teachers = await redis.get<TeacherAccount[]>('exam:teachers');
+      let teachers = await redis.get<any>('exam:teachers');
+      if (typeof teachers === 'string') {
+        try {
+          teachers = JSON.parse(teachers);
+        } catch {}
+      }
       if (Array.isArray(teachers) && teachers.length > 0) return teachers;
     } catch (err) {
       console.error('Error reading teachers from Redis:', err);

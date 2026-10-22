@@ -170,4 +170,6 @@ export interface ExamSessionState {
   is_submitted: boolean;
   status?: SubmissionStatus;
   exam_id: string;
+  exam_title?: string;
+  effective_config?: ExamConfig;
 }

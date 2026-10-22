@@ -9,7 +9,7 @@ import {
   sendJson,
   handleCors
 } from '../_storage';
-import { ExamConfig, Question, SanitizedQuestion } from '../../src/types/exam';
+import type { ExamConfig, Question, SanitizedQuestion } from '../../src/types/exam';
 import { generateAllExamVariants } from '../../src/utils/randomEngine';
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {

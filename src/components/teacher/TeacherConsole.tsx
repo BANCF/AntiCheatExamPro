@@ -210,8 +210,10 @@ export const TeacherConsole: React.FC<TeacherConsoleProps> = ({
           <ExamConfigTab
             config={config}
             bank={bank}
+            classes={classes}
+            onSaveClass={onSaveClass}
             onSaveConfig={onUpdateConfig}
-            onLaunchExamMode={() => onLaunchStudentExam()}
+            onLaunchExamMode={() => onLaunchStudentExam(classes.find((c) => c.isActive) || classes[0])}
           />
         )}
         {activeTab === 'gradebook' && (
