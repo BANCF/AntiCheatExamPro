@@ -101,6 +101,32 @@ var DEFAULT_CLASSES = [
     description: "B\xE0i thi tr\u1EAFc nghi\u1EC7m ri\xEAng bi\u1EC7t cho h\u1ECDc sinh l\u1EDBp 7A2"
   },
   {
+    id: "cls_7c",
+    code: "7C",
+    name: "L\u1EDBp 7C - Tin H\u1ECDc 7",
+    grade: "L\u1EDBp 7",
+    subject: "Tin h\u1ECDc",
+    teacherName: "Th\u1EA7y/C\xF4 B\u1ED9 M\xF4n Tin H\u1ECDc",
+    pinCode: "7007",
+    examTitle: "\u0110\u1EC1 Thi Gi\u1EEFa H\u1ECDc K\xEC 1 - Tin H\u1ECDc 7 (L\u1EDBp 7C)",
+    examConfig: {
+      duration_minutes: 45,
+      total_questions_to_pick: 34,
+      target_grade: "L\u1EDBp 7",
+      target_subject: "Tin h\u1ECDc",
+      target_term: "Gi\u1EEFa k\xEC I",
+      exam_mode: "bank",
+      distribution: {
+        single_choice: 32,
+        true_false: 2,
+        single_choice_points: 8,
+        true_false_points: 2
+      }
+    },
+    isActive: true,
+    description: "\u0110\u1EC1 thi Gi\u1EEFa h\u1ECDc k\xEC 1 m\xF4n Tin h\u1ECDc 7 ch\xEDnh th\u1EE9c (32 c\xE2u tr\u1EAFc nghi\u1EC7m 8.0\u0111 + 2 c\xE2u \u0111\xFAng/sai 2.0\u0111, Th\u1EDDi gian 45 ph\xFAt)"
+  },
+  {
     id: "cls_10a1",
     code: "10A1",
     name: "L\u1EDBp 10A1 - To\xE1n H\u1ECDc 10",

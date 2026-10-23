@@ -36,7 +36,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_2",
@@ -68,7 +71,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_3",
@@ -100,7 +106,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_4",
@@ -132,7 +141,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_5",
@@ -164,7 +176,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_6",
@@ -196,7 +211,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_7",
@@ -228,7 +246,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_8",
@@ -260,7 +281,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_9",
@@ -292,7 +316,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_10",
@@ -324,7 +351,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_11",
@@ -356,7 +386,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_12",
@@ -388,7 +421,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_1_thiet_bi_vao_ra",
       "phan_cung"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_13",
@@ -420,7 +456,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_2_phan_mem_may_tinh",
       "he_dieu_hanh"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_14",
@@ -452,7 +491,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_2_phan_mem_may_tinh",
       "he_dieu_hanh"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_15",
@@ -484,7 +526,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_2_phan_mem_may_tinh",
       "he_dieu_hanh"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_16",
@@ -516,7 +561,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_2_phan_mem_may_tinh",
       "he_dieu_hanh"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_17",
@@ -548,7 +596,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_2_phan_mem_may_tinh",
       "he_dieu_hanh"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_18",
@@ -580,7 +631,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_19",
@@ -612,7 +666,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_20",
@@ -644,7 +701,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_21",
@@ -676,7 +736,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_22",
@@ -708,7 +771,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_23",
@@ -740,7 +806,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_24",
@@ -772,7 +841,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_25",
@@ -804,7 +876,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_26",
@@ -836,7 +911,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_27",
@@ -868,7 +946,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_28",
@@ -900,7 +981,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_29",
@@ -932,7 +1016,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_30",
@@ -964,7 +1051,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_31",
@@ -996,7 +1086,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_32",
@@ -1028,7 +1121,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_3_quan_li_du_lieu",
       "tep_va_thu_muc"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_33",
@@ -1060,7 +1156,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_34",
@@ -1092,7 +1191,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_35",
@@ -1124,7 +1226,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_36",
@@ -1156,7 +1261,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_37",
@@ -1188,7 +1296,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_38",
@@ -1220,7 +1331,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_39",
@@ -1252,7 +1366,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_40",
@@ -1284,7 +1401,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_41",
@@ -1316,7 +1436,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_42",
@@ -1348,7 +1471,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_43",
@@ -1380,7 +1506,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_44",
@@ -1412,7 +1541,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "bai_4_mang_xa_hoi",
       "internet_an_toan"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_45",
@@ -1444,7 +1576,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "dung_sai_chum",
       "on_tap_giua_ki_1"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_46",
@@ -1476,7 +1611,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "dung_sai_chum",
       "on_tap_giua_ki_1"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_47",
@@ -1508,7 +1646,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "dung_sai_chum",
       "on_tap_giua_ki_1"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_48",
@@ -1540,7 +1681,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "dung_sai_chum",
       "on_tap_giua_ki_1"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_49",
@@ -1572,7 +1716,10 @@ var DEFAULT_QUESTION_BANK = [
       "tin_hoc_7",
       "dung_sai_chum",
       "on_tap_giua_ki_1"
-    ]
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin7_50",
@@ -1607,7 +1754,7 @@ var DEFAULT_QUESTION_BANK = [
     ],
     "grade": "L\u1EDBp 7",
     "subject": "Tin h\u1ECDc",
-    "term": "Gi\u1EEFa k\xEC I"
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
   },
   {
     "id": "q_tin10_gk1_1",
@@ -1754,7 +1901,7 @@ var DEFAULT_QUESTION_BANK = [
     "type": "single_choice",
     "grade": "L\u1EDBp 7",
     "subject": "Tin h\u1ECDc",
-    "term": "Cu\u1ED1i k\xEC I",
+    "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn",
     "prompt": "Trong ph\u1EA7n m\u1EC1m b\u1EA3ng t\xEDnh \u0111i\u1EC7n t\u1EED (MS Excel), c\xFA ph\xE1p h\xE0m n\xE0o sau \u0111\xE2y d\xF9ng \u0111\u1EC3 t\xEDnh t\u1ED5ng c\xE1c \xF4 t\u1EEB A1 \u0111\u1EBFn A5?",
     "options": [
       {
@@ -3533,6 +3680,1198 @@ var DEFAULT_QUESTION_BANK = [
     "grade": "L\u1EDBp 6",
     "subject": "Tin h\u1ECDc",
     "term": "\xD4n t\u1EADp th\u01B0\u1EDDng xuy\xEAn"
+  },
+  {
+    "id": "q_tin7_gk1_1",
+    "type": "single_choice",
+    "prompt": "Thi\u1EBFt b\u1ECB v\xE0o - ra \u0111\xF3ng vai tr\xF2 g\xEC trong h\u1EC7 th\u1ED1ng m\xE1y t\xEDnh?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_1_a",
+        "text": "Ch\u1EC9 cung c\u1EA5p ngu\u1ED3n \u0111i\u1EC7n cho m\xE1y t\xEDnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_1_b",
+        "text": "\u0110i\u1EC1u khi\u1EC3n to\xE0n b\u1ED9 ho\u1EA1t \u0111\u1ED9ng c\u1EE7a ph\u1EA7n m\u1EC1m.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_1_c",
+        "text": "Gi\xFAp m\xE1y t\xEDnh trao \u0111\u1ED5i d\u1EEF li\u1EC7u v\u1EDBi th\u1EBF gi\u1EDBi b\xEAn ngo\xE0i.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_1_d",
+        "text": "Ch\u1EC9 x\u1EED l\xED d\u1EEF li\u1EC7u b\xEAn trong m\xE1y t\xEDnh.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_2",
+    "type": "single_choice",
+    "prompt": "Thi\u1EBFt b\u1ECB n\xE0o sau \u0111\xE2y d\xF9ng \u0111\u1EC3 ti\u1EBFp nh\u1EADn th\xF4ng tin v\xE0 chuy\u1EC3n v\xE0o m\xE1y t\xEDnh (thi\u1EBFt b\u1ECB v\xE0o)?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_2_a",
+        "text": "B\u1ED9 x\u1EED l\xED trung t\xE2m (CPU).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_2_b",
+        "text": "B\xE0n ph\xEDm, chu\u1ED9t, micro.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_2_c",
+        "text": "M\xE0n h\xECnh, m\xE1y in, loa.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_2_d",
+        "text": "M\xE1y chi\u1EBFu, tai nghe.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_3",
+    "type": "single_choice",
+    "prompt": "Thi\u1EBFt b\u1ECB n\xE0o sau \u0111\xE2y nh\u1EADn th\xF4ng tin t\u1EEB m\xE1y t\xEDnh \u0111\u01B0a ra b\xEAn ngo\xE0i (thi\u1EBFt b\u1ECB ra)?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_3_a",
+        "text": "\u1ED4 \u0111\u0129a c\u1EE9ng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_3_b",
+        "text": "Micro, m\xE1y qu\xE9t.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_3_c",
+        "text": "M\xE1y in, loa, m\xE0n h\xECnh.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_3_d",
+        "text": "Chu\u1ED9t, b\xE0n ph\xEDm.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_4",
+    "type": "single_choice",
+    "prompt": "M\xE1y chi\u1EBFu thu\u1ED9c lo\u1EA1i thi\u1EBFt b\u1ECB n\xE0o?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_4_a",
+        "text": "Thi\u1EBFt b\u1ECB ra.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_4_b",
+        "text": "Thi\u1EBFt b\u1ECB x\u1EED l\xED.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_4_c",
+        "text": "Thi\u1EBFt b\u1ECB v\xE0o.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_4_d",
+        "text": "Thi\u1EBFt b\u1ECB l\u01B0u tr\u1EEF.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_5",
+    "type": "single_choice",
+    "prompt": "H\u1EC7 \u0111i\u1EC1u h\xE0nh l\xE0 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_5_a",
+        "text": "L\xE0 m\u1ED9t lo\u1EA1i thi\u1EBFt b\u1ECB ph\u1EA7n c\u1EE9ng c\u1EE7a m\xE1y t\xEDnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_5_b",
+        "text": "L\xE0 ph\u1EA7n m\u1EC1m h\u1EC7 th\u1ED1ng qu\u1EA3n l\xED, \u0111i\u1EC1u khi\u1EC3n ho\u1EA1t \u0111\u1ED9ng chung c\u1EE7a m\xE1y t\xEDnh v\xE0 qu\u1EA3n l\xED d\u1EEF li\u1EC7u.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_5_c",
+        "text": "L\xE0 trang web d\xF9ng \u0111\u1EC3 t\xECm ki\u1EBFm th\xF4ng tin.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_5_d",
+        "text": "L\xE0 ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng d\xF9ng \u0111\u1EC3 g\xF5 v\u0103n b\u1EA3n.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_2_he_dieu_hanh_va_phan_mem"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_6",
+    "type": "single_choice",
+    "prompt": "Ph\u1EA7n m\u1EC1m n\xE0o sau \u0111\xE2y L\xC0 m\u1ED9t h\u1EC7 \u0111i\u1EC1u h\xE0nh?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_6_a",
+        "text": "Zalo.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_6_b",
+        "text": "Google Chrome.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_6_c",
+        "text": "Microsoft Word.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_6_d",
+        "text": "Windows 10.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_2_he_dieu_hanh_va_phan_mem"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_7",
+    "type": "single_choice",
+    "prompt": "Ch\u1EE9c n\u0103ng n\xE0o sau \u0111\xE2y KH\xD4NG ph\u1EA3i l\xE0 ch\u1EE9c n\u0103ng c\u01A1 b\u1EA3n c\u1EE7a h\u1EC7 \u0111i\u1EC1u h\xE0nh?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_7_a",
+        "text": "Tr\u1EF1c ti\u1EBFp ch\u1EC9nh s\u1EEDa hi\u1EC7u \u1EE9ng c\u1EE7a m\u1ED9t b\u1EE9c \u1EA3nh ngh\u1EC7 thu\u1EADt.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_7_b",
+        "text": "Cung c\u1EA5p m\xF4i tr\u01B0\u1EDDng trao \u0111\u1ED5i th\xF4ng tin (giao di\u1EC7n) gi\u1EEFa ng\u01B0\u1EDDi v\xE0 m\xE1y.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_7_c",
+        "text": "Qu\u1EA3n l\xED c\xE1c thi\u1EBFt b\u1ECB v\xE0 d\u1EEF li\u1EC7u c\u1EE7a m\xE1y t\xEDnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_7_d",
+        "text": "Cung c\u1EA5p m\xF4i tr\u01B0\u1EDDng cho ph\xE9p ch\u1EA1y c\xE1c ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_2_he_dieu_hanh_va_phan_mem"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_8",
+    "type": "single_choice",
+    "prompt": "Ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng c\xF3 \u0111\u1EB7c \u0111i\u1EC3m g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_8_a",
+        "text": "Ph\u1EA3i c\xE0i \u0111\u1EB7t \u0111\u1EA7u ti\xEAn \u0111\u1EC3 m\xE1y t\xEDnh ho\u1EA1t \u0111\u1ED9ng \u0111\u01B0\u1EE3c.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_8_b",
+        "text": "Gi\xFAp con ng\u01B0\u1EDDi th\u1EF1c hi\u1EC7n nh\u1EEFng c\xF4ng vi\u1EC7c c\u1EE5 th\u1EC3 (so\u1EA1n v\u0103n b\u1EA3n, nghe nh\u1EA1c...).",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_8_c",
+        "text": "L\xE0 ph\u1EA7n m\u1EC1m kh\xF4ng bao gi\u1EDD b\u1ECB l\u1ED7i.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_8_d",
+        "text": "Qu\u1EA3n l\xED ph\u1EA7n c\u1EE9ng m\xE1y t\xEDnh tr\u1EF1c ti\u1EBFp.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_2_he_dieu_hanh_va_phan_mem"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_9",
+    "type": "single_choice",
+    "prompt": "T\u1EC7p c\xF3 ph\u1EA7n m\u1EDF r\u1ED9ng '.docx' ho\u1EB7c '.doc' th\u01B0\u1EDDng ch\u1EE9a d\u1EEF li\u1EC7u thu\u1ED9c lo\u1EA1i n\xE0o?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_9_a",
+        "text": "H\xECnh \u1EA3nh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_9_b",
+        "text": "V\u0103n b\u1EA3n.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_9_c",
+        "text": "\xC2m thanh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_9_d",
+        "text": "Video.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_10",
+    "type": "single_choice",
+    "prompt": "\u0110\u1EC3 nh\u1EADn bi\u1EBFt m\u1ED9t t\u1EC7p thu\u1ED9c lo\u1EA1i g\xEC v\xE0 d\xF9ng ph\u1EA7n m\u1EC1m n\xE0o \u0111\u1EC3 m\u1EDF, h\u1EC7 \u0111i\u1EC1u h\xE0nh th\u01B0\u1EDDng d\u1EF1a v\xE0o \u0111\xE2u?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_10_a",
+        "text": "Ng\xE0y t\u1EA1o t\u1EC7p.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_10_b",
+        "text": "T\xEAn ng\u01B0\u1EDDi t\u1EA1o ra t\u1EC7p.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_10_c",
+        "text": "Ph\u1EA7n m\u1EDF r\u1ED9ng c\u1EE7a t\xEAn t\u1EC7p.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_10_d",
+        "text": "K\xEDch th\u01B0\u1EDBc c\u1EE7a t\u1EC7p.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_11",
+    "type": "single_choice",
+    "prompt": "T\u1EC7p ch\u01B0\u01A1ng tr\xECnh m\xE1y t\xEDnh trong h\u1EC7 \u0111i\u1EC1u h\xE0nh Windows th\u01B0\u1EDDng c\xF3 ph\u1EA7n m\u1EDF r\u1ED9ng n\xE0o?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_11_a",
+        "text": ".exe, .com, .bat, .msi",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_11_b",
+        "text": ".jpg, .png",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_11_c",
+        "text": ".mp3, .mp4",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_11_d",
+        "text": ".doc, .docx",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_12",
+    "type": "single_choice",
+    "prompt": "Trong Windows 10, \u1EE9ng d\u1EE5ng n\xE0o gi\xFAp qu\u1EA3n l\xED t\u1EC7p v\xE0 th\u01B0 m\u1EE5c (t\u1EA1o, \u0111\u1ED5i t\xEAn, sao ch\xE9p, di chuy\u1EC3n, xo\xE1...)?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_12_a",
+        "text": "Microsoft Paint.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_12_b",
+        "text": "File Explorer.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_12_c",
+        "text": "Control Panel.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_12_d",
+        "text": "Task Manager.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_13",
+    "type": "single_choice",
+    "prompt": "C\xE1c k\xEAnh trao \u0111\u1ED5i th\xF4ng tin ph\u1ED5 bi\u1EBFn tr\xEAn Internet hi\u1EC7n nay bao g\u1ED3m nh\u1EEFng g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_13_a",
+        "text": "Ch\u1EC9 c\xF3 di\u1EC5n \u0111\xE0n th\u1EA3o lu\u1EADn.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_13_b",
+        "text": "Ch\u1EC9 c\xF3 th\u01B0 \u0111i\u1EC7n t\u1EED (email).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_13_c",
+        "text": "Th\u01B0 \u0111i\u1EC7n t\u1EED, di\u1EC5n \u0111\xE0n (Forum), m\u1EA1ng x\xE3 h\u1ED9i.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_13_d",
+        "text": "\u0110i\u1EC7n b\xE1o, b\u01B0u \u0111i\u1EC7n truy\u1EC1n th\u1ED1ng.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_14",
+    "type": "single_choice",
+    "prompt": "M\u1EA1ng x\xE3 h\u1ED9i l\xE0 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_14_a",
+        "text": "L\xE0 m\u1EA1ng k\u1EBFt n\u1ED1i c\xE1c m\xE1y t\xEDnh trong m\u1ED9t tr\u01B0\u1EDDng h\u1ECDc b\u1EB1ng d\xE2y c\xE1p.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_14_b",
+        "text": "L\xE0 m\u1ED9t th\u01B0 vi\u1EC7n \u0111i\u1EC7n t\u1EED ch\u1EC9 ch\u1EE9a s\xE1ch k\u0129 thu\u1EADt s\u1ED1.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_14_c",
+        "text": "L\xE0 ph\u1EA7n m\u1EC1m h\u1EC7 th\u1ED1ng gi\xFAp m\xE1y t\xEDnh ho\u1EA1t \u0111\u1ED9ng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_14_d",
+        "text": "L\xE0 m\u1ED9t c\u1ED9ng \u0111\u1ED3ng tr\u1EF1c tuy\u1EBFn \u0111\u1EC3 m\u1ECDi ng\u01B0\u1EDDi c\xF3 th\u1EC3 t\u01B0\u01A1ng t\xE1c, giao ti\u1EBFp v\u1EDBi nhau.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_15",
+    "type": "single_choice",
+    "prompt": "M\u1EE5c \u0111\xEDch ch\xEDnh c\u1EE7a m\u1EA1ng x\xE3 h\u1ED9i Facebook ho\u1EB7c Zalo l\xE0 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_15_a",
+        "text": "Chia s\u1EBB video k\u0129 thu\u1EADt cao l\xE0 ch\u1EE7 y\u1EBFu.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_15_b",
+        "text": "Qu\u1EA3n l\xED t\u1EC7p tin trong m\xE1y t\xEDnh n\u1ED9i b\u1ED9.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_15_c",
+        "text": "Giao l\u01B0u k\u1EBFt n\u1ED1i b\u1EA1n b\xE8, chia s\u1EBB h\xECnh \u1EA3nh, suy ngh\u0129 c\xE1 nh\xE2n.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_15_d",
+        "text": "Th\u1EA3o lu\u1EADn c\xE1c b\xE0i to\xE1n gi\u1EA3i t\xEDch chuy\xEAn s\xE2u.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_16",
+    "type": "single_choice",
+    "prompt": "M\u1EA1ng x\xE3 h\u1ED9i YouTube t\u1EADp trung ch\u1EE7 y\u1EBFu v\xE0o vi\u1EC7c chia s\u1EBB lo\u1EA1i d\u1EEF li\u1EC7u n\xE0o?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_16_a",
+        "text": "T\u1EC7p th\u1EF1c thi ch\u01B0\u01A1ng tr\xECnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_16_b",
+        "text": "Video.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_16_c",
+        "text": "H\xECnh \u1EA3nh (\u1EA2nh ch\u1EE5p t\u0129nh).",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_16_d",
+        "text": "V\u0103n b\u1EA3n Word.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_17",
+    "type": "single_choice",
+    "prompt": "Thi\u1EBFt b\u1ECB n\xE0o v\u1EEBa l\xE0 thi\u1EBFt b\u1ECB v\xE0o v\u1EEBa l\xE0 thi\u1EBFt b\u1ECB ra?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_17_a",
+        "text": "M\xE0n h\xECnh m\xE1y t\xEDnh th\xF4ng th\u01B0\u1EDDng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_17_b",
+        "text": "B\xE0n ph\xEDm.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_17_c",
+        "text": "M\xE0n h\xECnh c\u1EA3m \u1EE9ng (touch screen).",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_17_d",
+        "text": "Loa th\u01B0\u1EDDng.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_18",
+    "type": "single_choice",
+    "prompt": "Thao t\xE1c n\xE0o sau \u0111\xE2y l\xE0 thao t\xE1c t\u1EAFt m\xE1y t\xEDnh an to\xE0n, \u0111\xFAng c\xE1ch?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_18_a",
+        "text": "Nh\u1EA5n gi\u1EEF n\xFAt ngu\u1ED3n (Power) v\xE0i gi\xE2y.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_18_b",
+        "text": "R\xFAt ph\xEDch c\u1EAFm \u0111i\u1EC7n \u0111\u1ED9t ng\u1ED9t.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_18_c",
+        "text": "T\u1EAFt c\xF4ng t\u1EAFc m\xE0n h\xECnh r\u1ED3i r\xFAt \u0111i\u1EC7n.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_18_d",
+        "text": "S\u1EED d\u1EE5ng n\xFAt l\u1EC7nh Shut down c\u1EE7a h\u1EC7 \u0111i\u1EC1u h\xE0nh.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_19",
+    "type": "single_choice",
+    "prompt": "T\u1EA1i sao kh\xF4ng n\xEAn ch\u1EA1m v\xE0o ph\u1EA7n kim lo\u1EA1i c\u1EE7a m\xE1y t\xEDnh khi \u0111ang c\u1EAFm \u0111i\u1EC7n ho\u1EB7c lau d\u1ECDn ch\u01B0a r\xFAt \u0111i\u1EC7n?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_19_a",
+        "text": "L\xE0m m\u1EA5t d\u1EEF li\u1EC7u trong m\xE1y.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_19_b",
+        "text": "L\xE0m tr\u1EA7y x\u01B0\u1EDBc m\xE1y t\xEDnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_19_c",
+        "text": "L\xE0m m\xE1y t\xEDnh ch\u1EA1y ch\u1EADm \u0111i.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_19_d",
+        "text": "D\u1EC5 g\xE2y ra gi\u1EADt \u0111i\u1EC7n, kh\xF4ng an to\xE0n.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_1_thiet_bi_vao_ra"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_20",
+    "type": "single_choice",
+    "prompt": "M\u1ED1i quan h\u1EC7 gi\u1EEFa h\u1EC7 \u0111i\u1EC1u h\xE0nh v\xE0 ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng l\xE0 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_20_a",
+        "text": "Ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng ch\u1EA1y trong m\xF4i tr\u01B0\u1EDDng do h\u1EC7 \u0111i\u1EC1u h\xE0nh t\u1EA1o ra.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_20_b",
+        "text": "H\u1EC7 \u0111i\u1EC1u h\xE0nh ch\u1EA1y b\xEAn trong ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_20_c",
+        "text": "C\u1EA3 hai ho\u1EA1t \u0111\u1ED9ng \u0111\u1ED9c l\u1EADp, kh\xF4ng li\xEAn quan \u0111\u1EBFn nhau.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_20_d",
+        "text": "Ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng c\xF3 ch\u1EE9c n\u0103ng \u0111i\u1EC1u khi\u1EC3n h\u1EC7 \u0111i\u1EC1u h\xE0nh.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_2_he_dieu_hanh_va_phan_mem"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_21",
+    "type": "single_choice",
+    "prompt": "T\u1EA1i sao n\xEAn ph\xE2n lo\u1EA1i d\u1EEF li\u1EC7u v\xE0 l\u01B0u tr\u1EEF theo tr\u1EADt t\u1EF1 th\u01B0 m\u1EE5c, \u0111\u1EB7t t\xEAn r\xF5 r\xE0ng?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_21_a",
+        "text": "\u0110\u1EC3 m\xE1y t\xEDnh ch\u1EA1y nhanh h\u01A1n.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_21_b",
+        "text": "\u0110\u1EC3 d\u1EC5 d\xE0ng, nhanh ch\xF3ng t\xECm ki\u1EBFm v\xE0 truy c\u1EADp l\u1EA1i khi c\u1EA7n.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_21_c",
+        "text": "\u0110\u1EC3 ph\u1EA7n m\u1EC1m \u1EE9ng d\u1EE5ng ho\u1EA1t \u0111\u1ED9ng ch\xEDnh x\xE1c h\u01A1n.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_21_d",
+        "text": "\u0110\u1EC3 m\xE1y t\xEDnh kh\xF4ng b\u1ECB nhi\u1EC5m virus.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_22",
+    "type": "single_choice",
+    "prompt": "Sao l\u01B0u d\u1EEF li\u1EC7u l\xE0 thao t\xE1c n\xE0o sau \u0111\xE2y?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_22_a",
+        "text": "Xo\xE1 d\u1EEF li\u1EC7u g\u1ED1c v\xE0 ch\u1EC9 gi\u1EEF l\u1EA1i m\u1ED9t phi\xEAn b\u1EA3n duy nh\u1EA5t.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_22_b",
+        "text": "T\u1EA1o ra b\u1EA3n sao c\xE1c t\u1EC7p/th\u01B0 m\u1EE5c v\xE0 l\u01B0u ch\xFAng l\xEAn m\u1ED9t thi\u1EBFt b\u1ECB l\u01B0u tr\u1EEF kh\xE1c.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_22_c",
+        "text": "\u0110\u1ED5i t\xEAn to\xE0n b\u1ED9 th\u01B0 m\u1EE5c trong m\xE1y t\xEDnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_22_d",
+        "text": "\u0110\u0103ng t\u1EA3i d\u1EEF li\u1EC7u l\xEAn m\u1EA1ng \u0111\u1EC3 m\u1ECDi ng\u01B0\u1EDDi c\xF9ng xem.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_23",
+    "type": "single_choice",
+    "prompt": "Nh\u01B0\u1EE3c \u0111i\u1EC3m c\u1EE7a sao l\u01B0u c\u1EE5c b\u1ED9 (l\u01B0u tr\xEAn \u1ED5 c\u1EE9ng ngo\xE0i, USB \u0111\u1EC3 c\xF9ng ch\u1ED7 v\u1EDBi m\xE1y t\xEDnh) l\xE0 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_23_a",
+        "text": "Kh\xF4i ph\u1EE5c d\u1EEF li\u1EC7u r\u1EA5t ch\u1EADm.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_23_b",
+        "text": "Chi ph\xED r\u1EA5t cao.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_23_c",
+        "text": "N\u1EBFu r\u1EE7i ro l\xE0m m\u1EA5t c\u1EA3 m\xE1y t\xEDnh l\u1EABn USB (v\xED d\u1EE5 h\u1ECFa ho\u1EA1n, m\u1EA5t c\u1EAFp) th\xEC b\u1EA3n sao c\u0169ng b\u1ECB m\u1EA5t theo.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_23_d",
+        "text": "Kh\xF4ng th\u1EC3 l\u01B0u \u0111\u01B0\u1EE3c c\xE1c t\u1EC7p dung l\u01B0\u1EE3ng l\u1EDBn.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_24",
+    "type": "single_choice",
+    "prompt": "L\u1EC7nh n\xE0o d\xF9ng \u0111\u1EC3 \u0111\u1ED5i t\xEAn m\u1ED9t th\u01B0 m\u1EE5c ho\u1EB7c t\u1EC7p \u0111\xE3 ch\u1ECDn?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_24_a",
+        "text": "Paste.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_24_b",
+        "text": "Delete.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_24_c",
+        "text": "Rename.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_24_d",
+        "text": "Copy.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_25",
+    "type": "single_choice",
+    "prompt": "Thao t\xE1c s\u1EED d\u1EE5ng c\u1EB7p l\u1EC7nh 'Copy' v\xE0 'Paste' \u0111\u1ED1i v\u1EDBi m\u1ED9t t\u1EC7p s\u1EBD d\u1EABn \u0111\u1EBFn k\u1EBFt qu\u1EA3 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_25_a",
+        "text": "T\u1EC7p g\u1ED1c b\u1ECB \u0111\u1ED5i t\xEAn.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_25_b",
+        "text": "T\u1EC7p g\u1ED1c b\u1ECB di chuy\u1EC3n sang v\u1ECB tr\xED m\u1EDBi.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_25_c",
+        "text": "T\u1EC7p g\u1ED1c b\u1ECB xo\xE1 \u0111i.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_25_d",
+        "text": "T\u1EA1o ra m\u1ED9t b\u1EA3n sao c\u1EE7a t\u1EC7p t\u1EA1i v\u1ECB tr\xED m\u1EDBi, t\u1EC7p g\u1ED1c v\u1EABn gi\u1EEF nguy\xEAn.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_26",
+    "type": "single_choice",
+    "prompt": "T\xEDnh n\u0103ng n\xE0o sau \u0111\xE2y KH\xD4NG ph\u1EA3i l\xE0 ch\u1EE9c n\u0103ng ph\u1ED5 bi\u1EBFn c\u1EE7a m\u1EA1ng x\xE3 h\u1ED9i?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_26_a",
+        "text": "Vi\u1EBFt ch\u01B0\u01A1ng tr\xECnh \u0111i\u1EC1u khi\u1EC3n ph\u1EA7n c\u1EE9ng m\xE1y t\xEDnh.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_26_b",
+        "text": "G\u1EEDi tin nh\u1EAFn ri\xEAng t\u01B0.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_26_c",
+        "text": "B\xECnh lu\u1EADn (comment) tr\xEAn b\xE0i \u0111\u0103ng c\u1EE7a b\u1EA1n b\xE8.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_26_d",
+        "text": "\u0110\u0103ng \u1EA3nh, video.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_27",
+    "type": "single_choice",
+    "prompt": "N\u1EBFu em b\u1EAFt g\u1EB7p m\u1ED9t th\xF4ng tin 's\u1ED1c' tr\xEAn m\u1EA1ng nh\u01B0ng ch\u01B0a \u0111\u01B0\u1EE3c ki\u1EC3m ch\u1EE9ng, vi\u1EC7c l\xE0m \u0110\xDANG \u0111\u1EAFn l\xE0 g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_27_a",
+        "text": "Sao ch\xE9p v\xE0 \u0111\u0103ng l\u1EA1i tr\xEAn trang c\xE1 nh\xE2n c\u1EE7a m\xECnh xem nh\u01B0 l\xE0 th\xF4ng tin c\u1EE7a m\xECnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_27_b",
+        "text": "L\u1EADp t\u1EE9c chia s\u1EBB ngay \u0111\u1EC3 c\u1EA3nh b\xE1o m\u1ECDi ng\u01B0\u1EDDi.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_27_c",
+        "text": "Th\xEAm b\xECnh lu\u1EADn k\xEDch \u0111\u1ED9ng v\xE0o b\xE0i vi\u1EBFt.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_27_d",
+        "text": "Kh\xF4ng chia s\u1EBB v\u1ED9i, t\xECm hi\u1EC3u k\u0129 t\xEDnh x\xE1c th\u1EF1c c\u1EE7a th\xF4ng tin t\u1EEB c\xE1c ngu\u1ED3n ch\xEDnh th\u1ED1ng.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_28",
+    "type": "single_choice",
+    "prompt": "Thao t\xE1c n\xE0o d\xF9ng \u0111\u1EC3 di chuy\u1EC3n m\u1ED9t th\u01B0 m\u1EE5c/t\u1EC7p (c\u1EAFt t\u1EEB ch\u1ED7 c\u0169 sang ch\u1ED7 m\u1EDBi)?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_28_a",
+        "text": "Cut v\xE0 Paste.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_28_b",
+        "text": "Delete v\xE0 Paste.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_28_c",
+        "text": "Copy v\xE0 Paste.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_28_d",
+        "text": "Rename v\xE0 Cut.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_29",
+    "type": "single_choice",
+    "prompt": "N\u1EBFu em nh\xECn th\u1EA5y m\u1ED9t t\u1EC7p c\xF3 \u0111u\xF4i '.exe' trong \u1ED5 \u0111\u0129a h\u1EC7 th\u1ED1ng v\xE0 kh\xF4ng bi\u1EBFt r\xF5 v\u1EC1 n\xF3, em N\xCAN l\xE0m g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_29_a",
+        "text": "L\u1EADp t\u1EE9c xo\xE1 n\xF3 \u0111\u1EC3 gi\u1EA3i ph\xF3ng b\u1ED9 nh\u1EDB.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_29_b",
+        "text": "\u0110\u1ED5i \u0111u\xF4i t\u1EC7p th\xE0nh '.txt' \u0111\u1EC3 d\u1EC5 \u0111\u1ECDc.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_29_c",
+        "text": "Kh\xF4ng n\xEAn xo\xE1 hay di chuy\u1EC3n v\xEC \u0111\xF3 c\xF3 th\u1EC3 l\xE0 t\u1EC7p h\u1EC7 th\u1ED1ng/ch\u01B0\u01A1ng tr\xECnh c\u1EA7n thi\u1EBFt.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_29_d",
+        "text": "T\u1EA3i l\xEAn m\u1EA1ng x\xE3 h\u1ED9i chia s\u1EBB cho b\u1EA1n b\xE8.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_30",
+    "type": "single_choice",
+    "prompt": "Khi s\u1EED d\u1EE5ng m\u1EA1ng x\xE3 h\u1ED9i, \u0111\u1EC3 \u0111\u1EA3m b\u1EA3o an to\xE0n th\xF4ng tin c\xE1 nh\xE2n, em N\xCAN l\xE0m g\xEC?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_30_a",
+        "text": "\u0110\u1EC3 ch\u1EBF \u0111\u1ED9 c\xF4ng khai (Public) to\xE0n b\u1ED9 th\xF4ng tin c\xE1 nh\xE2n.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_30_b",
+        "text": "Ch\u1EC9 k\u1EBFt b\u1EA1n v\xE0 tr\xF2 chuy\u1EC7n v\u1EDBi ng\u01B0\u1EDDi m\xE0 em th\u1EF1c s\u1EF1 quen bi\u1EBFt v\xE0 tin t\u01B0\u1EDFng.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_30_c",
+        "text": "\u0110\u0103ng t\u1EA3i chi ti\u1EBFt m\u1ECDi l\u1ECBch tr\xECnh di chuy\u1EC3n h\xE0ng ng\xE0y c\u1EE7a b\u1EA3n th\xE2n l\xEAn m\u1EA1ng.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_30_d",
+        "text": "C\xF4ng khai m\u1EADt kh\u1EA9u \u0111\u1EC3 b\u1EA1n b\xE8 c\xF9ng s\u1EED d\u1EE5ng chung.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_31",
+    "type": "single_choice",
+    "prompt": "B\u1EA1n An c\u1EAFm USB v\xE0o m\xE1y t\xEDnh \u0111\u1EC3 copy b\xE0i nh\u01B0ng kh\xF4ng th\u1EA5y hi\u1EC7n l\xEAn, b\u1EF1c m\xECnh An li\u1EC1n r\xFAt USB ra ngay l\u1EADp t\u1EE9c m\xE0 kh\xF4ng s\u1EED d\u1EE5ng ch\u1EE9c n\u0103ng Eject (Ng\u1EAFt k\u1EBFt n\u1ED1i an to\xE0n). Vi\u1EC7c l\xE0m n\xE0y c\xF3 nguy c\u01A1 g\xEC l\u1EDBn nh\u1EA5t?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_31_a",
+        "text": "L\xE0m l\u1ED7i c\u1EA5u tr\xFAc, g\xE2y m\u1EA5t m\xE1t ho\u1EB7c h\u1ECFng d\u1EEF li\u1EC7u trong USB.",
+        "is_correct": true
+      },
+      {
+        "id": "opt_t7_gk1_31_b",
+        "text": "L\xE0m m\xE1y t\xEDnh b\u1ECB t\u1EAFt ngu\u1ED3n \u0111\u1ED9t ng\u1ED9t.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_31_c",
+        "text": "L\xE0m h\u1ECFng v\u0129nh vi\u1EC5n c\xE1c c\u1ED5ng c\u1EAFm USB c\u1EE7a m\xE1y t\xEDnh.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_31_d",
+        "text": "T\u1EF1 \u0111\u1ED9ng chia s\u1EBB d\u1EEF li\u1EC7u USB l\xEAn m\u1EA1ng Internet.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_32",
+    "type": "single_choice",
+    "prompt": "Nh\xF3m c\u1EE7a em \u0111ang l\xE0m m\u1ED9t d\u1EF1 \xE1n v\xE0 mu\u1ED1n t\u1EA1o m\u1ED9t th\u01B0 m\u1EE5c l\u01B0u tr\u1EEF t\xE0i li\u1EC7u chung \u0111\u1EC3 t\u1EA5t c\u1EA3 th\xE0nh vi\xEAn c\xF3 th\u1EC3 truy c\u1EADp, xem v\xE0 ch\u1EC9nh s\u1EEDa t\u1EEB xa m\u1ECDi l\xFAc m\u1ECDi n\u01A1i. Bi\u1EC7n ph\xE1p l\u01B0u tr\u1EEF n\xE0o l\xE0 T\u1ED0T NH\u1EA4T?",
+    "options": [
+      {
+        "id": "opt_t7_gk1_32_a",
+        "text": "L\u01B0u \u1EDF \u1ED5 \u0111\u0129a C c\u1EE7a tr\u01B0\u1EDFng nh\xF3m.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_32_b",
+        "text": "Ghi ra \u0111\u0129a CD r\u1ED3i ph\xE1t cho t\u1EEBng ng\u01B0\u1EDDi trong nh\xF3m.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_32_c",
+        "text": "L\u01B0u v\xE0o m\u1ED9t chi\u1EBFc USB v\xE0 chuy\u1EC1n tay nhau lu\xE2n phi\xEAn m\u01B0\u1EE3n.",
+        "is_correct": false
+      },
+      {
+        "id": "opt_t7_gk1_32_d",
+        "text": "L\u01B0u tr\xEAn c\xE1c d\u1ECBch v\u1EE5 l\u01B0u tr\u1EEF \u0111\xE1m m\xE2y nh\u01B0 Google Drive, OneDrive.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "bai_3_quan_li_du_lieu_tep_va_thu_muc"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_tf_1",
+    "type": "true_false",
+    "prompt": "\u0110\u1ECDc c\xE1c ph\xE1t bi\u1EC3u sau v\u1EC1 quy t\u1EAFc tham gia m\u1EA1ng x\xE3 h\u1ED9i v\xE0 s\u1EED d\u1EE5ng Internet an to\xE0n:",
+    "items": [
+      {
+        "id": "sub_t7_gk1_1_a",
+        "text": "Vi\u1EC7c \u0111\u0103ng t\u1EA3i, chia s\u1EBB c\xE1c th\xF4ng tin gi\u1EA3 m\u1EA1o, sai s\u1EF1 th\u1EADt tr\xEAn m\u1EA1ng x\xE3 h\u1ED9i l\xE0 h\xE0nh vi b\u1ECB ph\xE1p lu\u1EADt nghi\xEAm c\u1EA5m.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t7_gk1_1_b",
+        "text": "B\u1EA5t k\xEC ai, \u1EDF m\u1ECDi l\u1EE9a tu\u1ED5i k\u1EC3 c\u1EA3 d\u01B0\u1EDBi 10 tu\u1ED5i \u0111\u1EC1u \u0111\u01B0\u1EE3c ph\xE9p t\u1EF1 do l\u1EADp t\xE0i kho\u1EA3n Facebook m\xE0 kh\xF4ng c\xF3 gi\u1EDBi h\u1EA1n n\xE0o.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t7_gk1_1_c",
+        "text": "Khi nh\u1EADn \u0111\u01B0\u1EE3c m\u1ED9t y\xEAu c\u1EA7u k\u1EBFt b\u1EA1n t\u1EEB m\u1ED9t t\xE0i kho\u1EA3n ho\xE0n to\xE0n xa l\u1EA1, em n\xEAn ch\u1EA5p nh\u1EADn ngay \u0111\u1EC3 m\u1EDF r\u1ED9ng giao ti\u1EBFp.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t7_gk1_1_d",
+        "text": "M\u1EA1ng x\xE3 h\u1ED9i l\xE0 con dao hai l\u01B0\u1EE1i (c\xF3 c\u1EA3 m\u1EB7t t\u1ED1t v\xE0 m\u1EB7t x\u1EA5u), h\u1ECDc sinh c\u1EA7n t\xECm hi\u1EC3u k\u0129 v\xE0 s\u1EED d\u1EE5ng \u0111\xFAng m\u1EE5c \u0111\xEDch h\u1ECDc t\u1EADp, giao l\u01B0u l\xE0nh m\u1EA1nh.",
+        "is_correct": true
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "dung_sai_chum",
+      "bai_4_mang_xa_hoi_va_internet"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
+  },
+  {
+    "id": "q_tin7_gk1_tf_2",
+    "type": "true_false",
+    "prompt": "\u0110\u1ECDc t\xECnh hu\u1ED1ng sau: \u201CB\u1EA1n Khoa mang m\xE1y t\xEDnh x\xE1ch tay ra qu\xE1n c\xE0 ph\xEA \u0111\u1EC3 ho\xE0n th\xE0nh d\u1EF1 \xE1n Tin h\u1ECDc. Trong l\xFAc l\xE0m vi\u1EC7c, Khoa th\u1EA5y m\u1ED9t chi\u1EBFc USB l\u1EA1 ai \u0111\xF3 b\u1ECF qu\xEAn tr\xEAn b\xE0n li\u1EC1n c\u1EAFm v\xE0o m\xE1y \u0111\u1EC3 xem th\u1EED n\u1ED9i dung, \u0111\u1ED3ng th\u1EDDi Khoa k\u1EBFt n\u1ED1i v\xE0o wifi c\xF4ng c\u1ED9ng kh\xF4ng m\u1EADt kh\u1EA9u \u0111\u1EC3 \u0111\u0103ng nh\u1EADp t\xE0i kho\u1EA3n c\xE1 nh\xE2n t\u1EA3i t\xE0i li\u1EC7u. Do v\u1ED9i v\xE3 l\u1EA5y \u0111\u1ED3, Khoa v\xF4 t\xECnh l\xE0m \u0111\u1ED5 m\u1ED9t ch\xFAt n\u01B0\u1EDBc ra c\u1EA1nh m\xE1y t\xEDnh.\u201D \u0110\xE1nh gi\xE1 c\xE1c h\xE0nh vi c\u1EE7a Khoa:",
+    "items": [
+      {
+        "id": "sub_t7_gk1_2_a",
+        "text": "Vi\u1EC7c c\u1EAFm chi\u1EBFc USB l\u1EA1 nh\u1EB7t \u0111\u01B0\u1EE3c v\xE0o m\xE1y t\xEDnh l\xE0 ho\xE0n to\xE0n an to\xE0n n\u1EBFu Khoa ch\u01B0a nh\xE1y \u0111\xFAp m\u1EDF c\xE1c t\u1EC7p tin b\xEAn trong.",
+        "is_correct": false
+      },
+      {
+        "id": "sub_t7_gk1_2_b",
+        "text": "\u0110\u0103ng nh\u1EADp t\xE0i kho\u1EA3n c\xE1 nh\xE2n, m\u1EADt kh\u1EA9u qua m\u1EA1ng wifi c\xF4ng c\u1ED9ng kh\xF4ng c\xF3 m\xE3 h\xF3a (kh\xF4ng m\u1EADt kh\u1EA9u) c\xF3 r\u1EE7i ro b\u1ECB tin t\u1EB7c \u0111\xE1nh c\u1EAFp th\xF4ng tin.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t7_gk1_2_c",
+        "text": "Khoa c\u1EA7n lau tay kh\xF4, nhanh ch\xF3ng th\u1EA5m v\xF9ng n\u01B0\u1EDBc b\u1ECB \u0111\u1ED5 v\xE0 c\xE1ch li ngu\u1ED3n n\u01B0\u1EDBc \u0111\u1EC3 tr\xE1nh n\u01B0\u1EDBc ng\u1EA5m v\xE0o khe t\u1EA3n nhi\u1EC7t hay c\u1ED5ng c\u1EAFm g\xE2y ch\u1EADp ch\xE1y.",
+        "is_correct": true
+      },
+      {
+        "id": "sub_t7_gk1_2_d",
+        "text": "\u0110\u1EC3 b\xE0i t\u1EADp d\u1EF1 \xE1n \u0111\u01B0\u1EE3c an to\xE0n tuy\u1EC7t \u0111\u1ED1i, Khoa ch\u1EC9 c\u1EA7n l\xE0m xong v\xE0 l\u01B0u n\xF3 duy nh\u1EA5t tr\xEAn m\xE0n h\xECnh Desktop c\u1EE7a m\xE1y t\xEDnh x\xE1ch tay \u0111\xF3.",
+        "is_correct": false
+      }
+    ],
+    "tags": [
+      "tin_hoc_7",
+      "de_thi_giua_ki_1",
+      "dung_sai_chum",
+      "an_toan_may_tinh_va_du_lieu"
+    ],
+    "grade": "L\u1EDBp 7",
+    "subject": "Tin h\u1ECDc",
+    "term": "Gi\u1EEFa k\xEC I"
   }
 ];
 

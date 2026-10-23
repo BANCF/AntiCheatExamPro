@@ -351,5 +351,43 @@
 
 ---
 
-*Nhật ký được cập nhật lần cuối vào: 22/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
+## 🚀 9. TẢI ĐỀ THI GIỮA HỌC KÌ 1 TIN HỌC 7 & ÁP DỤNG ĐỀ KIỂM TRA CHO LỚP 7C (23/10/2026)
+
+### 📌 Nội dung triển khai:
+1. **Trích xuất & Xử lý đề thi chính thức từ `De_thi_Giua_ki_1_Tin_7_Tron_Dap_An.docx`:**
+   - **Tên bài thi:** Đề Thi Giữa Học Kì 1 - Tin Học 7 (Lớp 7C) - Năm học 2026-2027 (Trường TH-THCS Pascal - Tổ Tin học).
+   - **Thời gian làm bài:** 45 phút.
+   - **Tổng số:** 34 câu hỏi (Thang điểm chuẩn 10.0 Bộ GD&ĐT):
+     - **Phần I (32 câu trắc nghiệm 4 lựa chọn - 8.0 điểm):** Mỗi câu đúng được 0.25 điểm. Tự động xáo trộn ngẫu nhiên thứ tự câu và các phương án A, B, C, D theo mã đề phát sinh cho từng học sinh.
+       - Đáp án chuẩn 32 câu:
+         1C, 2B, 3C, 4A, 5B, 6D, 7A, 8B, 9B, 10C, 11A, 12B, 13C, 14D, 15C, 16B,
+         17C, 18D, 19D, 20A, 21B, 22B, 23C, 24C, 25D, 26A, 27D, 28A, 29C, 30B, 31A, 32D.
+     - **Phần II (2 câu trắc nghiệm Đúng / Sai - 2.0 điểm):** Mỗi câu trọn vẹn 1.0 điểm (Đúng 1 ý = 0.1đ; 2 ý = 0.25đ; 3 ý = 0.5đ; 4 ý = 1.0đ):
+       - Câu 1 (Quy tắc MXH & Internet an toàn): a) Đúng, b) Sai, c) Sai, d) Đúng.
+       - Câu 2 (Tình huống sử dụng máy tính & an toàn dữ liệu): a) Sai, b) Đúng, c) Đúng, d) Sai.
+
+2. **Cập nhật Ngân hàng câu hỏi (`src/data/defaultQuestionBank.ts` & `server_data/db.json`):**
+   - Đưa 34 câu hỏi chính thức vào hệ thống với nhãn: `Lớp 7`, môn `Tin học`, kỳ `Giữa kì I`.
+   - Phân loại rõ các câu hỏi ôn tập đề cương trước đây vào kỳ `Ôn tập thường xuyên`.
+   - Tổng số câu hỏi hiện có trong ngân hàng: 139 câu (34 câu Giữa kì I Tin 7 + 51 câu Ôn tập Tin 7 + 50 câu Ôn tập Tin 6 + các câu Toán/Lí).
+
+3. **Thiết lập Lớp học `7C` & Kích hoạt Phòng thi:**
+   - **Mã lớp học:** `7C`
+   - **Tên lớp:** `Lớp 7C - Tin Học 7`
+   - **Mã PIN phòng thi:** `7007`
+   - **Phân công giáo viên:** `gv_tin` (`Thầy/Cô Bộ Môn Tin Học`)
+   - **Cấu hình bài thi riêng của lớp:**
+     - Thời gian: 45 phút.
+     - Số lượng câu: 34 câu (32 Trắc nghiệm + 2 Đúng/Sai).
+     - Phân bổ điểm: 8.0 điểm phần Trắc nghiệm + 2.0 điểm phần Đúng/Sai.
+     - Trạng thái: Đang Mở (`isActive: true`).
+
+4. **Đồng bộ toàn diện hệ thống:**
+   - Cập nhật `src/data/defaultClasses.ts`, `server_data/db.json`.
+   - Biên dịch thành công gói Vercel Serverless Functions trong `api/` bằng `esbuild`.
+   - Đóng gói (Build) thành công toàn bộ mã nguồn Vite SPA (`dist/`).
+
+---
+
+*Nhật ký được cập nhật lần cuối vào: 23/10/2026 bởi Đội ngũ Phát triển AntiCheatExamPro.*
 

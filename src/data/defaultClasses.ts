@@ -96,6 +96,32 @@ export const DEFAULT_CLASSES: ClassRoom[] = [
     description: 'Bài thi trắc nghiệm riêng biệt cho học sinh lớp 7A2'
   },
   {
+    id: 'cls_7c',
+    code: '7C',
+    name: 'Lớp 7C - Tin Học 7',
+    grade: 'Lớp 7',
+    subject: 'Tin học',
+    teacherName: 'Thầy/Cô Bộ Môn Tin Học',
+    pinCode: '7007',
+    examTitle: 'Đề Thi Giữa Học Kì 1 - Tin Học 7 (Lớp 7C)',
+    examConfig: {
+      duration_minutes: 45,
+      total_questions_to_pick: 34,
+      target_grade: 'Lớp 7',
+      target_subject: 'Tin học',
+      target_term: 'Giữa kì I',
+      exam_mode: 'bank',
+      distribution: {
+        single_choice: 32,
+        true_false: 2,
+        single_choice_points: 8.0,
+        true_false_points: 2.0
+      }
+    },
+    isActive: true,
+    description: 'Đề thi Giữa học kì 1 môn Tin học 7 chính thức (32 câu trắc nghiệm 8.0đ + 2 câu đúng/sai 2.0đ, Thời gian 45 phút)'
+  },
+  {
     id: 'cls_10a1',
     code: '10A1',
     name: 'Lớp 10A1 - Toán Học 10',
