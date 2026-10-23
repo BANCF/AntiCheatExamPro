@@ -11,7 +11,7 @@ interface MathRendererProps {
  * Parses a string containing LaTeX markers ($...$, $$...$$, \(...\), \[...\])
  * and renders both text and KaTeX math safely.
  */
-export const MathRenderer: React.FC<MathRendererProps> = ({
+const MathRendererComponent: React.FC<MathRendererProps> = ({
   text = '',
   className = '',
   block = false
@@ -21,11 +21,12 @@ export const MathRenderer: React.FC<MathRendererProps> = ({
   const parsedSegments = useMemo(() => {
     if (!content) return [];
 
-    // Regex to capture:
-    // 1. $$ ... $$ (display math)
-    // 2. \[ ... \] (display math)
-    // 3. $ ... $   (inline math)
-    // 4. \( ... \) (inline math)
+    // Instant fast-path for plain text (no LaTeX markers: zero regex overhead!)
+    if (!content.includes('$') && !content.includes('\\(') && !content.includes('\\[')) {
+      return [{ type: 'text' as const, value: content }];
+    }
+
+    // Regex to capture LaTeX markers
     const regex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\$(?!\s)[\s\S]*?(?<!\s)\$|\\\([\s\S]*?\\\))/g;
 
     const parts: { type: 'text' | 'inline-math' | 'block-math'; value: string }[] = [];
@@ -80,9 +81,13 @@ export const MathRenderer: React.FC<MathRendererProps> = ({
 
   // If no math markers found, render plain text with newlines
   if (parsedSegments.length === 1 && parsedSegments[0].type === 'text') {
+    const textVal = parsedSegments[0].value;
+    if (!textVal.includes('\n')) {
+      return <span className={`inline-block ${className}`}>{textVal}</span>;
+    }
     return (
       <span className={`inline-block ${className}`}>
-        {parsedSegments[0].value.split('\n').map((line, i) => (
+        {textVal.split('\n').map((line, i) => (
           <React.Fragment key={i}>
             {i > 0 && <br />}
             {line}
@@ -133,15 +138,22 @@ export const MathRenderer: React.FC<MathRendererProps> = ({
 
         return (
           <span key={idx}>
-            {segment.value.split('\n').map((line, i) => (
-              <React.Fragment key={i}>
-                {i > 0 && <br />}
-                {line}
-              </React.Fragment>
-            ))}
+            {segment.value.includes('\n') ? (
+              segment.value.split('\n').map((line, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <br />}
+                  {line}
+                </React.Fragment>
+              ))
+            ) : (
+              segment.value
+            )}
           </span>
         );
       })}
     </span>
   );
 };
+
+export const MathRenderer = React.memo(MathRendererComponent);
+

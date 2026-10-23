@@ -70,11 +70,18 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
   const [broadcastNotice, setBroadcastNotice] = useState<string | null>(null);
 
   // Auto Force Submit handler from anti-cheat hook
+  const answersRef = useRef(answers);
+  answersRef.current = answers;
+
+  const violationsLogRef = useRef<ViolationLog[]>([]);
+  const remainingSecondsRef = useRef(remainingSeconds);
+  remainingSecondsRef.current = remainingSeconds;
+
   const handleForceSubmit = useCallback(
     (finalLogs: ViolationLog[]) => {
-      onSubmit(answers, 'FORCE_SUBMITTED', finalLogs);
+      onSubmit(answersRef.current, 'FORCE_SUBMITTED', finalLogs);
     },
-    [answers, onSubmit]
+    [onSubmit]
   );
 
   // Anti-cheat engine integration
@@ -92,14 +99,16 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     onForceSubmit: handleForceSubmit
   });
 
-  // Countdown timer effect
+  violationsLogRef.current = violationsLog;
+
+  // Countdown timer effect - stable interval, does not recreate when answers change
   useEffect(() => {
     const timer = setInterval(() => {
       setRemainingSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           // Auto submit when time runs out
-          onSubmit(answers, 'SUBMITTED', violationsLog);
+          onSubmit(answersRef.current, 'SUBMITTED', violationsLogRef.current);
           return 0;
         }
         return prev - 1;
@@ -107,9 +116,9 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [answers, onSubmit, violationsLog]);
+  }, [onSubmit]);
 
-  // Connect to Socket.IO and register student session
+  // Connect to Socket.IO and register student session (mounted once)
   useEffect(() => {
     const socket = getSocket();
     socket.emit('student:register', {
@@ -135,7 +144,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
 
     socket.on('teacher:force_terminate', ({ reason }: { reason: string }) => {
       alert(`BÀI THI BỊ ĐÌNH CHỈ: ${reason}`);
-      onSubmit(answers, 'FORCE_SUBMITTED', violationsLog);
+      onSubmit(answersRef.current, 'FORCE_SUBMITTED', violationsLogRef.current);
     });
 
     return () => {
@@ -144,7 +153,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
       socket.off('teacher:time_added');
       socket.off('teacher:force_terminate');
     };
-  }, [attemptId, studentName, studentClass, assignedCode, answers, violationsLog, onSubmit]);
+  }, [attemptId, studentName, studentClass, assignedCode, onSubmit]);
 
   // Check if a question is answered
   const isQuestionAnswered = useCallback(
@@ -164,17 +173,41 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     [answers]
   );
 
-  // Real-time progress emit to teacher
+  const isPdfMode = config.exam_mode === 'pdf' && Boolean(config.pdf_url);
+  const pdfTotalQuestions =
+    config.pdf_total_questions ||
+    (config.pdf_answer_key ? Object.keys(config.pdf_answer_key).length : questions.length || 40);
+  const totalExamQuestions = isPdfMode ? pdfTotalQuestions : questions.length;
+
+  // Answered questions Set for O(1) lookups
+  const answeredQuestionIds = useMemo(() => {
+    const set = new Set<string>();
+    for (const q of questions) {
+      if (isQuestionAnswered(q)) {
+        set.add(q.id);
+      }
+    }
+    return set;
+  }, [questions, isQuestionAnswered]);
+
+  // Total answered questions count (O(1))
+  const answeredCount = useMemo(() => {
+    if (isPdfMode) {
+      return Object.keys(answers).filter((k) => Boolean(answers[k])).length;
+    }
+    return answeredQuestionIds.size;
+  }, [isPdfMode, answers, answeredQuestionIds]);
+
+  // Real-time progress emit to teacher (only emits on question switch or answers change, NOT on every second tick)
   useEffect(() => {
     const socket = getSocket();
-    const answeredCount = questions.filter((q) => isQuestionAnswered(q)).length;
     socket.emit('student:progress', {
       attemptId,
       currentQuestionIndex: currentIndex,
       answeredCount,
-      remainingSeconds
+      remainingSeconds: remainingSecondsRef.current
     });
-  }, [currentIndex, answers, remainingSeconds, attemptId, questions, isQuestionAnswered]);
+  }, [currentIndex, answeredCount, attemptId]);
 
   // Real-time violation emit to teacher
   const lastEmittedViolationRef = useRef(0);
@@ -190,10 +223,18 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     }
   }, [violationsLog, attemptId]);
 
-  // Save progress periodically & on answers change
+  // Save progress immediately on answers change or violations change (without blocking on timer ticks)
   useEffect(() => {
-    onSaveProgress(answers, remainingSeconds, violationsLog, violationCount);
-  }, [answers, remainingSeconds, violationsLog, violationCount, onSaveProgress]);
+    onSaveProgress(answers, remainingSecondsRef.current, violationsLog, violationCount);
+  }, [answers, violationsLog, violationCount, onSaveProgress]);
+
+  // Periodic backup of remaining time (every 20s) to avoid heavy localStorage writes every single second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      onSaveProgress(answersRef.current, remainingSecondsRef.current, violationsLogRef.current, violationCount);
+    }, 20000);
+    return () => clearInterval(interval);
+  }, [onSaveProgress, violationCount]);
 
   // Format time MM:SS
   const formattedTime = useMemo(() => {
@@ -224,30 +265,23 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
     });
   };
 
-
-
-  const isPdfMode = config.exam_mode === 'pdf' && Boolean(config.pdf_url);
-  const pdfTotalQuestions =
-    config.pdf_total_questions ||
-    (config.pdf_answer_key ? Object.keys(config.pdf_answer_key).length : questions.length || 40);
-  const totalExamQuestions = isPdfMode ? pdfTotalQuestions : questions.length;
-
-  // Total answered questions count
-  const answeredCount = useMemo(() => {
-    if (isPdfMode) {
-      return Object.keys(answers).filter((k) => Boolean(answers[k])).length;
-    }
-    return questions.filter((q) => isQuestionAnswered(q)).length;
-  }, [isPdfMode, answers, questions, isQuestionAnswered]);
-
   const currentQuestion = questions[currentIndex];
 
-  // Calculate question point value based on config
+  // Pre-calculate distribution counts once
+  const { scCount, tfCount } = useMemo(() => {
+    let sc = 0;
+    let tf = 0;
+    for (const q of questions) {
+      if (q.type === 'single_choice') sc++;
+      else if (q.type === 'true_false') tf++;
+    }
+    return { scCount: sc, tfCount: tf };
+  }, [questions]);
+
+  // Calculate question point value based on config (O(1))
   const questionPointValue = useMemo(() => {
     if (!currentQuestion) return 0;
     const dist = config?.distribution;
-    const scCount = questions.filter((q) => q.type === 'single_choice').length;
-    const tfCount = questions.filter((q) => q.type === 'true_false').length;
 
     if (currentQuestion.type === 'single_choice') {
       const scPoints = typeof dist?.single_choice_points === 'number'
@@ -260,7 +294,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
         : (tfCount > 0 ? 3.0 : 0.0);
       return tfCount > 0 ? Math.round((tfPoints / tfCount) * 1000) / 1000 : 1.0;
     }
-  }, [currentQuestion, config, questions]);
+  }, [currentQuestion, config, scCount, tfCount]);
 
   // Timer urgency style
   const timerColorClass = useMemo(() => {
@@ -492,7 +526,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                         key={opt.id}
                         type="button"
                         onClick={() => handleSelectOption(currentQuestion.id, opt.id)}
-                        className={`w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3.5 group cursor-pointer ${
+                        className={`w-full text-left p-4 rounded-xl border transition-colors duration-150 flex items-start gap-3.5 group cursor-pointer ${
                           isSelected
                             ? 'bg-indigo-50/90 border-indigo-600 shadow-sm text-indigo-950 font-medium ring-1 ring-indigo-500'
                             : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-800'
@@ -545,7 +579,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                           <button
                             type="button"
                             onClick={() => handleSelectTrueFalse(currentQuestion.id, item.id, true)}
-                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-colors duration-150 cursor-pointer ${
                               selectedValue === true
                                 ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-500'
                                 : 'bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -556,7 +590,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                           <button
                             type="button"
                             onClick={() => handleSelectTrueFalse(currentQuestion.id, item.id, false)}
-                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-colors duration-150 cursor-pointer ${
                               selectedValue === false
                                 ? 'bg-rose-600 text-white shadow-sm ring-2 ring-rose-500'
                                 : 'bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -604,7 +638,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                       setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1));
                     }
                   }}
-                  className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-white text-xs font-bold cursor-pointer transition-all shadow-sm ${
+                  className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-white text-xs font-bold cursor-pointer transition-colors duration-150 shadow-sm ${
                     currentIndex === questions.length - 1
                       ? 'bg-emerald-600 hover:bg-emerald-700 ring-2 ring-emerald-400'
                       : 'bg-indigo-600 hover:bg-indigo-700'
@@ -646,7 +680,7 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
             {/* Grid Matrix of Buttons */}
             <div className="grid grid-cols-5 gap-2 max-h-[340px] overflow-y-auto pr-1">
               {questions.map((q, idx) => {
-                const answered = isQuestionAnswered(q);
+                const answered = answeredQuestionIds.has(q.id);
                 const isCurrent = idx === currentIndex;
 
                 return (
@@ -654,12 +688,10 @@ export const ExamRunner: React.FC<ExamRunnerProps> = ({
                     key={q.id}
                     type="button"
                     onClick={() => setCurrentIndex(idx)}
-                    className={`h-9 rounded-lg font-bold text-xs transition-all flex items-center justify-center cursor-pointer ${
+                    className={`h-9 rounded-lg font-bold text-xs transition-colors duration-150 flex items-center justify-center cursor-pointer ${
                       isCurrent
-                        ? 'ring-2 ring-indigo-600 font-extrabold scale-105 shadow-sm'
-                        : ''
-                    } ${
-                      answered
+                        ? 'ring-2 ring-indigo-600 font-extrabold shadow-sm bg-indigo-50 text-indigo-900 border border-indigo-400'
+                        : answered
                         ? 'bg-emerald-50 border border-emerald-300 text-emerald-800 hover:bg-emerald-100'
                         : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                     }`}

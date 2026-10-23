@@ -43,6 +43,11 @@ export function useAntiCheat({
     violationsLogRef.current = violationsLog;
   }, [violationsLog]);
 
+  const onForceSubmitRef = useRef(onForceSubmit);
+  useEffect(() => {
+    onForceSubmitRef.current = onForceSubmit;
+  }, [onForceSubmit]);
+
   // Record a violation with a 3-second cooldown to prevent double-counting
   const recordViolation = useCallback(
     (type: ViolationType, note?: string, durationSeconds?: number) => {
@@ -75,7 +80,7 @@ export function useAntiCheat({
       if (newCount >= maxViolationsAllowed) {
         hasForceSubmittedRef.current = true;
         setIsWarningModalOpen(false);
-        onForceSubmit(updatedLogs);
+        onForceSubmitRef.current(updatedLogs);
         return;
       }
 
@@ -103,7 +108,7 @@ export function useAntiCheat({
       });
       setIsWarningModalOpen(true);
     },
-    [enabled, maxViolationsAllowed, onForceSubmit]
+    [enabled, maxViolationsAllowed]
   );
 
   // Request Fullscreen
