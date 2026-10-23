@@ -115,6 +115,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
     let assignedCode = '101';
     let seed = 2026;
+    let sanitizedQuestions: SanitizedQuestion[] = [];
 
     if (effectiveConfig.exam_mode === 'pdf') {
       const totalQ = expectedQCount;

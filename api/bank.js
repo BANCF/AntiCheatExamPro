@@ -4968,12 +4968,21 @@ async function getQuestionBank() {
         } catch {
         }
       }
-      if (Array.isArray(bank) && bank.length > 0) return bank;
+      if (Array.isArray(bank) && bank.length > 0) {
+        const existingIds = new Set(bank.map((q) => q.id));
+        const missing = DEFAULT_QUESTION_BANK.filter((q) => !existingIds.has(q.id));
+        if (missing.length > 0) {
+          const merged = [...bank, ...missing];
+          await redis.set("exam:bank", merged);
+          return merged;
+        }
+        return bank;
+      }
     } catch (err) {
       console.error("Error reading bank from Redis:", err);
     }
   }
-  return memoryBank;
+  return memoryBank.length > 0 ? memoryBank : DEFAULT_QUESTION_BANK;
 }
 async function saveQuestionBank(bank) {
   const redis = getRedis();

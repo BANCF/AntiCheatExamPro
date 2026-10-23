@@ -124,14 +124,29 @@ export function getStoredClasses(): ClassRoom[] {
     if (!raw) return DEFAULT_CLASSES;
     const parsed: ClassRoom[] = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      const existingIds = new Set(parsed.map((c) => c.id));
-      const missing = DEFAULT_CLASSES.filter((c) => !existingIds.has(c.id));
-      if (missing.length > 0) {
-        const merged = [...missing, ...parsed];
-        saveStoredClasses(merged);
-        return merged;
+      const map = new Map<string, ClassRoom>();
+      parsed.forEach((c) => map.set(c.code.trim().toUpperCase(), c));
+      let changed = false;
+
+      for (const def of DEFAULT_CLASSES) {
+        const code = def.code.trim().toUpperCase();
+        if (!map.has(code)) {
+          map.set(code, def);
+          changed = true;
+        } else if (def.code === '7C') {
+          const cur = map.get(code)!;
+          if (cur.examConfig?.total_questions_to_pick !== 34 || cur.examTitle !== def.examTitle) {
+            map.set(code, { ...cur, ...def });
+            changed = true;
+          }
+        }
       }
-      return parsed;
+
+      const merged = Array.from(map.values());
+      if (changed) {
+        saveStoredClasses(merged);
+      }
+      return merged;
     }
     return DEFAULT_CLASSES;
   } catch {

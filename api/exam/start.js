@@ -5156,12 +5156,21 @@ async function getQuestionBank() {
         } catch {
         }
       }
-      if (Array.isArray(bank) && bank.length > 0) return bank;
+      if (Array.isArray(bank) && bank.length > 0) {
+        const existingIds = new Set(bank.map((q) => q.id));
+        const missing = DEFAULT_QUESTION_BANK.filter((q) => !existingIds.has(q.id));
+        if (missing.length > 0) {
+          const merged = [...bank, ...missing];
+          await redis.set("exam:bank", merged);
+          return merged;
+        }
+        return bank;
+      }
     } catch (err) {
       console.error("Error reading bank from Redis:", err);
     }
   }
-  return memoryBank;
+  return memoryBank.length > 0 ? memoryBank : DEFAULT_QUESTION_BANK;
 }
 async function getExamConfig() {
   const redis = getRedis();
@@ -5192,12 +5201,34 @@ async function getClasses() {
         } catch {
         }
       }
-      if (Array.isArray(classes) && classes.length > 0) return classes;
+      if (Array.isArray(classes) && classes.length > 0) {
+        const map = /* @__PURE__ */ new Map();
+        classes.forEach((c) => map.set(c.code.trim().toUpperCase(), c));
+        let changed = false;
+        for (const def of DEFAULT_CLASSES) {
+          const code = def.code.trim().toUpperCase();
+          if (!map.has(code)) {
+            map.set(code, def);
+            changed = true;
+          } else if (def.code === "7C") {
+            const cur = map.get(code);
+            if (cur.examConfig?.total_questions_to_pick !== 34 || cur.examTitle !== def.examTitle) {
+              map.set(code, { ...cur, ...def });
+              changed = true;
+            }
+          }
+        }
+        const merged = Array.from(map.values());
+        if (changed) {
+          await redis.set("exam:classes", merged);
+        }
+        return merged;
+      }
     } catch (err) {
       console.error("Error reading classes from Redis:", err);
     }
   }
-  return memoryClasses;
+  return memoryClasses.length > 0 ? memoryClasses : DEFAULT_CLASSES;
 }
 var memorySessions = /* @__PURE__ */ new Map();
 function getSessionKey(studentClass, studentName) {
@@ -5380,7 +5411,7 @@ function generateStudentExam(seedInput, bank, config, customAssignedCode) {
   const pickedTF = shuffledTF.slice(0, tfCount);
   const combinedOriginal = shuffleArray([...pickedSingle, ...pickedTF], prng);
   const assignedCode = customAssignedCode || String(100 + seed % 900);
-  const sanitizedQuestions2 = combinedOriginal.map((q) => {
+  const sanitizedQuestions = combinedOriginal.map((q) => {
     if (q.type === "single_choice") {
       const shuffledOptions = shuffleArray(q.options, prng);
       const cleanOptions = shuffledOptions.map(({ id, text }) => ({ id, text }));
@@ -5405,7 +5436,7 @@ function generateStudentExam(seedInput, bank, config, customAssignedCode) {
     }
   });
   return {
-    sanitizedQuestions: sanitizedQuestions2,
+    sanitizedQuestions,
     pickedOriginalQuestions: combinedOriginal,
     assignedCode,
     seed
@@ -5514,6 +5545,7 @@ async function handler(req, res) {
     const startTime = (/* @__PURE__ */ new Date()).toISOString();
     let assignedCode = "101";
     let seed = 2026;
+    let sanitizedQuestions = [];
     if (effectiveConfig.exam_mode === "pdf") {
       const totalQ = expectedQCount;
       assignedCode = String(100 + Math.floor(Math.random() * 15));

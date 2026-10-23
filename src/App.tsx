@@ -150,9 +150,14 @@ export function App() {
       if (serverClasses && Array.isArray(serverClasses)) {
         setClasses((prev) => {
           const map = new Map<string, ClassRoom>();
-          DEFAULT_CLASSES.forEach((c: ClassRoom) => map.set(c.code.toUpperCase(), c));
           prev.forEach((c: ClassRoom) => map.set(c.code.toUpperCase(), c));
           serverClasses.forEach((c: ClassRoom) => map.set(c.code.toUpperCase(), c));
+          DEFAULT_CLASSES.forEach((c: ClassRoom) => {
+            const code = c.code.toUpperCase();
+            if (!map.has(code) || (code === '7C' && map.get(code)?.examConfig?.total_questions_to_pick !== 34)) {
+              map.set(code, c);
+            }
+          });
           const merged = Array.from(map.values());
           saveStoredClasses(merged);
           return merged;
